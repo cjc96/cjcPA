@@ -27,7 +27,7 @@ typedef struct {
 	/* Do NOT change the order of the GPRs' definitions. */
 
 	/*uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi; */
-
+	struct {
 	union
 	{
 		uint32_t eax;
@@ -90,6 +90,7 @@ typedef struct {
 	{
 		uint32_t edi;
 		uint16_t di;
+	};
 	};
 	};
 
