@@ -29,28 +29,40 @@ typedef struct {
 	{
 		uint32_t eax;
 		uint16_t ax;
-		uint8_t al,ah;
+		struct
+		{
+			uint8_t al,ah;
+		};
 	};
 
 	union
 	{
 		uint32_t ecx;
 		uint16_t cx;
-		uint8_t cl,ch;
+		struct
+		{
+			uint8_t cl,ch;
+		};
 	};
 
 	union
 	{
 		uint32_t edx;
 		uint16_t dx;
-		uint8_t dl,dh;
+		struct
+		{
+			uint8_t dl,dh;
+		};
 	};
 
 	union
 	{
 		uint32_t ebx;
 		uint16_t bx;
-		uint8_t bl,bh;
+		struct
+		{
+			uint8_t bl,bh;
+		};
 	};
 
 	union
