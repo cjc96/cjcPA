@@ -42,7 +42,7 @@ static int cmd_si(char *args) {
 	int n;
 	if (args != NULL) {
 		sscanf(args, "%d", &n);
-		printf("%d",n);
+		
 	}
 	else
 		n = 1;
