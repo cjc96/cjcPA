@@ -52,14 +52,34 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args)
 {
-	int i;
 
 	if (strcmp(args,"r") == 0)
 	{
-		for (i=0; i<8; i++)
-		{
-			printf("gpr[%d] = %X\n",i,cpu.gpr[i]._32);
-		}
+		printf("EAX = %X\n",cpu.eax);
+		printf("EDX = %X\n",cpu.edx);
+		printf("ECX = %X\n",cpu.ecx);
+		printf("EBX = %X\n",cpu.ebx);
+		printf("ESI = %X\n",cpu.esi);
+		printf("EDI = %X\n",cpu.edi);
+		printf("ESP = %X\n",cpu.esp);
+		printf("EBP = %X\n",cpu.ebp);
+		printf("AX = %X\n",cpu.ax);
+		printf("DX = %X\n",cpu.dx);
+		printf("CX = %X\n",cpu.cx);
+		printf("BX = %X\n",cpu.bx);
+		printf("BP = %X\n",cpu.bp);
+		printf("SI = %X\n",cpu.si);
+		printf("DI = %X\n",cpu.di);
+		printf("SP = %X\n",cpu.sp);
+		printf("AL = %X\n",cpu.al);
+		printf("DL = %X\n",cpu.dl);
+		printf("CL = %X\n",cpu.cl);
+		printf("BL = %X\n",cpu.bl);
+		printf("AH = %X\n",cpu.ah);
+		printf("DH = %X\n",cpu.dh);
+		printf("CH = %X\n",cpu.ch);
+		printf("BH = %X\n",cpu.bh);
+		printf("EIP = %X\n",cpu.eip);
 	}
 
 	return 0;
