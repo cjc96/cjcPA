@@ -40,7 +40,7 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args) {
 	int n;
-	if (args[0] != '\0')
+	if (args != NULL)
 		sscanf(args,"%d",&n);
 	else
 		n = 1;
