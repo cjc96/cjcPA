@@ -52,9 +52,14 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args)
 {
+	int i;
+
 	if (strcmp(args,"r") == 0)
 	{
-
+		for (i=0; i<8; i++)
+		{
+			printf("gpr[%d] = %X",i,cpu.gpr[i]._32);
+		}
 	}
 
 	return 0;
@@ -69,7 +74,7 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n commands", cmd_si },
-	{ "info", "Show the information of a varible", cmd_info}
+	{ "info", "Show the information", cmd_info}
 
 	/* TODO: Add more commands */
 
