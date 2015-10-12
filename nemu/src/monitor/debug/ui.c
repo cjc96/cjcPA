@@ -50,6 +50,11 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
+static int cmd_info(char *args)
+{
+	
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -58,7 +63,8 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
-	{ "si","Execute n commands", cmd_si }
+	{ "si", "Execute n commands", cmd_si },
+	{ "info", "Show the information of a varible", cmd_info}
 
 	/* TODO: Add more commands */
 
