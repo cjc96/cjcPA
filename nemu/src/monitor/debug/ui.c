@@ -52,7 +52,12 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args)
 {
-	
+	if (strcmp(args,"r") == 0)
+	{
+
+	}
+
+	return 0;
 }
 
 static struct {
