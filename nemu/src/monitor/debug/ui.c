@@ -58,7 +58,7 @@ static int cmd_info(char *args)
 	{
 		for (i=0; i<8; i++)
 		{
-			printf("gpr[%d] = %X",i,cpu.gpr[i]._32);
+			printf("gpr[%d] = %X\n",i,cpu.gpr[i]._32);
 		}
 	}
 
