@@ -79,7 +79,7 @@ static int cmd_info(char *args)
 		printf("DH = %X\n",cpu.dh);
 		printf("CH = %X\t",cpu.ch);
 		printf("BH = %X\n",cpu.bh);
-		printf("EIP = %X\t",cpu.eip);
+		printf("EIP = %X\n",cpu.eip);
 	}
 
 	return 0;
