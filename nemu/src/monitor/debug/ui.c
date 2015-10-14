@@ -96,9 +96,9 @@ static int cmd_x(char *args)
 	sscanf(temp,"%d",&n);
 	sscanf(temp + strlen(temp) , "%x" , &addr);
 	
-	printf("%x\n%d\n",addr,n);
-	//sscanf();
-	//swaddr_read();
+	//printf("%x\n%d\n",addr,n);
+	
+	swaddr_read(addr,n);
 
 	return 0;
 }
