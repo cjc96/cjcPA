@@ -2,6 +2,7 @@
 #include "monitor/expr.h"
 #include "monitor/watchpoint.h"
 #include "nemu.h"
+#include "../../../include/memory/memory.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -85,6 +86,17 @@ static int cmd_info(char *args)
 	return 0;
 }
 
+static int cmd_x(char *args)
+{
+	int n;
+
+	sscanf(strtok(args, " "),"%d",&n);
+	//sscanf();
+	//swaddr_read();
+
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -94,7 +106,8 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n commands", cmd_si },
-	{ "info", "Show the information", cmd_info}
+	{ "info", "Show the information", cmd_info},
+	{ "x","Scan the Ram", cmd_x}
 
 	/* TODO: Add more commands */
 
