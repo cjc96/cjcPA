@@ -98,7 +98,7 @@ static int cmd_x(char *args)
 	
 	//printf("%x\n%d\n",addr,n);
 	for (i = 0; i < n; i++)
-		printf(" = %d\n",swaddr_read(addr+i*4,4));
+		printf(" = %d\n",swaddr_read(addr+i,4));
 
 	return 0;
 }
