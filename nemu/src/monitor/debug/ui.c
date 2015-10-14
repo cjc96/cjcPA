@@ -88,10 +88,15 @@ static int cmd_info(char *args)
 
 static int cmd_x(char *args)
 {
+	unsigned int addr;
 	int n;
-
-	sscanf(strtok(args, " "),"%d",&n);
-	printf("%d",n);
+	char *temp;
+	
+	temp = strtok(args , " ");
+	sscanf(temp,"%d",&n);
+	sscanf(temp + strlen(temp) , "%x" , &addr);
+	
+	printf("%x\n%d\n",addr,n);
 	//sscanf();
 	//swaddr_read();
 
