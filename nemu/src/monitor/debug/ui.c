@@ -94,7 +94,7 @@ static int cmd_x(char *args)
 	
 	temp = strtok(args , " ");
 	sscanf(temp,"%d",&n);
-	sscanf(temp + strlen(temp) , "%x" , &addr);
+	sscanf(temp + strlen(temp)+1 , "%x" , &addr);
 	
 	//printf("%x\n%d\n",addr,n);
 	for (i = 0; i < n; i++)
