@@ -91,6 +91,7 @@ static int cmd_x(char *args)
 	int n;
 
 	sscanf(strtok(args, " "),"%d",&n);
+	printf("%d",n);
 	//sscanf();
 	//swaddr_read();
 
