@@ -36,7 +36,7 @@ static struct rule {
 	{">", MT},					// more than
 	{"<", LT},					// less than
 	{"&&", LAND},				// logical and
-	{"||", LOR},				// logical or
+	{"\\|\\|", LOR},				// logical or
 	{"!", LN},					// logical not
 	{"^", XOR},					// xor
 	{"\\&", AAND},				// algebra and
