@@ -22,27 +22,27 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 	 
-	{" +", NOTYPE},				// spaces
-	{"\\+", '+'},				// plus
-	{"\\-", '-'},	 			// minus
-	{"\\*", '*'},				// times
-	{"\\/", '/'},				// divided
-	{"\\%", '%'},				// modify
+	{" +", NOTYPE},					// spaces
+	{"\\+", '+'},					// plus
+	{"\\-", '-'},	 				// minus
+	{"\\*", '*'},					// times
+	{"\\/", '/'},					// divided
+	{"\\%", '%'},					// modify
 	{"\\(", '('},					// right parenthese
 	{"\\)", ')'},					// left parenthese
-	{"==", EQ},					// equal
-	{">=", NLT},				// no less than
-	{"<=", NMT},				// no more than
-	{">", MT},					// more than
-	{"<", LT},					// less than
-	{"&&", LAND},				// logical and
-	{"\\|\\|", LOR},			// logical or
-	{"!", LN},					// logical not
-	{"^", XOR},					// xor
-	{"\\&", AAND},				// algebra and
-	{"|", AOR},					// algebra or
-	{"~", AN},					// algebra not
-	{"[0-9]+", NUM}				// number
+	{"==", EQ},						// equal
+	{">=", NLT},					// no less than
+	{"<=", NMT},					// no more than
+	{">", MT},						// more than
+	{"<", LT},						// less than
+	{"&&", LAND},					// logical and
+	{"\\|\\|", LOR},				// logical or
+	{"!", LN},						// logical not
+	{"\\^", XOR},					// xor
+	{"\\&", AAND},					// algebra and
+	{"|", AOR},						// algebra or
+	{"~", AN},						// algebra not
+	{"[0-9]+", NUM}					// number
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
