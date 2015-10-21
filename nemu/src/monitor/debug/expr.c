@@ -43,7 +43,7 @@ static struct rule {
 	{"\\|", AOR},					// algebra or
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM},				// number
-	{"$[a-z]+", REG}				// register
+	{"\\$[a-z]+", REG}				// register
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
