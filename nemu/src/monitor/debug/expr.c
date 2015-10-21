@@ -70,6 +70,7 @@ void init_regex() {
 typedef struct token {
 	int type;
 	char str[32];
+	int num;
 } Token;
 
 Token tokens[32];
@@ -77,7 +78,7 @@ int nr_token;
 
 static bool make_token(char *e) {
 	int position = 0;
-	int i;
+	int i,temp;
 	regmatch_t pmatch;
 	
 	nr_token = 0;
@@ -91,16 +92,129 @@ static bool make_token(char *e) {
 
 				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
-				printf("%d\n",nr_token);
 
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
 				 * to record the token in the array ``tokens''. For certain 
 				 * types of tokens, some extra actions should be performed.
 				 */
 
-				/*switch(rules[i].token_type) {
+				switch(rules[i].token_type) {
+					case NOTYPE: 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case EQ:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+					
+					case NLT:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+					
+					case NMT:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case MT:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case LT:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case LAND:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case LOR:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case LN:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case XOR:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case AAND:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case AOR:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case AN:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case NUM:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+						{
+							tokens[nr_token].num = tokens[nr_token].num * 10 + substr_start[temp] - '0';
+						}
+						break;
+						
+					case REG:
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case '+': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case '-': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case '*': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case '/': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case '%': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case '(': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
+					case ')': 
+						tokens[nr_token].type = rules[i].token_type; 
+						strcpy(tokens[nr_token++].str,substr_start);
+						break;
+						
 					default: panic("please implement me");
-				}*/
+				}
 
 				break;
 			}
@@ -122,6 +236,7 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+	printf("1");
 	panic("please implement me");
 	return 0;
 }
