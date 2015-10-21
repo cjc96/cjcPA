@@ -194,11 +194,12 @@ static bool make_token(char *e) {
 						tokens[nr_token].type = rules[i].token_type; 
 						for (temp = 0; temp < substr_len; ++temp)
 							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
+						tokens[nr_token].str[temp] = '\0';
 						for (temp = 0; temp < substr_len; ++temp)
 						{
 							tokens[nr_token].num = tokens[nr_token].num * 10 + substr_start[temp] - '0';
 						}
+						nr_token++;
 						break;
 						
 					case REG:
