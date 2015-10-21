@@ -230,13 +230,16 @@ static bool make_token(char *e) {
 }
 
 uint32_t expr(char *e, bool *success) {
+	int i;
+	
 	if(!make_token(e)) {
 		*success = false;
 		return 0;
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	printf("1");
+	for (i = 0; i < nr_token; ++i)
+		printf("%s\n",tokens[i].str);
 	panic("please implement me");
 	return 0;
 }
