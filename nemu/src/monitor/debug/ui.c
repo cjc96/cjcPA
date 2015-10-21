@@ -96,7 +96,6 @@ static int cmd_x(char *args)
 	sscanf(temp,"%d",&n);
 	sscanf(temp + strlen(temp)+1 , "%x" , &addr);
 	
-	//printf("%x\n%d\n",addr,n);
 	for (i = 0; i < n; i++)
 		printf("%x\t :\t %d\n",addr+i,swaddr_read(addr+i,4));
 
