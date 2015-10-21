@@ -101,72 +101,100 @@ static bool make_token(char *e) {
 				switch(rules[i].token_type) {
 					case NOTYPE: 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case EQ:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 					
 					case NLT:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 					
 					case NMT:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case MT:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case LT:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case LAND:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case LOR:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case LN:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case XOR:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case AAND:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case AOR:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case AN:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case NUM:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						for (temp = 0; temp < substr_len; ++temp)
 						{
 							tokens[nr_token].num = tokens[nr_token].num * 10 + substr_start[temp] - '0';
@@ -175,42 +203,58 @@ static bool make_token(char *e) {
 						
 					case REG:
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case '+': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case '-': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case '*': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case '/': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case '%': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case '(': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case ')': 
 						tokens[nr_token].type = rules[i].token_type; 
-						strcpy(tokens[nr_token++].str,substr_start);
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					default: panic("please implement me");
