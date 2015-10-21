@@ -40,7 +40,7 @@ static struct rule {
 	{"!", LN},						// logical not
 	{"\\^", XOR},					// xor
 	{"\\&", AAND},					// algebra and
-	{"|", AOR},						// algebra or
+	{"\\|", AOR},						// algebra or
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM}					// number
 };
