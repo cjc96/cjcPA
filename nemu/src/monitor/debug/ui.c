@@ -102,6 +102,15 @@ static int cmd_x(char *args)
 	return 0;
 }
 
+static int cmd_p(char *args)
+{
+	bool success;
+	
+	expr(args,&success);
+	
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -112,7 +121,8 @@ static struct {
 	{ "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute n commands", cmd_si },
 	{ "info", "Show the information", cmd_info},
-	{ "x","Scan the Ram", cmd_x}
+	{ "x", "Scan the Ram", cmd_x},
+	{ "p", "Compute the value of an expression", cmd_p}
 
 	/* TODO: Add more commands */
 
