@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN
+	NOTYPE = 256, EQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM
 
 	/* TODO: Add more token types */
 
@@ -36,12 +36,13 @@ static struct rule {
 	{">", MT},					// more than
 	{"<", LT},					// less than
 	{"&&", LAND},				// logical and
-	{"\\|\\|", LOR},				// logical or
+	{"\\|\\|", LOR},			// logical or
 	{"!", LN},					// logical not
 	{"^", XOR},					// xor
 	{"\\&", AAND},				// algebra and
 	{"|", AOR},					// algebra or
-	{"~", AN}					// algebra not
+	{"~", AN},					// algebra not
+	{"[0-9]+", NUM}				// number
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -87,7 +88,7 @@ static bool make_token(char *e) {
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
-				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
+				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -95,9 +96,9 @@ static bool make_token(char *e) {
 				 * types of tokens, some extra actions should be performed.
 				 */
 
-				switch(rules[i].token_type) {
+				/*switch(rules[i].token_type) {
 					default: panic("please implement me");
-				}
+				}*/
 
 				break;
 			}
