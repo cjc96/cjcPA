@@ -111,7 +111,7 @@ static int cmd_p(char *args)
 	temp = 0;
 	temp = expr(args,&success);
 	if (success)
-		printf("%d\n",temp);
+		printf("%u\n",temp);
 	else
 		printf("Invalid input\n");
 	
