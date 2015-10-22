@@ -72,7 +72,7 @@ void init_regex() {
 typedef struct token {
 	int type;
 	char str[32];
-	int num;
+	unsigned int num;
 } Token;
 
 Token tokens[32];
@@ -277,6 +277,15 @@ static bool make_token(char *e) {
 						for (temp = 0; temp < substr_len; ++temp)
 							tokens[nr_token].str[temp] = substr_start[temp];
 						tokens[nr_token++].str[temp] = '\0';
+						break;
+						
+					case HEX:
+						tokens[nr_token].type = NUM;
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token].str[temp] = '\0';
+						sscanf(tokens[nr_token].str,"%x",&tokens[nr_token].num);
+						nr_token++;
 						break;
 						
 					default: panic("please implement me");
