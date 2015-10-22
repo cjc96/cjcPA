@@ -355,6 +355,8 @@ uint32_t expr(char *e, bool *success) {
 	for (i = 0; i < pro_len; i++)
 	{
 		printf("%s ",tokens[pro[i]].str);
+		if (tokens[pro[i]].type == NUM)
+			printf("%d ", tokens[pro[i]].num);
 	}
 	printf("\n");
 	
