@@ -306,7 +306,8 @@ static bool make_token(char *e) {
 
 uint32_t expr(char *e, bool *success) {
 	int i;											// loop varible
-	int sta[32] = {0}, sta_len = 0;					// stack
+	unsigned int sta[32] = {0};						// stack
+	int  sta_len = 0;								// stack length
 	int pro[32] = {0}, pro_len = 0;					// order of process
 	int priority[300]={0};							// priority
 	int temp1,temp2;								// execute numbers
