@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR
+	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR, HEX
 };
 
 static struct rule {
@@ -43,7 +43,8 @@ static struct rule {
 	{"\\|", AOR},					// algebra or
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM},				// number
-	{"\\$[a-z]+", REG}				// register
+	{"\\$[a-z]+", REG},				// register
+	{"0x[0-9a-fA-F]+",HEX}			// hex
 	
 };
 
@@ -91,7 +92,7 @@ static bool make_token(char *e) {
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
-				//Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i, rules[i].regex, position, substr_len, substr_len, substr_start);
+				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
