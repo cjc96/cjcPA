@@ -352,11 +352,11 @@ uint32_t expr(char *e, bool *success) {
 	while (sta_len > 0)
 		pro[pro_len++] = sta[--sta_len];
 	
-	for (i = 0; i < pro_len; i++)
+	/*for (i = 0; i < pro_len; i++)
 	{
 		printf("%s ",tokens[pro[i]].str);
 	}
-	printf("\n");
+	printf("\n");*/
 	
 	// calculate the value of the expression with the help of array "pro"
 	sta_len = 0;
