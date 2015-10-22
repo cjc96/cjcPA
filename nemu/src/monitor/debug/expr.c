@@ -543,7 +543,6 @@ uint32_t expr(char *e, bool *success) {
 						
 			case REG:
 				sta[sta_len++] = tokens[pro[i]].num;
-				assert(0);
 				break;
 				
 			case POINTER:
