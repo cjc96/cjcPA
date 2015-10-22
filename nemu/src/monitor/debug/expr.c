@@ -293,10 +293,11 @@ static bool make_token(char *e) {
 }
 
 uint32_t expr(char *e, bool *success) {
-	int i;										// loop varible
+	int i;											// loop varible
 	int sta[32] = {0}, sta_len = 0;					// stack
 	int pro[32] = {0}, pro_len = 0;					// order of process
 	int priority[300]={0};							// priority
+	int temp1,temp2;								// execute numbers
 	
 	// priority table
 	priority[EQ] = 6; priority[NEQ] = 6; priority[NLT] = 7;
@@ -351,11 +352,6 @@ uint32_t expr(char *e, bool *success) {
 	while (sta_len > 0)
 		pro[pro_len++] = sta[--sta_len];
 	
-	for (i = 0; i < pro_len; ++i)
-	{
-		printf("%s ",tokens[pro[i]].str);
-	}
-	
 	// calculate the value of the expression with the help of array "pro"
 	sta_len = 0;
 	for (i = 0; i < pro_len; i++)
@@ -363,59 +359,156 @@ uint32_t expr(char *e, bool *success) {
 		switch (tokens[pro[i]].type)
 		{
 			case EQ:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 == temp2);
+				sta_len--;
+				break;
 				
 			case SHL:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 << temp2);
+				sta_len--;
+				break;
 
 			case SHR:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 >> temp2);
+				sta_len--;
+				break;
 				
 			case NEQ:
-			
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 != temp2);
+				sta_len--;
+				break;
+
 			case NLT:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 >= temp2);
+				sta_len--;
+				break;
 					
 			case NMT:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 <= temp2);
+				sta_len--;
+				break;
 					
 			case MT:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 > temp2);
+				sta_len--;
+				break;
 						
 			case LT:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 < temp2);
+				sta_len--;
+				break;
 				
 			case LAND:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 && temp2);
+				sta_len--;
+				break;
 						
 			case LOR:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 || temp2);
+				sta_len--;
+				break;
 						
 			case LN:
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (!temp2);
+				sta_len--;
+				break;
 						
 			case XOR:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 ^ temp2);
+				sta_len--;
+				break;
 						
 			case AAND:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 & temp2);
+				sta_len--;
+				break;
 				
 			case AOR:
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 | temp2);
+				sta_len--;
+				break;
 						
 			case AN:
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (~temp2);
+				sta_len--;
+				break;
 						
 			case NUM:
+				sta[sta_len++] = tokens[pro[i]].num;
+				break;
 						
 			case REG:
+				sta[sta_len++] = tokens[pro[i]].num;
+				assert(0);
+				break;
 						
 			case '+': 
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 + temp2);
+				sta_len--;
+				break;
 						
 			case '-': 
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 - temp2);
+				sta_len--;
+				break;
 						
 			case '*': 
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 * temp2);
+				sta_len--;
+				break;
 						
 			case '/': 
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 / temp2);
+				sta_len--;
+				break;
 						
 			case '%': 
-						
-			case '(': 
-						
-			case ')': 
+				temp1 = sta[sta_len-2];
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = (temp1 % temp2);
+				sta_len--;
+				break;
 						
 			default: panic("please implement me");	
 		}
-
 	}
 	
-	panic("please implement me");
-	return 0;
+	return sta[0];
 }
 
