@@ -213,6 +213,8 @@ static bool make_token(char *e) {
 						for (temp = 0; temp < substr_len; ++temp)
 							tokens[nr_token].str[temp] = substr_start[temp];
 						tokens[nr_token].str[temp] = '\0';
+						
+						tokens[nr_token].num = 0;
 						for (temp = 0; temp < substr_len; ++temp)
 						{
 							tokens[nr_token].num = tokens[nr_token].num * 10 + substr_start[temp] - '0';
@@ -352,13 +354,11 @@ uint32_t expr(char *e, bool *success) {
 	while (sta_len > 0)
 		pro[pro_len++] = sta[--sta_len];
 	
-	for (i = 0; i < pro_len; i++)
+	/*for (i = 0; i < pro_len; i++)
 	{
 		printf("%s ",tokens[pro[i]].str);
-		if (tokens[pro[i]].type == NUM)
-			printf("%d ", tokens[pro[i]].num);
 	}
-	printf("\n");
+	printf("\n");*/
 	
 	// calculate the value of the expression with the help of array "pro"
 	sta_len = 0;
