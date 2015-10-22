@@ -529,6 +529,12 @@ uint32_t expr(char *e, bool *success) {
 		}
 	}
 	
+	if (sta_len != 0)
+	{
+		*success = false;
+		return 0;
+	}
+	
 	printf("%d ",sta[0]);
 	return sta[0];
 }
