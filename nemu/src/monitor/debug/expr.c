@@ -355,13 +355,13 @@ uint32_t expr(char *e, bool *success) {
 		pro[pro_len++] = sta[--sta_len];
 	
 	
-	for (i = 0; i < pro_len; i++)
+	/*for (i = 0; i < pro_len; i++)
 	{
 		printf("%s ",tokens[pro[i]].str);
 		if (tokens[pro[i]].type == NEG)
 			assert(0);
 	}
-	printf("\n");
+	printf("\n");*/
 	
 	// calculate the value of the expression with the help of array "pro"
 	sta_len = 0;
@@ -527,7 +527,7 @@ uint32_t expr(char *e, bool *success) {
 				
 			case NEG:
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = -temp2;
+				sta[sta_len-1] = 0-temp2;
 				break;
 						
 			default: panic("please implement me");	
