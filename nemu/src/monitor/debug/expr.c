@@ -361,104 +361,102 @@ uint32_t expr(char *e, bool *success) {
 			case EQ:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 == temp2);
+				sta[sta_len-2] = (temp1 == temp2);
 				sta_len--;
 				break;
 				
 			case SHL:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 << temp2);
+				sta[sta_len-2] = (temp1 << temp2);
 				sta_len--;
 				break;
 
 			case SHR:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 >> temp2);
+				sta[sta_len-2] = (temp1 >> temp2);
 				sta_len--;
 				break;
 				
 			case NEQ:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 != temp2);
+				sta[sta_len-2] = (temp1 != temp2);
 				sta_len--;
 				break;
 
 			case NLT:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 >= temp2);
+				sta[sta_len-2] = (temp1 >= temp2);
 				sta_len--;
 				break;
 					
 			case NMT:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 <= temp2);
+				sta[sta_len-2] = (temp1 <= temp2);
 				sta_len--;
 				break;
 					
 			case MT:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 > temp2);
+				sta[sta_len-2] = (temp1 > temp2);
 				sta_len--;
 				break;
 						
 			case LT:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 < temp2);
+				sta[sta_len-2] = (temp1 < temp2);
 				sta_len--;
 				break;
 				
 			case LAND:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 && temp2);
+				sta[sta_len-2] = (temp1 && temp2);
 				sta_len--;
 				break;
 						
 			case LOR:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 || temp2);
+				sta[sta_len-2] = (temp1 || temp2);
 				sta_len--;
 				break;
 						
 			case LN:
 				temp2 = sta[sta_len-1];
 				sta[sta_len-1] = (!temp2);
-				sta_len--;
 				break;
 						
 			case XOR:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 ^ temp2);
+				sta[sta_len-2] = (temp1 ^ temp2);
 				sta_len--;
 				break;
 						
 			case AAND:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 & temp2);
+				sta[sta_len-2] = (temp1 & temp2);
 				sta_len--;
 				break;
 				
 			case AOR:
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 | temp2);
+				sta[sta_len-2] = (temp1 | temp2);
 				sta_len--;
 				break;
 						
 			case AN:
 				temp2 = sta[sta_len-1];
 				sta[sta_len-1] = (~temp2);
-				sta_len--;
 				break;
 						
 			case NUM:
@@ -473,36 +471,41 @@ uint32_t expr(char *e, bool *success) {
 			case '+': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 + temp2);
+				sta[sta_len-2] = (temp1 + temp2);
 				sta_len--;
 				break;
 						
 			case '-': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 - temp2);
+				sta[sta_len-2] = (temp1 - temp2);
 				sta_len--;
 				break;
 						
 			case '*': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 * temp2);
+				sta[sta_len-2] = (temp1 * temp2);
 				sta_len--;
 				break;
 						
 			case '/': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 / temp2);
+				sta[sta_len-2] = (temp1 / temp2);
 				sta_len--;
 				break;
 						
 			case '%': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (temp1 % temp2);
+				sta[sta_len-2] = (temp1 % temp2);
 				sta_len--;
+				break;
+				
+			case NEG:
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = -temp2;
 				break;
 						
 			default: panic("please implement me");	
