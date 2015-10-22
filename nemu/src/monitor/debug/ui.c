@@ -109,7 +109,7 @@ static int cmd_p(char *args)
 	
 	temp = expr(args,&success);
 	if (success)
-		printf("%d",temp);
+		printf("%d\n",temp);
 	
 	return 0;
 }
