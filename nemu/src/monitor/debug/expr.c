@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR, HEX
+	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR, HEX, POINTER
 };
 
 static struct rule {
@@ -316,23 +316,24 @@ uint32_t expr(char *e, bool *success) {
 	priority[NMT] = 7; priority[MT] = 7; priority[LT] = 7;
 	priority[LAND] = 2; priority[LOR] = 1; priority[LN] = 11;
 	priority[XOR] = 4; priority[AAND] = 5; priority[AOR] = 3;
-	priority[AN] = 11; priority[NUM] = 12; priority[REG] = 12;
+	priority[AN] = 11; priority[NUM] = 13; priority[REG] = 13;
 	priority[NEG] = 11; priority['+'] = 9; priority['-'] = 9;
 	priority['*'] = 10; priority['/'] = 10; priority['%'] = 10;
-	priority[SHL] = 8; priority[SHR] = 8;
+	priority[SHL] = 8; priority[SHR] = 8; priority[HEX] = 13;
+	priority[POINTER] = 11;
 
 	if(!make_token(e)) {
 		*success = false;
 		return 0;
 	}
 
-	/* TODO: Insert codes to evaluate the expression. */
-
 	// correct '-' from minus into negative 
 	for (i = 0; i < nr_token; ++i)
 	{
 		if (tokens[i].type == '-' && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i-1].type != ')')
 			tokens[i].type = NEG;
+		if (tokens[i].type == '*' && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i-1].type != ')')
+			tokens[i].type = POINTER;
 	}
 	
 	// get infix expression into suffix expression
@@ -488,6 +489,11 @@ uint32_t expr(char *e, bool *success) {
 			case REG:
 				sta[sta_len++] = tokens[pro[i]].num;
 				assert(0);
+				break;
+				
+			case POINTER:
+				temp2 = sta[sta_len-1];
+				sta[sta_len-1] = swaddr_read(temp2,1);
 				break;
 						
 			case '+': 
