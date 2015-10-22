@@ -322,6 +322,11 @@ uint32_t expr(char *e, bool *success) {
 			tokens[i].type = NEG;
 	}
 	
+	for (i = 0; i < nr_token; ++i)
+	{
+		printf("%s ",tokens[i].str);
+	}
+	
 	// get infix expression into suffix expression
 	for (i = 0; i < nr_token; ++i)
 	{
