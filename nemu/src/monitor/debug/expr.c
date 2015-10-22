@@ -80,6 +80,7 @@ int nr_token;
 
 static bool make_token(char *e) {
 	int position = 0;
+	char regtemp[32];
 	unsigned int i,temp;
 	regmatch_t pmatch;
 	
@@ -227,7 +228,62 @@ static bool make_token(char *e) {
 						tokens[nr_token].type = rules[i].token_type; 
 						for (temp = 0; temp < substr_len; ++temp)
 							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
+						tokens[nr_token].str[temp] = '\0';
+						
+						for (temp = 1; temp < substr_len; ++temp)
+							regtemp[temp-1] = substr_start[temp];
+						if (strcmp(regtemp,"eax") == 0)
+							tokens[nr_token].num = cpu.eax;
+						if (strcmp(regtemp,"edx") == 0)
+							tokens[nr_token].num = cpu.edx;
+						if (strcmp(regtemp,"ecx") == 0)
+							tokens[nr_token].num = cpu.ecx;
+						if (strcmp(regtemp,"ebx") == 0)
+							tokens[nr_token].num = cpu.ebx;
+						if (strcmp(regtemp,"esi") == 0)
+							tokens[nr_token].num = cpu.esi;
+						if (strcmp(regtemp,"edi") == 0)
+							tokens[nr_token].num = cpu.edi;
+						if (strcmp(regtemp,"esp") == 0)
+							tokens[nr_token].num = cpu.esp;
+						if (strcmp(regtemp,"ebp") == 0)
+							tokens[nr_token].num = cpu.ebp;
+						if (strcmp(regtemp,"ax") == 0)
+							tokens[nr_token].num = cpu.ax;
+						if (strcmp(regtemp,"dx") == 0)
+							tokens[nr_token].num = cpu.dx;
+						if (strcmp(regtemp,"cx") == 0)
+							tokens[nr_token].num = cpu.cx;
+						if (strcmp(regtemp,"bx") == 0)
+							tokens[nr_token].num = cpu.bx;
+						if (strcmp(regtemp,"bp") == 0)
+							tokens[nr_token].num = cpu.bp;	
+						if (strcmp(regtemp,"si") == 0)
+							tokens[nr_token].num = cpu.si;
+						if (strcmp(regtemp,"di") == 0)
+							tokens[nr_token].num = cpu.di;
+						if (strcmp(regtemp,"sp") == 0)
+							tokens[nr_token].num = cpu.sp;
+						if (strcmp(regtemp,"al") == 0)
+							tokens[nr_token].num = cpu.al;
+						if (strcmp(regtemp,"dl") == 0)
+							tokens[nr_token].num = cpu.dl;
+						if (strcmp(regtemp,"cl") == 0)
+							tokens[nr_token].num = cpu.cl;
+						if (strcmp(regtemp,"bl") == 0)
+							tokens[nr_token].num = cpu.bl;
+						if (strcmp(regtemp,"ah") == 0)
+							tokens[nr_token].num = cpu.ah;
+						if (strcmp(regtemp,"dh") == 0)
+							tokens[nr_token].num = cpu.dh;
+						if (strcmp(regtemp,"ch") == 0)
+							tokens[nr_token].num = cpu.ch;
+						if (strcmp(regtemp,"bh") == 0)
+							tokens[nr_token].num = cpu.bh;
+						if (strcmp(regtemp,"eip") == 0)
+							tokens[nr_token].num = cpu.eip;
+							
+						nr_token++;
 						break;
 						
 					case '+': 
