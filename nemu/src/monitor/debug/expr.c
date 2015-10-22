@@ -348,7 +348,12 @@ uint32_t expr(char *e, bool *success) {
 			sta[sta_len] = i;
 		}
 	}
-
+	
+	for (i = 0; i < pro_len; ++i)
+	{
+		printf("%s ",tokens[pro[i]].str);
+	}
+	
 	// calculate the value of the expression with the help of array "pro"
 	sta_len = 0;
 	for (i = 0; i < pro_len; i++)
