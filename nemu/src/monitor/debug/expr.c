@@ -100,10 +100,6 @@ static bool make_token(char *e) {
 
 				switch(rules[i].token_type) {
 					case NOTYPE: 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
 						break;
 						
 					case EQ:
@@ -275,7 +271,7 @@ static bool make_token(char *e) {
 }
 
 uint32_t expr(char *e, bool *success) {
-	int i;
+	//int i;
 	
 	if(!make_token(e)) {
 		*success = false;
@@ -283,9 +279,11 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	for (i = 0; i < nr_token; ++i)
+	
+	/*for (i = 0; i < nr_token; ++i)
 		if (tokens[i].type == NUM)
-			printf("%d\n",tokens[i].num);
+			printf("%d\n",tokens[i].num);*/
+	
 	panic("please implement me");
 	return 0;
 }
