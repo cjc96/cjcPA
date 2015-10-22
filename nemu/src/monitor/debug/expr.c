@@ -492,6 +492,11 @@ uint32_t expr(char *e, bool *success) {
 			case '*': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
+				if (temp2 == 0)
+				{
+					*success = false;
+					return 0;
+				}
 				sta[sta_len-2] = (temp1 * temp2);
 				sta_len--;
 				break;
@@ -506,6 +511,11 @@ uint32_t expr(char *e, bool *success) {
 			case '%': 
 				temp1 = sta[sta_len-2];
 				temp2 = sta[sta_len-1];
+				if (temp2 == 0)
+				{
+					*success = false;
+					return 0;
+				}
 				sta[sta_len-2] = (temp1 % temp2);
 				sta_len--;
 				break;
@@ -519,6 +529,7 @@ uint32_t expr(char *e, bool *success) {
 		}
 	}
 	
+	printf("%d ",sta[0]);
 	return sta[0];
 }
 
