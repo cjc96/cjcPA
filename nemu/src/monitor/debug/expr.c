@@ -310,7 +310,7 @@ uint32_t expr(char *e, bool *success) {
 	int  sta_len = 0;								// stack length
 	int pro[32] = {0}, pro_len = 0;					// order of process
 	int priority[300]={0};							// priority
-	int temp1,temp2;								// execute numbers
+	unsigned int temp1,temp2;								// execute numbers
 	
 	// priority table
 	priority[EQ] = 6; priority[NEQ] = 6; priority[NLT] = 7;
