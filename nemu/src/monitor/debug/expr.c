@@ -529,7 +529,7 @@ uint32_t expr(char *e, bool *success) {
 		}
 	}
 	
-	if (sta_len != 0)
+	if (sta_len != 1)
 	{
 		*success = false;
 		return 0;
