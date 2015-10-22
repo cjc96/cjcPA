@@ -348,6 +348,8 @@ uint32_t expr(char *e, bool *success) {
 			sta[sta_len] = i;
 		}
 	}
+	while (sta_len > 0)
+		pro[pro_len++] = sta[--sta_len];
 	
 	for (i = 0; i < pro_len; ++i)
 	{
