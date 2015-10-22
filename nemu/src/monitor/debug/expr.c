@@ -18,7 +18,7 @@ static struct rule {
 	/* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
-	 
+	{"0x[0-9a-fA-F]+",HEX},			// hex
 	{" +", NOTYPE},					// spaces
 	{"\\+", '+'},					// plus
 	{"\\-", '-'},	 				// minus
@@ -43,8 +43,8 @@ static struct rule {
 	{"\\|", AOR},					// algebra or
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM},				// number
-	{"\\$[a-z]+", REG},				// register
-	{"0x[0-9a-fA-F]+",HEX}			// hex
+	{"\\$[a-z]+", REG}				// register
+
 	
 };
 
