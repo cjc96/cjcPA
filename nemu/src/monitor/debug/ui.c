@@ -104,9 +104,12 @@ static int cmd_x(char *args)
 
 static int cmd_p(char *args)
 {
-	bool success;
+	bool success = true;
+	int temp;
 	
-	expr(args,&success);
+	temp = expr(args,&success);
+	if (success)
+		printf("%d",temp);
 	
 	return 0;
 }
