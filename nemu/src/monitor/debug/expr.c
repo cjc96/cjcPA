@@ -7,10 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG
-
-	/* TODO: Add more token types */
-
+	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR
 };
 
 static struct rule {
@@ -31,6 +28,9 @@ static struct rule {
 	{"\\(", '('},					// right parenthese
 	{"\\)", ')'},					// left parenthese
 	{"==", EQ},						// equal
+	{">>", SHR},					// shr
+	{"<<", SHL},					// shl
+	{"!=", NEQ},					// not equal
 	{">=", NLT},					// no less than
 	{"<=", NMT},					// no more than
 	{">", MT},						// more than
@@ -44,6 +44,7 @@ static struct rule {
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM},				// number
 	{"\\$[a-z]+", REG}				// register
+	
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -103,6 +104,27 @@ static bool make_token(char *e) {
 						break;
 						
 					case EQ:
+						tokens[nr_token].type = rules[i].token_type; 
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
+						break;
+
+					case SHL:
+						tokens[nr_token].type = rules[i].token_type; 
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
+						break;
+
+					case SHR:
+						tokens[nr_token].type = rules[i].token_type; 
+						for (temp = 0; temp < substr_len; ++temp)
+							tokens[nr_token].str[temp] = substr_start[temp];
+						tokens[nr_token++].str[temp] = '\0';
+						break;
+
+					case NEQ:
 						tokens[nr_token].type = rules[i].token_type; 
 						for (temp = 0; temp < substr_len; ++temp)
 							tokens[nr_token].str[temp] = substr_start[temp];
@@ -271,18 +293,120 @@ static bool make_token(char *e) {
 }
 
 uint32_t expr(char *e, bool *success) {
-	//int i;
+	int i;										// loop varible
+	int sta[32] = {0}, sta_len = 0;					// stack
+	int pro[32] = {0}, pro_len = 0;					// order of process
+	int priority[300]={0};							// priority
 	
+	// priority table
+	priority[EQ] = 6; priority[NEQ] = 6; priority[NLT] = 7;
+	priority[NMT] = 7; priority[MT] = 7; priority[LT] = 7;
+	priority[LAND] = 2; priority[LOR] = 1; priority[LN] = 11;
+	priority[XOR] = 4; priority[AAND] = 5; priority[AOR] = 3;
+	priority[AN] = 11; priority[NUM] = 12; priority[REG] = 12;
+	priority[NEG] = 11; priority['+'] = 9; priority['-'] = 9;
+	priority['*'] = 10; priority['/'] = 10; priority['%'] = 10;
+	priority[SHL] = 8; priority[SHR] = 8;
+
 	if(!make_token(e)) {
 		*success = false;
 		return 0;
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+
+	// correct '-' from minus into negative 
+	for (i = 0; i < nr_token; ++i)
+	{
+		if (tokens[i].type == '-' && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i-1].type != ')')
+			tokens[i].type = NEG;
+	}
 	
-	/*for (i = 0; i < nr_token; ++i)
-		if (tokens[i].type == NUM)
-			printf("%d\n",tokens[i].num);*/
+	// get infix expression into suffix expression
+	for (i = 0; i < nr_token; ++i)
+	{
+		if (tokens[i].type == REG || tokens[i].type == NUM)
+			pro[pro_len++] = i;
+		else if (tokens[i].type == '(')
+			sta[sta_len++] = i;
+		else if (tokens[i].type == ')')
+		{
+			while (tokens[sta[sta_len-1]].type != '(')
+			{
+				pro[pro_len++] = sta[sta_len-1];
+				sta_len--;
+			}
+			sta_len--;
+		}
+		else
+		{
+			while (sta_len > 0 && priority[tokens[sta[sta_len-1]].type] > priority[tokens[i].type])
+			{
+				pro[pro_len++] = sta[sta_len-1];
+				sta_len--;
+			}
+			sta[sta_len] = i;
+		}
+	}
+
+	// calculate the value of the expression with the help of array "pro"
+	sta_len = 0;
+	for (i = 0; i < pro_len; i++)
+	{
+		switch (tokens[pro[i]].type)
+		{
+			case EQ:
+				
+			case SHL:
+
+			case SHR:
+				
+			case NEQ:
+			
+			case NLT:
+					
+			case NMT:
+					
+			case MT:
+						
+			case LT:
+				
+			case LAND:
+						
+			case LOR:
+						
+			case LN:
+						
+			case XOR:
+						
+			case AAND:
+				
+			case AOR:
+						
+			case AN:
+						
+			case NUM:
+						
+			case REG:
+						
+			case '+': 
+						
+			case '-': 
+						
+			case '*': 
+						
+			case '/': 
+						
+			case '%': 
+						
+			case '(': 
+						
+			case ')': 
+						
+			default: panic("please implement me");	
+		}
+
+	}
 	
 	panic("please implement me");
 	return 0;
