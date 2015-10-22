@@ -369,7 +369,7 @@ uint32_t expr(char *e, bool *success) {
 	
 	for (i = 0; i < pro_len; i++)
 	{
-		printf("%u ",tokens[pro[i]].num);
+		printf("%s %u\n",tokens[pro[i]].str,tokens[pro[i]].num);
 	}
 	printf("\n");
 	
