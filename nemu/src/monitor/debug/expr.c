@@ -341,7 +341,7 @@ uint32_t expr(char *e, bool *success) {
 		}
 		else
 		{
-			while (sta_len > 0 && priority[tokens[sta[sta_len-1]].type] > priority[tokens[i].type])
+			while (sta_len > 0 && priority[tokens[sta[sta_len-1]].type] >= priority[tokens[i].type])
 			{
 				pro[pro_len++] = sta[sta_len-1];
 				sta_len--;
@@ -360,6 +360,7 @@ uint32_t expr(char *e, bool *success) {
 	
 	// calculate the value of the expression with the help of array "pro"
 	sta_len = 0;
+	memset(sta,0,sizeof(sta));
 	for (i = 0; i < pro_len; i++)
 	{
 		switch (tokens[pro[i]].type)
