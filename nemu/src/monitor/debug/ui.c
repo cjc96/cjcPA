@@ -53,7 +53,6 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args)
 {
-
 	if (strcmp(args,"r") == 0)
 	{
 		printf("EAX = %X\t",cpu.eax);
@@ -82,7 +81,17 @@ static int cmd_info(char *args)
 		printf("BH = %X\n",cpu.bh);
 		printf("EIP = %X\n",cpu.eip);
 	}
-
+	if (strcmp(args,"w") == 0)
+	{
+		WP* temp;
+		
+		temp = get_head();
+		while (temp != NULL)
+		{
+			printf("No. %d\t%s\t%d\n",temp->NO,temp->expr,temp->value);
+			temp = temp->next;
+		}
+	}
 	return 0;
 }
 
@@ -139,6 +148,25 @@ static int cmd_w(char *args)
 	return 0;
 }
 
+static int cmd_d(char *args)
+{
+	int no;
+	WP *temp;
+
+	sscanf(args,"%d",&no);	
+	temp = get_head();
+	while (temp->NO != no && temp != NULL)
+		temp = temp->next;
+	if (temp == NULL)
+	{
+		printf("Invalid input\n");
+		return 0;
+	}
+	free_wp(temp);
+
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -151,7 +179,8 @@ static struct {
 	{ "info", "Show the information", cmd_info},
 	{ "x", "Scan the Ram", cmd_x},
 	{ "p", "Compute the value of an expression", cmd_p},
-	{ "w", "Set a watchpoint", cmd_w}
+	{ "w", "Set a watchpoint", cmd_w},
+	{ "d", "Delete a watchpoint", cmd_d}
 
 	/* TODO: Add more commands */
 
