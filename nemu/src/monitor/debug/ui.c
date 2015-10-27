@@ -55,14 +55,14 @@ static int cmd_info(char *args)
 {
 	if (strcmp(args,"r") == 0)
 	{
-		printf("EAX = %x\t",cpu.eax);
-		printf("EDX = %x\n",cpu.edx);
-		printf("ECX = %x\t",cpu.ecx);
-		printf("EBX = %x\n",cpu.ebx);
-		printf("ESI = %x\t",cpu.esi);
-		printf("EDI = %x\n",cpu.edi);
-		printf("ESP = %x\t",cpu.esp);
-		printf("EBP = %x\n",cpu.ebp);
+		printf("EAX = 0x%x\t",cpu.eax);
+		printf("EDX = 0x%x\n",cpu.edx);
+		printf("ECX = 0x%x\t",cpu.ecx);
+		printf("EBX = 0x%x\n",cpu.ebx);
+		printf("ESI = 0x%x\t",cpu.esi);
+		printf("EDI = 0x%x\n",cpu.edi);
+		printf("ESP = 0x%x\t",cpu.esp);
+		printf("EBP = 0x%x\n",cpu.ebp);
 		printf("AX = 0x%x\t",cpu.ax);
 		printf("DX = 0x%x\n",cpu.dx);
 		printf("CX = 0x%x\t",cpu.cx);
