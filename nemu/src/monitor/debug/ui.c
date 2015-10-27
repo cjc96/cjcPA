@@ -86,6 +86,10 @@ static int cmd_info(char *args)
 		WP* temp;
 		
 		temp = get_head();
+		if (temp == NULL)
+		{
+			printf("no watchpoint!\n");
+		}
 		while (temp != NULL)
 		{
 			printf("No. %d\t%s\t%d\n",temp->NO,temp->expr,temp->value);
