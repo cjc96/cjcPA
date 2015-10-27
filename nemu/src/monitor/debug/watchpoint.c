@@ -15,6 +15,7 @@ void init_wp_list() {
 	wp_list[NR_WP - 1].next = NULL;
 
 	head = NULL;
+	printf("%p\n",head);
 	free_ = wp_list;
 }
 
