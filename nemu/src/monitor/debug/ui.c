@@ -143,7 +143,6 @@ static int cmd_w(char *args)
 		temp->NO = no++;
 		strcpy(temp->expr,args);
 		temp->value = check;
-		printf("%p",temp->next);
 	}
 	else
 		printf("Invalid input\n");

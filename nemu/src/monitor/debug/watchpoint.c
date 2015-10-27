@@ -34,14 +34,16 @@ WP* new_wp()
 
 void free_wp(WP *wp)
 {
-	WP* temp;
+	WP* temp,*fake_head;
 	
 	temp = head;
 	if (temp == wp)
 	{
+		fake_head = head->next;
+	
 		head->next = free_;
 		free_ = head;
-		head = head->next;
+		head = fake_head;
 		printf("%p",head);
 	}
 	else
