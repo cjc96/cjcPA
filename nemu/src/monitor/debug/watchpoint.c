@@ -42,6 +42,7 @@ void free_wp(WP *wp)
 		head->next = free_;
 		free_ = head;
 		head = head->next;
+		printf("%p\n",head);
 	}
 	else
 	{
