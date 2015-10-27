@@ -52,4 +52,9 @@ void free_wp(WP *wp)
 		free_ = wp;
 	}
 }
+
+WP* get_head()
+{
+	return head;
+}
 /* TODO: Implement the functionality of watchpoint */
