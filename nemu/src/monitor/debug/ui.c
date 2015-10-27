@@ -134,6 +134,8 @@ static int cmd_w(char *args)
 	bool success;
 	int check;
 	
+	success = true;
+	check = 0;
 	check = expr(args,&success);
 	if (success)
 	{

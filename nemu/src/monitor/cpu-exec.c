@@ -78,6 +78,10 @@ void cpu_exec(volatile uint32_t n) {
 		WP *temp_node;
 		int temp_value;
 		bool temp_success;
+		
+		temp_value = 0;
+		temp_success = true;
+		
 		temp_node = get_head();
 		while (temp_node != NULL)
 		{
