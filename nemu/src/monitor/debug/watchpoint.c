@@ -18,6 +18,38 @@ void init_wp_list() {
 	free_ = wp_list;
 }
 
+WP* new_wp()
+{
+	WP* temp;
+	
+	temp = free_;
+	if (temp == NULL)
+		assert(0);
+	free_ = free_->next;
+	temp->next = head;
+	head = temp;
+	
+	return temp;
+}
+
+void free_wp(WP *wp)
+{
+	WP* temp;
+	
+	temp = head;
+	if (temp == wp)
+	{
+		head->next = free_;
+		free_ = head;
+		head = head->next;
+	}
+	else
+	{
+		while (temp->next != wp)
+			temp = temp->next;
+		temp->next = wp->next;
+		wp->next = free_;
+		free_ = wp;
+	}
+}
 /* TODO: Implement the functionality of watchpoint */
-
-

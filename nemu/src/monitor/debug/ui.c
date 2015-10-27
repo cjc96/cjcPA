@@ -118,6 +118,27 @@ static int cmd_p(char *args)
 	return 0;
 }
 
+static int cmd_w(char *args)
+{
+	WP *temp;
+	static int no;
+	bool success;
+	int check;
+	
+	check = expr(args,&success);
+	if (success)
+	{
+		temp = new_wp();
+		temp->NO = no++;
+		strcpy(temp->expr,args);
+		temp->value = check;
+	}
+	else
+		printf("Invalid input\n");
+
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -129,7 +150,8 @@ static struct {
 	{ "si", "Execute n commands", cmd_si },
 	{ "info", "Show the information", cmd_info},
 	{ "x", "Scan the Ram", cmd_x},
-	{ "p", "Compute the value of an expression", cmd_p}
+	{ "p", "Compute the value of an expression", cmd_p},
+	{ "w", "Set a watchpoint", cmd_w}
 
 	/* TODO: Add more commands */
 
