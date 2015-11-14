@@ -80,7 +80,7 @@ static int cmd_info(char *args)
 		printf("CH = 0x%x\t",cpu.ch);
 		printf("BH = 0x%x\n",cpu.bh);
 		printf("EIP = 0x%x\t",cpu.eip);
-		printf("EFLAGS = 0x%x\n",cpu.EFLAGS);
+		printf("EFLAGS = 0x%8x\n",cpu.EFLAGS);
 	}
 	if (strcmp(args,"w") == 0)
 	{
