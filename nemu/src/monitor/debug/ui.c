@@ -79,7 +79,8 @@ static int cmd_info(char *args)
 		printf("DH = 0x%x\n",cpu.dh);
 		printf("CH = 0x%x\t",cpu.ch);
 		printf("BH = 0x%x\n",cpu.bh);
-		printf("EIP = 0x%x\n",cpu.eip);
+		printf("EIP = 0x%x\n\t",cpu.eip);
+		printf("EFLAGS = 0x%x\n",cpu.EFLAGS);
 	}
 	if (strcmp(args,"w") == 0)
 	{
