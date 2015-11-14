@@ -55,31 +55,31 @@ static int cmd_info(char *args)
 {
 	if (strcmp(args,"r") == 0)
 	{
-		printf("EAX = 0x%x\t",cpu.eax);
-		printf("EDX = 0x%x\n",cpu.edx);
-		printf("ECX = 0x%x\t",cpu.ecx);
-		printf("EBX = 0x%x\n",cpu.ebx);
-		printf("ESI = 0x%x\t",cpu.esi);
-		printf("EDI = 0x%x\n",cpu.edi);
-		printf("ESP = 0x%x\t",cpu.esp);
-		printf("EBP = 0x%x\n",cpu.ebp);
-		printf("AX = 0x%x\t",cpu.ax);
-		printf("DX = 0x%x\n",cpu.dx);
-		printf("CX = 0x%x\t",cpu.cx);
-		printf("BX = 0x%x\n",cpu.bx);
-		printf("BP = 0x%x\t",cpu.bp);
-		printf("SI = 0x%x\n",cpu.si);
-		printf("DI = 0x%x\t",cpu.di);
-		printf("SP = 0x%x\n",cpu.sp);
-		printf("AL = 0x%x\t",cpu.al);
-		printf("DL = 0x%x\n",cpu.dl);
-		printf("CL = 0x%x\t",cpu.cl);
-		printf("BL = 0x%x\n",cpu.bl);
-		printf("AH = 0x%x\t",cpu.ah);
-		printf("DH = 0x%x\n",cpu.dh);
-		printf("CH = 0x%x\t",cpu.ch);
-		printf("BH = 0x%x\n",cpu.bh);
-		printf("EIP = 0x%x\t",cpu.eip);
+		printf("EAX = 0x%08x\t",cpu.eax);
+		printf("EDX = 0x%08x\n",cpu.edx);
+		printf("ECX = 0x%08x\t",cpu.ecx);
+		printf("EBX = 0x%08x\n",cpu.ebx);
+		printf("ESI = 0x%08x\t",cpu.esi);
+		printf("EDI = 0x%08x\n",cpu.edi);
+		printf("ESP = 0x%08x\t",cpu.esp);
+		printf("EBP = 0x%08x\n",cpu.ebp);
+		printf("AX = 0x%04x\t",cpu.ax);
+		printf("DX = 0x%04x\n",cpu.dx);
+		printf("CX = 0x%04x\t",cpu.cx);
+		printf("BX = 0x%04x\n",cpu.bx);
+		printf("BP = 0x%04x\t",cpu.bp);
+		printf("SI = 0x%04x\n",cpu.si);
+		printf("DI = 0x%04x\t",cpu.di);
+		printf("SP = 0x%04x\n",cpu.sp);
+		printf("AL = 0x%02x\t",cpu.al);
+		printf("DL = 0x%02x\n",cpu.dl);
+		printf("CL = 0x%02x\t",cpu.cl);
+		printf("BL = 0x%02x\n",cpu.bl);
+		printf("AH = 0x%02x\t",cpu.ah);
+		printf("DH = 0x%02x\n",cpu.dh);
+		printf("CH = 0x%02x\t",cpu.ch);
+		printf("BH = 0x%02x\n",cpu.bh);
+		printf("EIP = 0x%08x\t",cpu.eip);
 		printf("EFLAGS = 0x%08x\n",cpu.EFLAGS);
 	}
 	if (strcmp(args,"w") == 0)
