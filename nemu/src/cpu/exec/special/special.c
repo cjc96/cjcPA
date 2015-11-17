@@ -17,7 +17,7 @@ make_helper(inv) {
 1. The instruction at eip = 0x%08x is not implemented.\n\
 2. Something is implemented incorrectly.\n", eip);
 	printf("Find this eip value(0x%08x) in the disassembling result to distinguish which case it is.\n\n", eip);
-	printf("\33[1;31mIf it is the first case, see\n%s\n\n\n", logo);
+	printf("\33[1;31mWash Wash Sleep\n%s\n\33[0m\n\n", logo);
 
 	assert(0);
 }
