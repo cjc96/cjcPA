@@ -33,3 +33,23 @@
 #define OPERAND_W(op, src) concat(write_operand_, SUFFIX) (op, src)
 
 #define MSB(n) ((DATA_TYPE)(n) >> ((DATA_BYTE << 3) - 1))
+
+#define set_eflags(ain , bin , sin , cin) \
+{\
+	int temp[32]={0},i;\
+	cpu.CF = cin;\
+	for (i = 0; i < sizeof(DATA_TYPE); i++)\
+	{\
+		temp[i] = (ain & 1) ^ ((bin & 1) ^ sin) ^ cin;\
+		ain = ain >> 1;\
+		bin = bin >> 1;\
+		cin = (((ain & 1) | ((bin & 1) ^ sin)) & ((ain & 1) | cin)) & (((bin & 1) ^ sin) | cin);\
+		if (i == sizeof(DATA_TYPE) - 2)\
+			cpu.OF = cin;\
+	}\
+	cpu.OF ^= cin;\
+	cpu.CF ^= cin;\
+	cpu.SF = temp[i-1];\
+	for (i = 0; i < sizeof(DATA_TYPE); i++)\
+		cpu.ZF = cpu.ZF | temp[i];\
+}
