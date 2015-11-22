@@ -14,4 +14,4 @@
 
 /* for instruction encoding overloading */
 
-make_helper_v(jcc_r)
+make_helper_v(jcc_i)
