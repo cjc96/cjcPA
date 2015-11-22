@@ -7,10 +7,12 @@ static void do_execute () {
 	OPERAND_W(op_dest, result);
 
 	/* TODO: Update EFLAGS. */
+	printf("%d %d\n",op_dest->val,op_src->val);
 	//panic("please implement me");
 	
 	int sin = 1,cin = 1;
 	set_eflags(op_dest->val,op_src->val,sin,cin);
+	
 	print_asm_template2();
 }
 
