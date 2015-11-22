@@ -17,6 +17,7 @@ int exec(swaddr_t);
 
 char assembly[80];
 char asm_buf[128];
+int do_call;
 
 /* Used with exception handling. */
 jmp_buf jbuf;
@@ -61,9 +62,18 @@ void cpu_exec(volatile uint32_t n) {
 
 		/* Execute one instruction, including instruction fetch,
 		 * instruction decode, and the actual execution. */
+		 
+		do_call = 0;
+		
 		int instr_len = exec(cpu.eip);
-
+		int former_eip = cpu.eip;
 		cpu.eip += instr_len;
+		former_eip += instr_len;
+		if (do_call)
+		{
+			cpu.esp -= 4;
+			swaddr_write(cpu.esp,4,former_eip);
+		}
 
 #ifdef DEBUG
 		print_bin_instr(eip_temp, instr_len);

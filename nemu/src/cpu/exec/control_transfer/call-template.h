@@ -5,6 +5,9 @@
 static void do_execute () {
 	cpu.eip += op_src->val;
 	
+	extern int do_call;
+	do_call = 1;
+	
 	print_asm_template1();
 }
 
