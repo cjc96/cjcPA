@@ -52,6 +52,7 @@
 	cpu.SF = temp[i-1];\
 	for (i = 0; i < sizeof(DATA_TYPE); i++)\
 		cpu.ZF = cpu.ZF | temp[i];\
+	cpu.ZF = 1 - cpu.ZF;\
 	cpu.PF = temp[0];\
 	for (i = 1; i < 7; i++)\
 		cpu.PF ^= temp[i];\
