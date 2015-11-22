@@ -3,10 +3,6 @@
 #define instr cmp
 
 static void do_execute () {
-
-	/* TODO: Update EFLAGS. */
-	//printf("%d %d\n",op_dest->val,op_src->val);
-	//panic("please implement me");
 	
 	int sin = 1,cin = 1;
 	set_eflags(op_dest->val,op_src->val,sin,cin);
