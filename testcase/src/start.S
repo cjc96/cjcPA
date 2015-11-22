@@ -6,3 +6,5 @@ start:
 	movl $(128 << 20), %esp
 	subl $16, %esp		# keep the `bt' command happy
 	call main			# never return
+	nop
+	nop
