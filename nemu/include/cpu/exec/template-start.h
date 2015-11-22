@@ -50,6 +50,7 @@
 	cpu.OF ^= cin;\
 	cpu.CF ^= cin;\
 	cpu.SF = temp[i-1];\
+	cpu.ZF = 0;\
 	for (i = 0; i < sizeof(DATA_TYPE); i++)\
 		cpu.ZF = cpu.ZF | temp[i];\
 	cpu.ZF = 1 - cpu.ZF;\
