@@ -3,6 +3,7 @@
 #define instr jcc
 
 static void do_execute () {
+	printf("%d",swaddr_read(cpu.eip,1));
 	switch (swaddr_read(cpu.eip,1))
 	{
 		case 74 : if (cpu.ZF) cpu.eip += op_src->val; break;
