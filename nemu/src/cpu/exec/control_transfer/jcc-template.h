@@ -32,6 +32,7 @@ static void do_execute () {
 	else 
 		if (op_temp <= 0x7f && op_temp >= 0x70)
 		{
+			op_src->val = (DATA_TYPE_S)((DATA_TYPE)op_src->val);
 			switch (op_temp)
 			{
 				case 0x70 : if (cpu.OF) cpu.eip += op_src->val; break;
