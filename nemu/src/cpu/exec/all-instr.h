@@ -31,6 +31,7 @@
 #include "special/special.h"
 
 #include "control_transfer/call.h"
-#include "control_transfer/push.h"
 #include "control_transfer/jcc.h"
 #include "control_transfer/jmp.h"
+
+#include "data_transfer/push.h"

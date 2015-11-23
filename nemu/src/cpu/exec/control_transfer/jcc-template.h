@@ -51,7 +51,7 @@ static void do_execute () {
 				case 0x7d : if (cpu.SF == cpu.OF) cpu.eip += op_src->val; break;
 				case 0x7e : if ((cpu.ZF) || (cpu.SF != cpu.OF)) cpu.eip += op_src->val; break;
 				case 0x7f : if ((!cpu.ZF) && (cpu.SF == cpu.OF)) cpu.eip += op_src->val; break;
-				case 0xe3 : if (!cpu.cx) cpu.eip += op_src->val; break;
+				case 0xe3 : if (!cpu.ecx) cpu.eip += op_src->val; break;
 				default : panic("Please implent me!");
 			}
 		}
