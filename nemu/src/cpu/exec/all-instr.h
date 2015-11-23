@@ -11,6 +11,7 @@
 #include "arith/idiv.h"
 #include "arith/div.h"
 #include "arith/sub.h"
+#include "arith/add.h"
 
 #include "logic/and.h"
 #include "logic/or.h"
@@ -30,5 +31,7 @@
 #include "special/special.h"
 
 #include "control_transfer/call.h"
-#include "control_transfer/push.h"
 #include "control_transfer/jcc.h"
+#include "control_transfer/jmp.h"
+
+#include "data_transfer/push.h"
