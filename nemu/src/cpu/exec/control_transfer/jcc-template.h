@@ -7,7 +7,26 @@ static void do_execute () {
 	op_temp = swaddr_read(cpu.eip,1);
 	if (op_temp == 0x0f)
 	{
-		assert(0);
+		switch (swaddr_read(cpu.eip+1,1))
+			{
+				case 0x80 : if (cpu.OF) cpu.eip += op_src->val; break;
+				case 0x81 : if (!cpu.OF) cpu.eip += op_src->val; break;
+				case 0x82 : if (cpu.CF) cpu.eip += op_src->val; break;
+				case 0x83 : if (!cpu.CF) cpu.eip += op_src->val; break;
+				case 0x84 : if (cpu.ZF) cpu.eip += op_src->val; break;
+				case 0x85 : if (!cpu.ZF) cpu.eip += op_src->val; break;
+				case 0x86 : if ((cpu.CF) || (cpu.ZF)) cpu.eip += op_src->val; break;
+				case 0x87 : if ((!cpu.CF) && (!cpu.ZF)) cpu.eip += op_src->val; break;
+				case 0x88 : if (cpu.SF) cpu.eip += op_src->val; break;
+				case 0x89 : if (!cpu.SF) cpu.eip += op_src->val; break;
+				case 0x8a : if (cpu.PF) cpu.eip += op_src->val; break;
+				case 0x8b : if (!cpu.PF) cpu.eip += op_src->val; break;
+				case 0x8c : if (cpu.SF != cpu.OF) cpu.eip += op_src->val; break;
+				case 0x8d : if (cpu.SF == cpu.OF) cpu.eip += op_src->val; break;
+				case 0x8e : if ((cpu.ZF) || (cpu.SF != cpu.OF)) cpu.eip += op_src->val; break;
+				case 0x8f : if ((!cpu.ZF) && (cpu.SF == cpu.OF)) cpu.eip += op_src->val; break;
+				default : panic("Please implent me!");
+			}
 	}
 	else 
 		if (op_temp <= 0x7f && op_temp >= 0x70)
