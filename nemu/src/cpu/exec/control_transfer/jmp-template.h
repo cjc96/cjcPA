@@ -3,6 +3,7 @@
 #define instr jmp
 
 static void do_execute () {
+	op_src->val = (DATA_TYPE_S)((DATA_TYPE)op_src->val);
 	cpu.eip += op_src->val;
 	
 	print_asm_template1();
