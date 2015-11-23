@@ -2,6 +2,9 @@
 
 #include "data-mov/mov.h"
 #include "data-mov/xchg.h"
+#include "data-mov/push.h"
+#include "data-mov/pop.h"
+#include "data-mov/leave.h"
 
 #include "arith/dec.h"
 #include "arith/inc.h"
@@ -34,6 +37,3 @@
 #include "control_transfer/jcc.h"
 #include "control_transfer/jmp.h"
 
-#include "data_transfer/push.h"
-#include "data_transfer/pop.h"
-#include "data_transfer/leave.h"
