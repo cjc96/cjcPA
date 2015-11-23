@@ -99,6 +99,7 @@ void cpu_exec(volatile uint32_t n) {
 			if (temp_value != temp_node->value)
 			{
 				nemu_state = STOP;
+				temp_node->value = temp_value;
 				printf("break at watchpoint %d\n",temp_node->NO);
 				break;
 			}
