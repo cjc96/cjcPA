@@ -81,6 +81,11 @@ static int cmd_info(char *args)
 		printf("BH = 0x%02x\n",cpu.bh);
 		printf("EIP = 0x%08x\t",cpu.eip);
 		printf("EFLAGS = 0x%08x\n",cpu.EFLAGS);
+		printf("CF = %d\t",cpu.CF);
+		printf("OF = %d\t",cpu.OF);
+		printf("SF = %d\t",cpu.SF);
+		printf("PF = %d\t",cpu.PF);
+		printf("ZF = %d\t",cpu.ZF);
 	}
 	if (strcmp(args,"w") == 0)
 	{
