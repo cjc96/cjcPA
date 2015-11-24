@@ -74,7 +74,7 @@ static int cmd_info(char *args)
 		printf("AL = 0x%02x\t\t",cpu.al);
 		printf("DL = 0x%02x\n",cpu.dl);
 		printf("CL = 0x%02x\t\t",cpu.cl);
-		printf("BL = 0x%02x\n\t",cpu.bl);
+		printf("BL = 0x%02x\n",cpu.bl);
 		printf("AH = 0x%02x\t\t",cpu.ah);
 		printf("DH = 0x%02x\n",cpu.dh);
 		printf("CH = 0x%02x\t\t",cpu.ch);
