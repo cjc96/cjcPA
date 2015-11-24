@@ -83,3 +83,18 @@ void load_elf_tables(int argc, char *argv[]) {
 	fclose(fp);
 }
 
+unsigned int get_value_from_name(char *exname)
+{
+    int i;
+
+    for (i = 0; i < nr_symtab_entry; i++)
+    {
+        if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
+        {
+            unsigned int ans;
+            ans = (uint32_t)swaddr_read((uint32_t)((symtab+i)->st_value),(symtab+i)->st_size);
+            return ans;
+        }
+    }
+    return -1;
+}

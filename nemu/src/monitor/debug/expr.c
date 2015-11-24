@@ -104,6 +104,19 @@ static bool make_token(char *e) {
 				 */
 
 				switch(rules[i].token_type) {
+				    case OBJ:
+				        tokens[nr_token].type = rules[i].token_type;
+				        for (temp = 0; temp < substr_len; ++temp)
+				            tokens[nr_token].str[temp] = substr_start[temp];
+				        tokens[nr_token].str[temp] = '\0';
+				        
+				        extern uint32_t get_value_from_name(char *);
+				        tokens[nr_token].num = get_value_from_name(tokens[nr_token].str);
+				        assert(tokens[nr_token.num] != -1);
+				        /* TODO */
+				        nr_token.num++;
+				        break;
+				
 					case NOTYPE: 
 						break;
 						
@@ -379,7 +392,7 @@ uint32_t expr(char *e, bool *success) {
 	priority[NEG] = 11; priority['+'] = 9; priority['-'] = 9;
 	priority['*'] = 10; priority['/'] = 10; priority['%'] = 10;
 	priority[SHL] = 8; priority[SHR] = 8; priority[HEX] = 13;
-	priority[POINTER] = 11;
+	priority[POINTER] = 11; priority[OBJ] = 13;
 
 	if(!make_token(e)) {
 		*success = false;
@@ -546,6 +559,10 @@ uint32_t expr(char *e, bool *success) {
 			case REG:
 				sta[sta_len++] = tokens[pro[i]].num;
 				break;
+				
+			case OBJ:
+			    sta[sta_len++] = tokens[pro[i]].num;
+			    break;
 				
 			case POINTER:
 				temp2 = sta[sta_len-1];
