@@ -1,26 +1,37 @@
 #include "trap.h"
 
-int a[] = {7,295,3,1,2,8,2,5};
-int b[] = {1,2,2,3,5,7,8,295};
+#define N 10
 
-void swap(int *x,int *y)
-{
-    int temp;
-    
-    temp = *x; *x = *y; *y = temp;
+int a[N] = {5,2,6,8,9,10,1,3,7,4};
+
+void bubble_sort() {
+	int i, j, t;
+	for(j = 0; j < N; j ++) {
+		for(i = 0; i < N - 1 - j; i ++) {
+			if(a[i] > a[i + 1]) {
+				t = a[i];
+				a[i] = a[i + 1];
+				a[i + 1] = t;
+			}
+		}
+	}
 }
 
-int main()
-{
-    int i , j;
-    for (i = 0; i < 7; i++)
-        for (j = i+1; j < 8; j++)
-            if (a[i] > a[j])
-                swap(&a[i],&a[j]);
-    for (i = 0; i < 8; i++)
-        nemu_assert(a[i] == b[i]);
-       
-    HIT_GOOD_TRAP;
-    
-    return 0;
+int main() {
+	bubble_sort();
+
+	int i;
+	for(i = 0; i < N; i ++) {
+		nemu_assert(a[i] == i);
+	}
+
+	bubble_sort();
+
+	for(i = 0; i < N; i ++) {
+		nemu_assert(a[i] == i);
+	}
+
+	HIT_GOOD_TRAP;
+
+	return 0;
 }
