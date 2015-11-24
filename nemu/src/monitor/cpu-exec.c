@@ -71,8 +71,8 @@ void cpu_exec(volatile uint32_t n) {
 		if (do_call)
 		{
 			cpu.esp -= 4;
-			swaddr_write(cpu.esp,4,former_eip-1);
-			//printf("%x\n",former_eip);
+			swaddr_write(cpu.esp,4,former_eip);
+			printf("%x\n",former_eip);
 		}
 
 #ifdef DEBUG
