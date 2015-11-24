@@ -35,11 +35,11 @@ int main() {
 		nemu_assert(a[i] == i);
 	}
 
-	/*quick_sort(a, 0, N - 1);
+	quick_sort(a, 0, N - 1);
 
 	for(i = 0; i < N; i ++) {
 		nemu_assert(a[i] == i);
-	}*/
+	}
 
 	HIT_GOOD_TRAP;
 
