@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR, HEX, POINTER
+	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR, HEX, POINTER, OBJ
 };
 
 static struct rule {
@@ -18,6 +18,7 @@ static struct rule {
 	/* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
+	
 	{"0x[0-9a-fA-F]+",HEX},			// hex
 	{" +", NOTYPE},					// spaces
 	{"\\+", '+'},					// plus
@@ -43,7 +44,8 @@ static struct rule {
 	{"\\|", AOR},					// algebra or
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM},				// number
-	{"\\$[a-z]+", REG}				// register
+	{"\\$[a-z]+", REG},				// register
+	{"[a-zA-Z_][a-zA-Z0-9_]*",OBJ}  // object
 
 	
 };
