@@ -125,7 +125,7 @@ static int cmd_p(char *args)
 	temp = 0;
 	temp = expr(args,&success);
 	if (success)
-		printf("%u\n",temp);
+		printf("DEC : %u\t\tHEX : %x\n",temp,temp);
 	else
 		printf("Invalid input\n");
 	
