@@ -38,13 +38,13 @@
 {\
 	int temp[32]={0},i;\
 	cpu.CF = cin;\
-	for (i = 0; i < sizeof(DATA_TYPE); i++)\
+	for (i = 0; i < sizeof(DATA_TYPE)*8; i++)\
 	{\
 		temp[i] = (ain & 1) ^ ((bin & 1) ^ sin) ^ cin;\
+		cin = (((ain & 1) & ((bin & 1) ^ sin)) | ((ain & 1) & cin)) | (((bin & 1) ^ sin) & cin);\
 		ain = ain >> 1;\
 		bin = bin >> 1;\
-		cin = (((ain & 1) | ((bin & 1) ^ sin)) & ((ain & 1) | cin)) & (((bin & 1) ^ sin) | cin);\
-		if (i == sizeof(DATA_TYPE) - 2)\
+		if (i == 8*sizeof(DATA_TYPE) - 2)\
 			cpu.OF = cin;\
 	}\
 	cpu.OF ^= cin;\
