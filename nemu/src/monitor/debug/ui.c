@@ -85,7 +85,7 @@ static int cmd_info(char *args)
 		printf("OF = %d\t",cpu.OF);
 		printf("SF = %d\t",cpu.SF);
 		printf("PF = %d\t",cpu.PF);
-		printf("ZF = %d\t",cpu.ZF);
+		printf("ZF = %d\t\n",cpu.ZF);
 	}
 	if (strcmp(args,"w") == 0)
 	{
