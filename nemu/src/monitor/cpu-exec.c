@@ -64,9 +64,8 @@ void cpu_exec(volatile uint32_t n) {
 		 * instruction decode, and the actual execution. */
 		 
 		do_call = 0;
-		
+		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
-		int former_eip = cpu.eip;
 		cpu.eip += instr_len;
 		former_eip += instr_len;
 		if (do_call)
