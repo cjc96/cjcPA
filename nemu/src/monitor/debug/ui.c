@@ -189,7 +189,7 @@ static int cmd_clear()
 
 static int cmd_bt()
 {
-	uint32_t temp = cpu.ebp,label = 0;
+	uint32_t temp = cpu.ebp,label = 1;
 	
 	while (temp != 0)
 	{
@@ -199,6 +199,7 @@ static int cmd_bt()
 		get_func_name(temp);
 		
 		temp = swaddr_read(temp,4);
+		label++;
 	}
 
 	return 0;
