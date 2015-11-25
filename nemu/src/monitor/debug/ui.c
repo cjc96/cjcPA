@@ -189,11 +189,15 @@ static int cmd_clear()
 
 static int cmd_bt()
 {
-	uint32_t temp;
-	temp = cpu.ebp;
+	uint32_t temp = cpu.ebp,label = 0;
+	
 	while (temp != 0)
 	{
-		printf("%d\n",temp);
+		printf("#%d 0x%x in ",label,temp);
+		
+		extern void get_func_name(uint32_t);
+		get_func_name(temp);
+		
 		temp = swaddr_read(temp,4);
 	}
 

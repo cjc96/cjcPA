@@ -83,6 +83,10 @@ void load_elf_tables(int argc, char *argv[]) {
 	fclose(fp);
 }
 
+void get_func_name(uint32_t now_addr)
+{
+}
+
 unsigned int get_address_from_name(char *exname)
 {
     int i;
