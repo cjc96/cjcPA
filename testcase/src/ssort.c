@@ -2,8 +2,7 @@
 
 #define N 10
 
-char a[N] = {9,8,7,6,5,4,3,2,1,0};
-char b;
+int a[N] = {9,8,7,6,5,4,3,2,1,0};
 
 void bubble_sort() {
 	int i, j, t;
