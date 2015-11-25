@@ -94,9 +94,11 @@ unsigned int get_value_from_name(char *exname)
         
         if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
         {
-            unsigned int ans = 0;
+            unsigned int ans = 0, temp_address = 0, temp_size = 0;
             //ans = (uint32_t)swaddr_read((uint32_t)((symtab+i)->st_value),(symtab+i)->st_size/8);
-            printf("debug : %u\n",(symtab+i)->st_value);
+            temp_address += (symtab+i)->st_value;
+            temp_size = (symtab+i)->st_size;
+            printf("debug : %u\n",temp_size);
             return ans;
         }
     }
