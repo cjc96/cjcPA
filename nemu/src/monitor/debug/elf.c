@@ -85,6 +85,20 @@ void load_elf_tables(int argc, char *argv[]) {
 
 void get_func_name(uint32_t now_addr)
 {
+	int i;
+	
+	for (i = 0; i <nr_symtab_entry; i++)
+	{
+		if (now_addr >= (symtab+i)->st_value && now_addr < (symtab+i)->st_value + (symtab+i)->st_size)
+		{
+			printf("%s(",strtab+(symtab+i)->st_name);
+			/*TODO : implement four parameters*/
+			printf("\n");
+			
+			return;
+		}
+	}
+
 }
 
 unsigned int get_address_from_name(char *exname)
@@ -92,8 +106,7 @@ unsigned int get_address_from_name(char *exname)
     int i;
     
     for (i = 0; i < nr_symtab_entry; i++)
-    {
-        
+    {       
         if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
         {
             unsigned int temp_address = 0, temp_size = 0;
