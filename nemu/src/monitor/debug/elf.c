@@ -87,8 +87,11 @@ unsigned int get_value_from_name(char *exname)
 {
     int i;
 
+    printf("debug : %s\n",exname);
+    
     for (i = 0; i < nr_symtab_entry; i++)
     {
+        
         if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
         {
             unsigned int ans = 0;
