@@ -113,7 +113,7 @@ static bool make_token(char *e) {
 				        extern uint32_t get_address_from_name(char *);
 				        tokens[nr_token].num = get_address_from_name(tokens[nr_token].str);
 				        assert(tokens[nr_token].num);
-				        /* TODO */
+				        
 				        nr_token++;
 				        break;
 				
