@@ -116,9 +116,8 @@ unsigned int get_address_from_name(char *exname)
     {       
         if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
         {
-            unsigned int temp_address = 0, temp_size = 0;
+            unsigned int temp_address = 0;
             temp_address = (symtab+i)->st_value;
-            temp_size += (symtab+i)->st_size;
             return temp_address;
         }
     }
