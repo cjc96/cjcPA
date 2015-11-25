@@ -181,7 +181,6 @@ static int cmd_d(char *args)
 
 static int cmd_clear()
 {
-	//int i;
 		
 	printf("%s", "\033[1H\033[2J");
 	
