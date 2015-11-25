@@ -112,9 +112,9 @@ static bool make_token(char *e) {
 				        
 				        extern uint32_t get_value_from_name(char *);
 				        tokens[nr_token].num = get_value_from_name(tokens[nr_token].str);
-				        assert(tokens[nr_token.num] != -1);
+				        assert(tokens[nr_token].num != -1);
 				        /* TODO */
-				        nr_token.num++;
+				        nr_token++;
 				        break;
 				
 					case NOTYPE: 
