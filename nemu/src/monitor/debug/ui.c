@@ -191,8 +191,8 @@ static int cmd_bt()
 {
 	uint32_t temp = cpu.ebp,label = 1, flag = 1;
 	
-	extern void get_now_func_name(uint32_t);
-	get_now_func_name(cpu.eip);
+	extern void get_now_func_name(uint32_t,uint32_t);
+	get_now_func_name(cpu.eip,cpu.ebp);
 	
 	while (temp != 0 && flag)
 	{
