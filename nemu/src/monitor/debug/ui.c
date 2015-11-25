@@ -181,11 +181,10 @@ static int cmd_d(char *args)
 
 static int cmd_clear()
 {
-	int i;
+	//int i;
 		
-	for (i = 0; i < 30; i++)
-		printf("\n");
-		
+	printf("%s", "\033[1H\033[2J");
+	
 	return 0;
 }
 
