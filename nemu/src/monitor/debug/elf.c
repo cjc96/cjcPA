@@ -92,7 +92,7 @@ void get_now_func_name(uint32_t now_addr)
 		if (now_addr >=(symtab+i)->st_value && now_addr < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
 		{
 			printf("#0 %s(",strtab+(symtab+i)->st_name);
-			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+20,4),swaddr_read(now_addr+16,4),swaddr_read(now_addr+12,4),swaddr_read(now_addr+8,4));
+			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr-16,4),swaddr_read(now_addr-12,4),swaddr_read(now_addr-8,4),swaddr_read(now_addr-4,4));
 			return;
 		}
 	}
@@ -111,7 +111,7 @@ int get_func_name(uint32_t now_addr)
 		{
 			printf("%s(",strtab+(symtab+i)->st_name);
 			now_addr = swaddr_read(now_addr,4);
-			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+20,4),swaddr_read(now_addr+16,4),swaddr_read(now_addr+12,4),swaddr_read(now_addr+8,4));
+			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr-16,4),swaddr_read(now_addr-12,4),swaddr_read(now_addr-8,4),swaddr_read(now_addr-4,4));
 			if (!strcmp(strtab+(symtab+i)->st_name,"main"))
 				return 1;
 			return 0;
