@@ -93,7 +93,7 @@ void get_func_name(uint32_t now_addr)
 		//printf("debug : 0x%x\n",symvalue);
 
 		extern uint32_t swaddr_read(uint32_t, size_t);
-		uint32_t temp = swaddr_read(now_addr,4);
+		uint32_t temp = swaddr_read(now_addr+4,4);
 		printf("debug : 0x%x\n",temp);
 		
 		if (now_addr >= temp && now_addr < temp + 8 * (symtab+i)->st_size)
