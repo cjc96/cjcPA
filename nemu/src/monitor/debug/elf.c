@@ -83,28 +83,39 @@ void load_elf_tables(int argc, char *argv[]) {
 	fclose(fp);
 }
 
-void get_func_name(uint32_t now_addr)
+void get_now_func_name(uint32_t now_addr)
+{
+	int i;
+	for (i = 0; i < nr_symtab_entry; i++)
+	{
+		if (now_addr >=(symtab+i)->st_value && now_addr < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
+		{
+			printf("#0 %s(",strtab+(symtab+i)->st_name);
+			printf(")");
+			return;
+		}
+	}
+}
+
+int get_func_name(uint32_t now_addr)
 {
 	int i;
 	
-	for (i = 0; i <nr_symtab_entry; i++)
+	for (i = 0; i < nr_symtab_entry; i++)
 	{
-		//uint32_t symvalue = (symtab+i)->st_value;
-		//printf("debug : 0x%x\n",symvalue);
-
 		extern uint32_t swaddr_read(uint32_t, size_t);
 		uint32_t temp = swaddr_read(now_addr+4,4);
-		//printf("debug : 0x%x\n",temp);
 		
 		if (temp >= (symtab+i)->st_value && temp < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
 		{
 			printf("%s(",strtab+(symtab+i)->st_name);
 			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+20,4),swaddr_read(now_addr+16,4),swaddr_read(now_addr+12,4),swaddr_read(now_addr+8,4));
-			
-			return;
+			if (!strcmp(strtab+(symtab+i)->st_name,"main"))
+				return 1;
+			return 0;
 		}
 	}
-
+	return 1;
 }
 
 unsigned int get_address_from_name(char *exname)
