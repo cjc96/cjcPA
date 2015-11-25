@@ -179,6 +179,21 @@ static int cmd_d(char *args)
 	return 0;
 }
 
+static int cmd_clear()
+{
+	int i;
+		
+	for (i = 0; i < 30; i++)
+		printf("\n");
+		
+	return 0;
+}
+
+static int cmd_bt()
+{
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -192,7 +207,9 @@ static struct {
 	{ "x", "Scan the Ram", cmd_x},
 	{ "p", "Compute the value of an expression", cmd_p},
 	{ "w", "Set a watchpoint", cmd_w},
-	{ "d", "Delete a watchpoint", cmd_d}
+	{ "d", "Delete a watchpoint", cmd_d},
+	{ "bt", "Print all stack frames", cmd_bt},
+	{ "clear", "Clear the screen", cmd_clear}
 
 	/* TODO: Add more commands */
 
