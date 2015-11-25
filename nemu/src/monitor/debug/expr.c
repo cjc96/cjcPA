@@ -110,9 +110,9 @@ static bool make_token(char *e) {
 				            tokens[nr_token].str[temp] = substr_start[temp];
 				        tokens[nr_token].str[temp] = '\0';
 				        
-				        extern uint32_t get_value_from_name(char *);
-				        tokens[nr_token].num = get_value_from_name(tokens[nr_token].str);
-				        assert(tokens[nr_token].num != -1);
+				        extern uint32_t get_address_from_name(char *);
+				        tokens[nr_token].num = get_address_from_name(tokens[nr_token].str);
+				        assert(tokens[nr_token].num);
 				        /* TODO */
 				        nr_token++;
 				        break;
