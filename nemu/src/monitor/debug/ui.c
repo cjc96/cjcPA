@@ -189,6 +189,14 @@ static int cmd_clear()
 
 static int cmd_bt()
 {
+	uint32_t temp;
+	temp = cpu.ebp;
+	while (temp != 0)
+	{
+		printf("%d\n",temp);
+		temp = swaddr_read(temp,4);
+	}
+
 	return 0;
 }
 
