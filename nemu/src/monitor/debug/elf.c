@@ -93,7 +93,7 @@ unsigned int get_value_from_name(char *exname)
         {
             unsigned int ans;
             //ans = (uint32_t)swaddr_read((uint32_t)((symtab+i)->st_value),(symtab+i)->st_size/8);
-            printf("%u\n",(symtab+i)->st_value);
+            printf("debug : %u\n",(symtab+i)->st_value);
             return ans;
         }
     }
