@@ -91,7 +91,7 @@ unsigned int get_value_from_name(char *exname)
     {
         if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
         {
-            unsigned int ans;
+            unsigned int ans = 0;
             //ans = (uint32_t)swaddr_read((uint32_t)((symtab+i)->st_value),(symtab+i)->st_size/8);
             printf("debug : %u\n",(symtab+i)->st_value);
             return ans;
