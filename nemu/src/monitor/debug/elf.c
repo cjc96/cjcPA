@@ -94,13 +94,12 @@ void get_func_name(uint32_t now_addr)
 
 		extern uint32_t swaddr_read(uint32_t, size_t);
 		uint32_t temp = swaddr_read(now_addr+4,4);
-		printf("debug : 0x%x\n",temp);
+		//printf("debug : 0x%x\n",temp);
 		
 		if (temp >= (symtab+i)->st_value && temp < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
 		{
 			printf("%s(",strtab+(symtab+i)->st_name);
-			/*TODO : implement four parameters*/
-			printf("\n");
+			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+20,4),swaddr_read(now_addr+16,4),swaddr_read(now_addr+12,4),swaddr_read(now_addr+8,4));
 			
 			return;
 		}
