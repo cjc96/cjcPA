@@ -86,8 +86,6 @@ void load_elf_tables(int argc, char *argv[]) {
 unsigned int get_address_from_name(char *exname)
 {
     int i;
-
-    printf("debug : %s\n",exname);
     
     for (i = 0; i < nr_symtab_entry; i++)
     {
