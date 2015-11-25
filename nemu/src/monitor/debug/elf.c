@@ -89,7 +89,7 @@ void get_func_name(uint32_t now_addr)
 	
 	for (i = 0; i <nr_symtab_entry; i++)
 	{
-		if (now_addr >= (symtab+i)->st_value && now_addr < (symtab+i)->st_value + (symtab+i)->st_size)
+		if (now_addr >= (symtab+i)->st_value && now_addr < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
 		{
 			printf("%s(",strtab+(symtab+i)->st_name);
 			/*TODO : implement four parameters*/
