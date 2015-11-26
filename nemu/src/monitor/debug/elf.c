@@ -117,7 +117,7 @@ int get_func_name(uint32_t now_addr)
 			return 0;
 		}
 	}
-	return 1;
+	return 0;
 }
 
 unsigned int get_address_from_name(char *exname)
