@@ -7,7 +7,7 @@ static void do_execute () {
 	op_temp = swaddr_read(cpu.eip,1);
 	if (op_temp == 0x0f)
 	{
-		/*switch (swaddr_read(cpu.eip+1,1))
+		switch (swaddr_read(cpu.eip+1,1))
 			{
 				case 0x80 : if (cpu.OF) cpu.eip += op_src->val; break;
 				case 0x81 : if (!cpu.OF) cpu.eip += op_src->val; break;
@@ -26,8 +26,7 @@ static void do_execute () {
 				case 0x8e : if ((cpu.ZF) || (cpu.SF != cpu.OF)) cpu.eip += op_src->val; break;
 				case 0x8f : if ((!cpu.ZF) && (cpu.SF == cpu.OF)) cpu.eip += op_src->val; break;
 				default : panic("Please implent me!");
-			}*/
-		panic("Please implent me!");
+			}
 	}
 	else 
 		if (op_temp <= 0x7f && op_temp >= 0x70)

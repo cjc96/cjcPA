@@ -11,7 +11,8 @@ static void do_execute () {
 	//panic("please implement me");
 	
 	int sin = 0,cin = 0;
-	set_eflags(op_dest->val,op_src->val,sin,cin);
+	DATA_TYPE ain = op_dest->val,bin = op_src->val;
+	set_eflags(ain,bin,sin,cin);
 	
 	print_asm_template2();
 }

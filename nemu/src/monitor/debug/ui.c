@@ -63,24 +63,29 @@ static int cmd_info(char *args)
 		printf("EDI = 0x%08x\n",cpu.edi);
 		printf("ESP = 0x%08x\t",cpu.esp);
 		printf("EBP = 0x%08x\n",cpu.ebp);
-		printf("AX = 0x%04x\t",cpu.ax);
+		printf("AX = 0x%04x\t\t",cpu.ax);
 		printf("DX = 0x%04x\n",cpu.dx);
-		printf("CX = 0x%04x\t",cpu.cx);
+		printf("CX = 0x%04x\t\t",cpu.cx);
 		printf("BX = 0x%04x\n",cpu.bx);
-		printf("BP = 0x%04x\t",cpu.bp);
+		printf("BP = 0x%04x\t\t",cpu.bp);
 		printf("SI = 0x%04x\n",cpu.si);
-		printf("DI = 0x%04x\t",cpu.di);
+		printf("DI = 0x%04x\t\t",cpu.di);
 		printf("SP = 0x%04x\n",cpu.sp);
-		printf("AL = 0x%02x\t",cpu.al);
+		printf("AL = 0x%02x\t\t",cpu.al);
 		printf("DL = 0x%02x\n",cpu.dl);
-		printf("CL = 0x%02x\t",cpu.cl);
+		printf("CL = 0x%02x\t\t",cpu.cl);
 		printf("BL = 0x%02x\n",cpu.bl);
-		printf("AH = 0x%02x\t",cpu.ah);
+		printf("AH = 0x%02x\t\t",cpu.ah);
 		printf("DH = 0x%02x\n",cpu.dh);
-		printf("CH = 0x%02x\t",cpu.ch);
+		printf("CH = 0x%02x\t\t",cpu.ch);
 		printf("BH = 0x%02x\n",cpu.bh);
 		printf("EIP = 0x%08x\t",cpu.eip);
 		printf("EFLAGS = 0x%08x\n",cpu.EFLAGS);
+		printf("CF = %d\t",cpu.CF);
+		printf("OF = %d\t",cpu.OF);
+		printf("SF = %d\t",cpu.SF);
+		printf("PF = %d\t",cpu.PF);
+		printf("ZF = %d\t\n",cpu.ZF);
 	}
 	if (strcmp(args,"w") == 0)
 	{
@@ -125,7 +130,7 @@ static int cmd_p(char *args)
 	temp = 0;
 	temp = expr(args,&success);
 	if (success)
-		printf("%u\n",temp);
+		printf("DEC : %u\t\tHEX : %x\n",temp,temp);
 	else
 		printf("Invalid input\n");
 	
@@ -174,6 +179,36 @@ static int cmd_d(char *args)
 	return 0;
 }
 
+static int cmd_clear()
+{
+		
+	printf("%s", "\033[1H\033[2J");
+	
+	return 0;
+}
+
+static int cmd_bt()
+{
+	uint32_t temp = cpu.ebp,label = 1, flag = 1;
+	
+	extern void get_now_func_name(uint32_t,uint32_t);
+	get_now_func_name(cpu.eip,cpu.ebp);
+	
+	while (temp != 0 && flag)
+	{
+		printf("#%d 0x%x in ",label,temp);
+		
+		extern int get_func_name(uint32_t);
+		if (get_func_name(temp))
+			flag = 0;
+		
+		temp = swaddr_read(temp,4);
+		label++;
+	}
+
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -187,7 +222,9 @@ static struct {
 	{ "x", "Scan the Ram", cmd_x},
 	{ "p", "Compute the value of an expression", cmd_p},
 	{ "w", "Set a watchpoint", cmd_w},
-	{ "d", "Delete a watchpoint", cmd_d}
+	{ "d", "Delete a watchpoint", cmd_d},
+	{ "bt", "Print all stack frames", cmd_bt},
+	{ "clear", "Clear the screen", cmd_clear}
 
 	/* TODO: Add more commands */
 

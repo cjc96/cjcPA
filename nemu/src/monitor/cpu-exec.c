@@ -64,15 +64,15 @@ void cpu_exec(volatile uint32_t n) {
 		 * instruction decode, and the actual execution. */
 		 
 		do_call = 0;
-		
+		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
-		int former_eip = cpu.eip;
 		cpu.eip += instr_len;
 		former_eip += instr_len;
 		if (do_call)
 		{
 			cpu.esp -= 4;
 			swaddr_write(cpu.esp,4,former_eip);
+			//printf("%x\n",former_eip);
 		}
 
 #ifdef DEBUG
@@ -99,6 +99,7 @@ void cpu_exec(volatile uint32_t n) {
 			if (temp_value != temp_node->value)
 			{
 				nemu_state = STOP;
+				temp_node->value = temp_value;
 				printf("break at watchpoint %d\n",temp_node->NO);
 				break;
 			}
