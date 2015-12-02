@@ -108,7 +108,7 @@ int get_func_name(uint32_t now_addr)
 		extern uint32_t swaddr_read(uint32_t, size_t);
 		uint32_t temp = swaddr_read(now_addr+4,4);
 		
-		if (temp >= (symtab+i)->st_value && temp < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
+		if (temp >= (symtab+i)->st_value && temp < (symtab+i)->st_value + (symtab+i)->st_size)
 		{
 			printf("%s(",strtab+(symtab+i)->st_name);
 			now_addr = swaddr_read(now_addr,4);
