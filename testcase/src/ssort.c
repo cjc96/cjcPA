@@ -4,7 +4,7 @@
 
 int a[N] = {9,8,7,6,5,4,3,2,1,0};
 
-void bubble_sort(int b) {
+void bubble_sort() {
 	int i, j, t;
 	for(j = 0; j < N; j ++) {
 		for(i = 0; i < N - 1 - j; i ++) {
@@ -18,14 +18,14 @@ void bubble_sort(int b) {
 }
 
 int main() {
-	bubble_sort(5);
+	bubble_sort();
 
 	int i;
 	for(i = 0; i < N; i ++) {
 		nemu_assert(a[i] == i);
 	}
 
-	bubble_sort(4);
+	bubble_sort();
 
 	for(i = 0; i < N; i ++) {
 		nemu_assert(a[i] == i);
