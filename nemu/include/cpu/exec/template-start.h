@@ -55,7 +55,7 @@
 		cpu.ZF = cpu.ZF | temp[i];\
 	cpu.ZF = 1 - cpu.ZF;\
 	cpu.PF = temp[0];\
-	for (i = 1; i < 7; i++)\
+	for (i = 1; i < 8; i++)\
 		cpu.PF ^= temp[i];\
 	cpu.PF = 1 - cpu.PF;\
 }
