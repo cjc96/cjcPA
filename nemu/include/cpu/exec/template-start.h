@@ -51,7 +51,7 @@
 	cpu.CF ^= cin;\
 	cpu.SF = temp[i-1];\
 	cpu.ZF = 0;\
-	for (i = 0; i < sizeof(DATA_TYPE); i++)\
+	for (i = 0; i < sizeof(DATA_TYPE) * 8; i++)\
 		cpu.ZF = cpu.ZF | temp[i];\
 	cpu.ZF = 1 - cpu.ZF;\
 	cpu.PF = temp[0];\
