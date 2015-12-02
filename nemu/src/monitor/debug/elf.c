@@ -83,7 +83,7 @@ void load_elf_tables(int argc, char *argv[]) {
 	fclose(fp);
 }
 
-void get_now_func_name(uint32_t now_addr,uint32_t para)
+int get_now_func_name(uint32_t now_addr,uint32_t para)
 {
 	int i;
 	extern uint32_t swaddr_read(uint32_t, size_t);
@@ -94,9 +94,13 @@ void get_now_func_name(uint32_t now_addr,uint32_t para)
 			
 			printf("%s(",strtab+(symtab+i)->st_name);
 			printf("%u, %u, %u, %u)\n",swaddr_read(para+8,4),swaddr_read(para+12,4),swaddr_read(para+16,4),swaddr_read(para+20,4));
-			return;
+			if (!strcmp(strtab+(symtab+i)->st_name,"main"))
+				return 1;
+			else 
+				return 0;
 		}
 	}
+	return -1;
 }
 
 int get_func_name(uint32_t now_addr)

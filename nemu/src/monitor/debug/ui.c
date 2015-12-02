@@ -190,22 +190,27 @@ static int cmd_clear()
 static int cmd_bt()
 {
 	uint32_t temp = cpu.ebp,label = 1, flag = 1;
+	int nend_flag;
 	
-	extern void get_now_func_name(uint32_t,uint32_t);
+	extern int get_now_func_name(uint32_t,uint32_t);
 	printf("#0 0x%x in ",cpu.eip);
-	get_now_func_name(cpu.eip,cpu.ebp);
+	nend_flag = get_now_func_name(cpu.eip,cpu.ebp);
 	
-	while (temp != 0 && flag)
-	{
-		printf("#%d 0x%x in ",label,swaddr_read(temp+4,4));
+	if (nend_flag)
+		while (temp != 0 && flag)
+		{
+			printf("#%d 0x%x in ",label,swaddr_read(temp+4,4));
 		
-		extern int get_func_name(uint32_t);
-		if (get_func_name(temp))
-			flag = 0;
+			extern int get_func_name(uint32_t);
+			if (get_func_name(temp))
+				flag = 0;
 		
-		temp = swaddr_read(temp,4);
-		label++;
-	}
+			temp = swaddr_read(temp,4);
+			label++;
+		}
+	else
+		if (nend_flag == -1)
+			panic("Something wrong with command \"bt\"\n");
 
 	return 0;
 }
