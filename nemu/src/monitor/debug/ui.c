@@ -196,6 +196,9 @@ static int cmd_bt()
 	printf("#0 0x%x in ",cpu.eip);
 	nend_flag = get_now_func_name(cpu.eip,cpu.ebp);
 	
+	if (nend_flag == -1)
+			panic("Something wrong with command \"bt\"\n");
+
 	if (nend_flag)
 		while (temp != 0 && flag)
 		{
@@ -208,10 +211,7 @@ static int cmd_bt()
 			temp = swaddr_read(temp,4);
 			label++;
 		}
-	else
-		if (nend_flag == -1)
-			panic("Something wrong with command \"bt\"\n");
-
+		
 	return 0;
 }
 

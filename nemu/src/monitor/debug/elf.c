@@ -94,10 +94,10 @@ int get_now_func_name(uint32_t now_addr,uint32_t para)
 			
 			printf("%s(",strtab+(symtab+i)->st_name);
 			printf("%u, %u, %u, %u)\n",swaddr_read(para+8,4),swaddr_read(para+12,4),swaddr_read(para+16,4),swaddr_read(para+20,4));
-			if (!strcmp(strtab+(symtab+i)->st_name,"main"))
-				return 1;
-			else 
+			if (strcmp(strtab+(symtab+i)->st_name,"main") == 0)
 				return 0;
+			else 
+				return 1;
 		}
 	}
 	return -1;
