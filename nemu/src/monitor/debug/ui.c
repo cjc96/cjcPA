@@ -197,7 +197,7 @@ static int cmd_bt()
 	
 	while (temp != 0 && flag)
 	{
-		printf("#%d 0x%x in ",label,temp);
+		printf("#%d 0x%x in ",label,swaddr_read(temp+4,4));
 		
 		extern int get_func_name(uint32_t);
 		if (get_func_name(temp))
