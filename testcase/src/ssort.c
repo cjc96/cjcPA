@@ -2,7 +2,7 @@
 
 #define N 10
 
-int a[N] = {9,8,7,6,5,4,3,2,1,0};
+int a[N] = {109,108,107,106,105,104,103,102,101,100};
 
 void bubble_sort() {
 	int i, j, t;
@@ -22,13 +22,13 @@ int main() {
 
 	int i;
 	for(i = 0; i < N; i ++) {
-		nemu_assert(a[i] == i);
+		nemu_assert(a[i] == 100+i);
 	}
 
 	bubble_sort();
 
 	for(i = 0; i < N; i ++) {
-		nemu_assert(a[i] == i);
+		nemu_assert(a[i] == 100+i);
 	}
 
 	HIT_GOOD_TRAP;
