@@ -91,7 +91,8 @@ void get_now_func_name(uint32_t now_addr,uint32_t para)
 	{
 		if (now_addr >=(symtab+i)->st_value && now_addr < (symtab+i)->st_value + 8 * (symtab+i)->st_size)
 		{
-			printf("#0 %s(",strtab+(symtab+i)->st_name);
+			
+			printf("%s(",strtab+(symtab+i)->st_name);
 			printf("%u, %u, %u, %u)\n",swaddr_read(para+8,4),swaddr_read(para+12,4),swaddr_read(para+16,4),swaddr_read(para+20,4));
 			return;
 		}
