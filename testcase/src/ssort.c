@@ -31,7 +31,7 @@ int main() {
 		nemu_assert(a[i] == 100+i);
 	}
 
-	HIT_GOOD_TRAP;
+	//HIT_GOOD_TRAP;
 
 	return 0;
 }
