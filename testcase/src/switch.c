@@ -5,9 +5,16 @@ int switch_case(int n) {
 	switch(n) {
 		case 0: ret = 0; break;
 		case 1: ret = 2; break;
-		case 2: case 3: ret = 5; break;
-		case 4: case 5: case 6: case 7: ret = 8; break;
-		case 8: case 9: case 10: case 11: ret = 10; break;
+		case 2: 
+		case 3: ret = 5; break;
+		case 4: 
+		case 5: 
+		case 6: 
+		case 7: ret = 8; break;
+		case 8: 
+		case 9: 
+		case 10: 
+		case 11: ret = 10; break;
 		case 12: ret = 15; break;
 		default: ret = -1; break;
 	}
