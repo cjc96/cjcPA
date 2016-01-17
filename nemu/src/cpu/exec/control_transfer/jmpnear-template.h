@@ -6,6 +6,9 @@ static void do_execute () {
 
 	cpu.eip = op_src->val;
 	
+	extern int do_jmpnear;
+	do_jmpnear = 1;
+	
 	print_asm_template1();
 }
 
