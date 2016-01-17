@@ -1,6 +1,6 @@
 #include "cpu/exec/template-start.h"
 
-#define instr movzbl
+#define instr movsx
 
 static void do_execute () {
 	
