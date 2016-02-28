@@ -7,20 +7,12 @@ static void do_execute () {
 	OPERAND_W(op_dest, result);
 
 	/* TODO: Update EFLAGS. */
-	int temp[32] , i ;
+	
+	int sin = 0,cin = 0;
+	DATA_TYPE ain = op_dest->val,bin = 0;
+	set_eflags(ain,bin,sin,cin);
 	cpu.OF = 0;
 	cpu.CF = 0;
-	cpu.ZF = 1;
-	for (i = 0; i < DATA_BYTE * 8; i++)
-	{
-		temp[i] = ((op_dest->val >> i) & 1) & ((op_src->val >> i) & 1);
-		if (temp[i])
-			cpu.ZF = 0;
-	}
-	cpu.SF = temp[i - 1];
-	for (i = 0; i < 7; i++)
-		cpu.PF ^= temp[i];
-	cpu.PF = 1 - cpu.PF;
 
 	print_asm_template2();
 }
