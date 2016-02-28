@@ -11,7 +11,7 @@ static void do_execute () {
 	cpu.OF = 0;
 	cpu.CF = 0;
 	cpu.ZF = 1;
-	for (i = 0; i < DATA_BYTE; i++)
+	for (i = 0; i < DATA_BYTE * 8; i++)
 	{
 		temp[i] = ((op_dest->val >> i) & 1) & ((op_src->val >> i) & 1);
 		if (temp[i])
