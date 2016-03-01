@@ -5,9 +5,9 @@
 static void do_execute () {
 	int op_temp;
 	op_temp = swaddr_read(cpu.eip,1);
-	if (op_temp == 0x0f)
+	if (op_temp >= 0x80 && op_temp <= 0x8f)
 	{
-		switch (swaddr_read(cpu.eip+1,1))
+		switch (op_temp)
 			{
 				case 0x80 : if (cpu.OF) cpu.eip += op_src->val; break;
 				case 0x81 : if (!cpu.OF) cpu.eip += op_src->val; break;
@@ -29,7 +29,7 @@ static void do_execute () {
 			}
 	}
 	else 
-		if (op_temp <= 0x7f && op_temp >= 0x70)
+		if ((op_temp <= 0x7f && op_temp >= 0x70) || op_temp == 0xe3)
 		{
 			op_src->val = (DATA_TYPE_S)((DATA_TYPE)op_src->val);
 			switch (op_temp)
