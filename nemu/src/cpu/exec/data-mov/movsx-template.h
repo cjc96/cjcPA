@@ -4,7 +4,8 @@
 
 static void do_execute () {
 	
-	op_dest->val = (DATA_TYPE_S)op_src->val;
+	DATA_TYPE_S temp = op_src->val;
+	OPERAND_W(op_dest, temp);
 	print_asm_template2();
 }
 
