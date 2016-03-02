@@ -4,7 +4,7 @@
 
 static void do_execute () {
 	int op_temp = swaddr_read(cpu.eip + 1,1);
-	printf("%x\n  %x\n",op_temp, op_src->val);
+	printf("%x\n", op_src->val);
 	switch (op_temp)
 	{
 		case 0x90 : if (cpu.OF) op_src->val = 1; else op_src->val = 0; break;
@@ -25,6 +25,7 @@ static void do_execute () {
 		case 0x9f : if (cpu.ZF || cpu.SF == cpu.OF) op_src->val = 1; else op_src->val = 0; break; 
 		default : panic("Please implent me!");
 	}
+	printf("%x\n", op_src->val);
 	print_asm_template1();
 }
 
