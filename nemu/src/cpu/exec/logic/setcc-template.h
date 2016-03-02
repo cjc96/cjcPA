@@ -26,6 +26,7 @@ static void do_execute () {
 		default : panic("Please implent me!");
 	}
 	printf("%x\n", op_src->val);
+	printf("%p\n", &(op_src->val));
 	print_asm_template1();
 }
 
