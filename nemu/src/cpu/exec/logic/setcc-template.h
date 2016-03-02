@@ -12,7 +12,7 @@ static void do_execute () {
 		case 0x92 : if (cpu.CF) op_src->val = 1; else op_src->val = 0; break;
 		case 0x93 : if (!cpu.CF) op_src->val = 1; else op_src->val = 0; break;
 		case 0x94 : if (cpu.ZF) op_src->val = 1; else op_src->val = 0; break;
-		case 0x95 : if (!cpu.ZF) op_src->val = 1; else op_src->val = 0; break;
+		case 0x95 : if (!cpu.ZF) OPERAND_W(op_src, 1); else op_src->val = 0; break;
 		case 0x96 : if (cpu.CF || cpu.ZF) op_src->val = 1; else op_src->val = 0; break;
 		case 0x97 : if (!cpu.CF && !cpu.ZF) op_src->val = 1; else op_src->val = 0; break;
 		case 0x98 : if (cpu.SF) op_src->val = 1; else op_src->val = 0; break;
