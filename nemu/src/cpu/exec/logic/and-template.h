@@ -18,7 +18,8 @@ static void do_execute () {
 			cpu.ZF = 0;
 	}
 	cpu.SF = temp[i - 1];
-	for (i = 0; i < 7; i++)
+	cpu.PF = temp[0];
+	for (i = 1; i < 8; i++)
 		cpu.PF ^= temp[i];
 	cpu.PF = 1 - cpu.PF;
 
