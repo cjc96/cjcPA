@@ -4,7 +4,7 @@
 
 static void do_execute () {
 	int op_temp = swaddr_read(cpu.eip + 1,1);
-	//printf("%x\n  %x\n",op_temp, op_src->val);
+	printf("%x\n  %x\n",op_temp, op_src->val);
 	switch (op_temp)
 	{
 		case 0x90 : if (cpu.OF) op_src->val = 1; else op_src->val = 0; break;
