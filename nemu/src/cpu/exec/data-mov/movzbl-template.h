@@ -4,8 +4,9 @@
 
 static void do_execute () {
 	DATA_TYPE temp = op_src->val;
-	op_dest->val = temp;
-	printf("%d\n",DATA_BYTE);
+	unsigned int result = temp;
+	OPERAND_W(op_dest, result);
+	//printf("%d\n",DATA_BYTE);
 	print_asm_template2();
 }
 
