@@ -3,7 +3,7 @@
 #define instr setcc
 
 static void do_execute () {
-	int op_temp = swaddr_read(cpu.eip,1);
+	int op_temp = swaddr_read(cpu.eip + 1,1);
 	printf("%d\n",op_temp);
 	switch (op_temp)
 	{
