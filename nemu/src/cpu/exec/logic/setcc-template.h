@@ -4,6 +4,7 @@
 
 static void do_execute () {
 	int op_temp = swaddr_read(cpu.eip,1);
+	printf("%d\n",op_temp);
 	switch (op_temp)
 	{
 		case 0x90 : if (cpu.OF) op_src->val = 1; else op_src->val = 0; break;
