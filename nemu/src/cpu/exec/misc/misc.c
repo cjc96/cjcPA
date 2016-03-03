@@ -3,6 +3,7 @@
 
 make_helper(nop) {
 	print_asm("nop");
+	
 	return 1;
 }
 
@@ -21,6 +22,7 @@ make_helper(lea) {
 	reg_l(m.reg) = op_src->addr;
 
 	print_asm("leal %s,%%%s", op_src->str, regsl[m.reg]);
+	
 	return 1 + len;
 }
 
@@ -30,5 +32,13 @@ make_helper(cltd) {
 	else
 		cpu.edx = 0;
 	print_asm("cltd");
+	
+	return 1;
+}
+
+make_helper(cld) {
+	cpu.DF = 0;
+	print_asm("cld");
+	
 	return 1;
 }
