@@ -63,7 +63,7 @@ static int cmd_info(char *args)
 		printf("EDI = 0x%08x\n",cpu.edi);
 		printf("ESP = 0x%08x\t",cpu.esp);
 		printf("EBP = 0x%08x\n",cpu.ebp);
-		printf("AX = 0x%04x\t\t",cpu.ax);
+		/*printf("AX = 0x%04x\t\t",cpu.ax);
 		printf("DX = 0x%04x\n",cpu.dx);
 		printf("CX = 0x%04x\t\t",cpu.cx);
 		printf("BX = 0x%04x\n",cpu.bx);
@@ -78,14 +78,15 @@ static int cmd_info(char *args)
 		printf("AH = 0x%02x\t\t",cpu.ah);
 		printf("DH = 0x%02x\n",cpu.dh);
 		printf("CH = 0x%02x\t\t",cpu.ch);
-		printf("BH = 0x%02x\n",cpu.bh);
+		printf("BH = 0x%02x\n",cpu.bh);*/
 		printf("EIP = 0x%08x\t",cpu.eip);
 		printf("EFLAGS = 0x%08x\n",cpu.EFLAGS);
 		printf("CF = %d\t",cpu.CF);
 		printf("OF = %d\t",cpu.OF);
 		printf("SF = %d\t",cpu.SF);
 		printf("PF = %d\t",cpu.PF);
-		printf("ZF = %d\t\n",cpu.ZF);
+		printf("ZF = %d\t",cpu.ZF);
+		printf("DF = %d\t\n",cpu.DF);
 	}
 	if (strcmp(args,"w") == 0)
 	{
