@@ -9,7 +9,7 @@ static void do_execute () {
 	/* TODO: Update EFLAGS. */
 	
 	int sin = 0,cin = 0;
-	DATA_TYPE ain = op_dest->val,bin = 0;
+	DATA_TYPE ain = result,bin = 0;
 	set_eflags(ain,bin,sin,cin);
 	cpu.OF = 0;
 	cpu.CF = 0;
