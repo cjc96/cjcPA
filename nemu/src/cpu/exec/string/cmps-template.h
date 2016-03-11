@@ -2,9 +2,10 @@
 
 #define instr cmps
 
-make_helper(concat(cmps_, SUFFIX)) {
-	
+make_helper(concat(cmps_, SUFFIX)) {	
+
 	int incdec;
+	
 	if (DATA_BYTE == 1)
 	{
 		int sin = 1, cin = 1;

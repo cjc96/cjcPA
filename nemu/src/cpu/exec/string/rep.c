@@ -12,7 +12,6 @@ make_helper(rep) {
 	}
 	else {
 		while(cpu.ecx) {
-			printf("%x\n",eip);
 			exec(eip + 1);
 			count ++;
 			cpu.ecx --;
