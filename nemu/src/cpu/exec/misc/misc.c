@@ -3,8 +3,9 @@
 
 make_helper(cwtl) 
 {
-	int temp = (int)cpu.ax;
-	cpu.eax = temp;	
+	int16_t temp1 = cpu.ax;
+	int32_t temp2 = temp1;
+	cpu.eax = temp2;	
 	print_asm("cwtl");
 	
 	return 1;
