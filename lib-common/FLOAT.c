@@ -30,12 +30,12 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 			temp_int++;
 		}
 	}
-	int ans = temp_int * sign;
+	int ans = temp_int * temp_sign;
 	return ans;
 }
 
 FLOAT f2F(float a) {
-	uint32_t temp_a = *(uint32_t *)&a, temp_sign = temp_a >> 31, temp_exp = temp_a >> 23 & 0xff, temp_man = temp_a & 0x007fffff;
+	unsigned int temp_a = *(unsigned int *)&a, temp_sign = temp_a >> 31, temp_exp = temp_a >> 23 & 0xff, temp_man = temp_a & 0x007fffff;
 	if (temp_exp)
 		temp_man += 1 << 23;
 	temp_exp -= 150;
