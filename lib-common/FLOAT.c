@@ -6,16 +6,43 @@ FLOAT F_mul_F(FLOAT a, FLOAT b) {
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-	nemu_assert(0);
-	return 0;
+	int temp_sign = 1, i;
+	
+	if (a < 0)
+	{
+		temp_sign *= -1;
+		a = -a;
+	}
+	if (b < 0)
+	{
+		temp_sign *= -1;
+		b = -b;
+	}
+	int temp_int = a / b;
+	a = a % b;
+	for (i = 0; i < 16; i++)
+	{
+		a <<= 1;
+		temp_int <<= 1;
+		if (a >= b)
+		{
+			a -= b;
+			temp_int++;
+		}
+	}
+	int ans = temp_int * sign;
+	return ans;
 }
 
 FLOAT f2F(float a) {
-	int temp_sign, temp_int, temp_frac;
+	uint32_t temp_a = *(uint32_t *)&a, temp_sign = temp_a >> 31, temp_exp = temp_a >> 23 & 0xff, temp_man = temp_a & 0x007fffff;
+	if (temp_exp)
+		temp_man += 1 << 23;
+	temp_exp -= 150;
+	if (temp_exp < -16) temp_man >>= -16 - temp_exp;
+	if (temp_exp > -16) temp_man <<= temp_exp + 16;
 	
-	temp_sign = a >= 0 ? 0 : 1;
-	temp_int = trunc(a);
-	return 0;
+	return temp_sign ? -temp_man : temp_man;
 }
 
 FLOAT Fabs(FLOAT a) {
