@@ -7,7 +7,7 @@ static void do_execute () {
 	if (temp == 0xe8)
 		cpu.eip += op_src->val;
 	else if (temp == 0xff)
-		cpu.eip = swaddr_read(op_src->val, 4);
+		cpu.eip = op_src->val;
 	
 	extern int do_call;
 	do_call = 1;
