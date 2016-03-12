@@ -4,8 +4,8 @@
 
 static void do_execute () {
 	
-	int sin = 1,cin = 1;
-	set_eflags(op_dest->val,op_src->val,sin,cin);
+	int sin = 1,cin = 1, ain = op_dest->val, bin = op_src->val;
+	set_eflags(ain, bin, sin, cin);
 	
 	print_asm_template2();
 }
