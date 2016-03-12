@@ -5,8 +5,7 @@
 static void do_execute () {
 	
 	uint32_t sin = 1,cin = 1, ain = op_dest->val, bin = op_src->val;
-	
-	printf("%u\t%u\n", ain, bin);
+	//printf("%u\t%u\n", ain, bin);
 	
 	set_eflags(ain, bin, sin, cin);
 	
