@@ -87,10 +87,10 @@ logic_test:
   cmp $0xece8ece8, %eax
   jne bad
   // shrd
-  //mov %ecx, %eax
-  //shrd %cl, %edx, %eax
-  //cmp $0xdcba9012, %eax
-  //jne bad
+  mov %ecx, %eax
+  shrd %cl, %edx, %eax
+  cmp $0xdcba9012, %eax
+  jne bad
   // sar
   sar $4, %eax
   cmp $0xfdcba901, %eax
@@ -100,8 +100,8 @@ logic_test:
   cmp $0x0fdcba90, %eax
   jne bad
   // shld
-  //shld $4, %edx, %eax
-  //cmp $0xfdcba90f, %eax
+  shld $4, %edx, %eax
+  cmp $0xfdcba90f, %eax
   jne bad
   // shl
   shl $8, %eax
