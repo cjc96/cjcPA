@@ -35,7 +35,7 @@ uint32_t loader() {
 	uint32_t *p_magic = (void *)buf;
 	nemu_assert(*p_magic == elf_magic);
 	
-	panic("Hahahahahaha");
+	//panic("Hahahahahaha");
 
 	/* Load each program segment */
 	
