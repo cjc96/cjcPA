@@ -13,7 +13,9 @@ int gcd(int a,int b)
 int main()
 {
 
-    nemu_assert("gcd(a,b) == 10");
+    nemu_assert(gcd(a,b) == 10);
+    
+    HIT_GOOD_TRAP;
     
     return 0;
 }

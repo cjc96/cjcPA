@@ -19,6 +19,7 @@
 #include "arith/sbb.h"
 #include "arith/add.h"
 #include "arith/adc.h"
+#include "arith/neg.h"
 
 #include "logic/and.h"
 #include "logic/or.h"
@@ -34,6 +35,8 @@
 
 #include "string/rep.h"
 #include "string/stos.h"
+#include "string/cmps.h"
+#include "string/movs.h"
 
 #include "misc/misc.h"
 

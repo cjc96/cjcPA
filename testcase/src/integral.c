@@ -6,8 +6,10 @@ FLOAT f(FLOAT x) {
 	return F_div_F(int2F(1), int2F(1) + F_mul_int(F_mul_F(x, x), 25));
 }
 
+int k;
+
 FLOAT computeT(int n, FLOAT a, FLOAT b, FLOAT (*fun)(FLOAT)) {
-	int k;
+	//int k;
 	FLOAT s,h;
 	h = F_div_int((b - a), n);
 	s = F_div_int(fun(a) + fun(b), 2 );

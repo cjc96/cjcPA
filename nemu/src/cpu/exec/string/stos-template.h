@@ -3,7 +3,7 @@
 #define instr stos
 
 make_helper(concat(stos_, SUFFIX)) {
-	printf("%d %d\n",cpu.edi,cpu.eax);
+
 	if (DATA_BYTE == 1)
 	{
 		swaddr_write(cpu.edi, DATA_BYTE, cpu.al);
@@ -32,7 +32,5 @@ make_helper(concat(stos_, SUFFIX)) {
 	print_asm_template1();
 	return 1;
 }
-
-//make_instr_helper()
 
 #include "cpu/exec/template-end.h"

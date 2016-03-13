@@ -12,7 +12,6 @@ make_helper(rep) {
 	}
 	else {
 		while(cpu.ecx) {
-			printf("%x\n",eip);
 			exec(eip + 1);
 			count ++;
 			cpu.ecx --;
@@ -29,9 +28,9 @@ make_helper(rep) {
 			if (ops_decoded.opcode == 0xa6 || ops_decoded.opcode == 0xa7 || ops_decoded.opcode == 0xae || ops_decoded.opcode == 0xaf)
 			{
 				int temp_opcode = swaddr_read(eip, 1);
-				if (temp_opcode == 0xf3 && cpu.ZF)
+				if (temp_opcode == 0xf3 && !cpu.ZF)
 					break;
-				else if (temp_opcode == 0xf2 && !cpu.ZF)
+				else if (temp_opcode == 0xf2 && cpu.ZF)
 					break;
 			}
 

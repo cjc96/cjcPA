@@ -7,7 +7,7 @@ static void do_execute () {
 	OPERAND_W(op_dest, result);
 
 	int sin = 0,cin = 0;
-	DATA_TYPE ain = op_dest->val,bin = 0;
+	DATA_TYPE ain = result,bin = 0;
 	set_eflags(ain,bin,sin,cin);
 	cpu.CF = 0;
 	cpu.OF = 0;
