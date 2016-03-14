@@ -17,7 +17,7 @@ int exec(swaddr_t);
 
 char assembly[80];
 char asm_buf[128];
-int do_call,do_jmpnear;
+int do_call,do_jmpnear,do_rm_call;
 
 /* Used with exception handling. */
 jmp_buf jbuf;
@@ -63,7 +63,7 @@ void cpu_exec(volatile uint32_t n) {
 		/* Execute one instruction, including instruction fetch,
 		 * instruction decode, and the actual execution. */
 		 
-		do_call = 0; do_jmpnear = 0;
+		do_call = 0; do_jmpnear = 0; do_rm_call = 0;
 		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
 		cpu.eip += instr_len;
@@ -72,6 +72,10 @@ void cpu_exec(volatile uint32_t n) {
 		{
 			cpu.esp -= 4;
 			swaddr_write(cpu.esp,4,former_eip);
+			
+			if (do_rm_call)
+				cpu.eip -= instr_len;
+				
 			//printf("%x\n",former_eip);
 		}
 		if (do_jmpnear)
