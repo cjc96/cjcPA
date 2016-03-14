@@ -10,7 +10,7 @@ static void do_execute () {
 	{
 		extern int do_rm_call;
 		do_rm_call = 1;
-		cpu.eip = op_src->val - 2;
+		cpu.eip = op_src->val;
 	}
 	
 	extern int do_call;
