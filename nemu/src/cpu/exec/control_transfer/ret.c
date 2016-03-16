@@ -11,8 +11,13 @@ make_helper(ret)
 	return 0;
 }
 
-/*make_helper(ret_i_w)
+make_helper(ret_i_w)
 {
-TODO
-}*/
+	cpu.eip = swaddr_read(cpu.esp,4);
+	cpu.esp += 4;
+	cpu.esp += op_src->val & 0x0000ffff;
+
+	print_asm("ret");
+	return 0;
+}
 
