@@ -94,5 +94,5 @@ void restart() {
 	/* Initialize cache */
 	int i;
 	for (i = 0; i < 1000; i++)
-		l1_cache[i].sign = 1;
+		l1_cache[i].sign = 0;
 }
