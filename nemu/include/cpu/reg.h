@@ -19,9 +19,9 @@ typedef struct {
 	uint8_t sign;
 	uint8_t data[64];
 }l1_cache_state;
-#endif
 
 extern l1_cache_state l1_cache[1000];
+#endif
 
 typedef struct {
 	union {

@@ -8,7 +8,7 @@
 
 #define DEBUG
 #define LOG_FILE
-#define CACHE
+//#define CACHE
 
 #include "debug.h"
 #include "macro.h"
