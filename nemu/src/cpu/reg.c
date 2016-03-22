@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+l1_cache_state l1_cache[1000];
+
 CPU_state cpu;
 
 const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};

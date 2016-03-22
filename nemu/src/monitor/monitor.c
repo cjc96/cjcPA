@@ -90,4 +90,9 @@ void restart() {
 
 	/* Initialize DRAM. */
 	init_ddr3();
+	
+	/* Initialize cache */
+	int i;
+	for (i = 0; i < 1000; i++)
+		l1_cache[i].sign = 1;
 }
