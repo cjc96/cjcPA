@@ -8,7 +8,7 @@ void dram_write(hwaddr_t, size_t, uint32_t);
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 #ifdef CACHE
 	uint32_t musk = ~0u >> ((4 - len) << 3;
-	uint32_t tag = addr & 0xfffffe00 >> 9, group = addr & 0x000001c0 >> 6, offset = addr & 0x0000003f;
+	uint32_t tag = addr & 0xfffffe00, group = addr & 0x000001c0 >> 6, offset = addr & 0x0000003f;
 	int i, start = group * 128, end = start + 128;
 	for (i = start; i < end; i++)
 	{
