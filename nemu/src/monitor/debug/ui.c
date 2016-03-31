@@ -296,6 +296,7 @@ static int cmd_addr(char *args)
 			}
 		}
 	}
+	
 	if (!flag)
 		printf("Woops, not hit~~~");
 		
