@@ -42,12 +42,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 							loc++;
 							loc_sp++;
 						}
-						if (len == 1)
-							return *(uint32_t *)temp & musk;
-						else if (len == 2)
-							return *(uint32_t *)temp & musk;
-						else
-							return *(uint32_t *)temp & musk;
+						return *(uint32_t *)temp & musk;
 					}
 				}
 				break;
@@ -55,12 +50,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			else
 			{
 				uint8_t *temp = &l1_cache[i].data_b[offset];
-				if (len == 1)
-					return *(uint32_t *)temp & musk;
-				else if (len == 2)
-					return *(uint32_t *)temp & musk;
-				else
-					return *(uint32_t *)temp & musk;
+				return *(uint32_t *)temp & musk;
 			}
 		}
 	}

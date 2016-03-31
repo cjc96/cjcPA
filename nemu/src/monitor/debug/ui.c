@@ -55,32 +55,32 @@ static int cmd_info(char *args)
 {
 	if (strcmp(args,"r") == 0)
 	{
-		printf("EAX = 0x%08x\t",cpu.eax);
-		printf("EDX = 0x%08x\n",cpu.edx);
-		printf("ECX = 0x%08x\t",cpu.ecx);
-		printf("EBX = 0x%08x\n",cpu.ebx);
-		printf("ESI = 0x%08x\t",cpu.esi);
-		printf("EDI = 0x%08x\n",cpu.edi);
-		printf("ESP = 0x%08x\t",cpu.esp);
-		printf("EBP = 0x%08x\n",cpu.ebp);
-		/*printf("AX = 0x%04x\t\t",cpu.ax);
-		printf("DX = 0x%04x\n",cpu.dx);
-		printf("CX = 0x%04x\t\t",cpu.cx);
-		printf("BX = 0x%04x\n",cpu.bx);
-		printf("BP = 0x%04x\t\t",cpu.bp);
-		printf("SI = 0x%04x\n",cpu.si);
-		printf("DI = 0x%04x\t\t",cpu.di);
-		printf("SP = 0x%04x\n",cpu.sp);
-		printf("AL = 0x%02x\t\t",cpu.al);
-		printf("DL = 0x%02x\n",cpu.dl);
-		printf("CL = 0x%02x\t\t",cpu.cl);
-		printf("BL = 0x%02x\n",cpu.bl);
-		printf("AH = 0x%02x\t\t",cpu.ah);
-		printf("DH = 0x%02x\n",cpu.dh);
-		printf("CH = 0x%02x\t\t",cpu.ch);
-		printf("BH = 0x%02x\n",cpu.bh);*/
-		printf("EIP = 0x%08x\t",cpu.eip);
-		printf("EFLAGS = 0x%08x\n",cpu.EFLAGS);
+		printf("EAX = 0x%08X\t",cpu.eax);
+		printf("EDX = 0x%08X\n",cpu.edx);
+		printf("ECX = 0x%08X\t",cpu.ecx);
+		printf("EBX = 0x%08X\n",cpu.ebx);
+		printf("ESI = 0x%08X\t",cpu.esi);
+		printf("EDI = 0x%08X\n",cpu.edi);
+		printf("ESP = 0x%08X\t",cpu.esp);
+		printf("EBP = 0x%08X\n",cpu.ebp);
+		/*printf("AX = 0x%04X\t\t",cpu.ax);
+		printf("DX = 0x%04X\n",cpu.dx);
+		printf("CX = 0x%04X\t\t",cpu.cx);
+		printf("BX = 0x%04X\n",cpu.bx);
+		printf("BP = 0x%04X\t\t",cpu.bp);
+		printf("SI = 0x%04X\n",cpu.si);
+		printf("DI = 0x%04X\t\t",cpu.di);
+		printf("SP = 0x%04X\n",cpu.sp);
+		printf("AL = 0x%02X\t\t",cpu.al);
+		printf("DL = 0x%02X\n",cpu.dl);
+		printf("CL = 0x%02X\t\t",cpu.cl);
+		printf("BL = 0x%02X\n",cpu.bl);
+		printf("AH = 0x%02X\t\t",cpu.ah);
+		printf("DH = 0x%02X\n",cpu.dh);
+		printf("CH = 0x%02X\t\t",cpu.ch);
+		printf("BH = 0x%02X\n",cpu.bh);*/
+		printf("EIP = 0x%08X\t",cpu.eip);
+		printf("EFLAGS = 0x%08X\n",cpu.EFLAGS);
 		printf("CF = %d\t",cpu.CF);
 		printf("OF = %d\t",cpu.OF);
 		printf("SF = %d\t",cpu.SF);
@@ -216,6 +216,92 @@ static int cmd_bt()
 	return 0;
 }
 
+static int cmd_addr(char *args)
+{
+	uint32_t addr, len;
+	sscanf(args, "%x %d", &addr, &len);
+	
+	uint32_t musk = ~0u >> ((4 - len) << 3);
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
+	bool flag = 0;
+	
+	uint32_t i, start =addr & 0x000001c0 << 1, end = start + 128;
+	for (i = start; i < end; i++)
+	{
+		if (l1_cache[i].sign && l1_cache[i].tag == tag)
+		{
+			if (tag_sp != tag)
+			{
+				uint8_t ans[4], *temp = ans, loc = 0;
+				while (((addr + loc) & 0xfffffe00) == tag)
+				{
+					ans[loc] = l1_cache[i].data_b[offset + loc];
+					loc++;
+				}
+				
+				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0 << 1, end_sp = start_sp + 128, loc_sp = 0;
+				for (j = start_sp; j < end_sp; j++)
+				{
+					if (l1_cache[j].sign && l1_cache[j].tag == tag_sp)
+					{
+						assert(loc < len);
+						while (loc < len)
+						{
+							ans[loc] = l1_cache[j].data_b[loc_sp];
+							loc++;
+							loc_sp++;
+						}
+						
+						printf("Hit in Two Blocks!!!!!!!!!!\n");
+						printf("Ans = 0x%X\n",*(uint32_t *)temp & musk);
+						printf("Group_id = %X\n", addr & 0x000001c0);
+						printf("Offset = %x\n", offset);
+						printf("Tag = 0x%X\tTag_sp = %X\n\n", tag, tag_sp);
+						uint32_t k;
+						printf("Block 1 : l1_cache[%d] = ", i);
+						for (k = 0; k < 64; k++)
+						{
+							if (k % 16 == 0)
+								printf("\n");
+							printf("%X ", l1_cache[i].data_b[k]);
+						}
+						printf("Block 2 : l1_cache[%d] = ", j);
+						for (k = 0; k < 64; k++)
+						{
+							if (k % 16 == 0)
+								printf("\n");
+							printf("%X ", l1_cache[j].data_b[k]);
+						}
+						flag = true;
+					}
+				}
+				break;
+			}
+			else
+			{
+				uint8_t *temp = &l1_cache[i].data_b[offset];
+				printf("Ans = 0x%X\n",*(uint32_t *)temp & musk);
+				printf("Group_id = %X\n", addr & 0x000001c0);
+				printf("Offset = %x\n", offset);
+				printf("Tag = 0x%X\n\n", tag);
+				uint32_t k;
+				printf("Block : l1_cache[%d] = ", i);
+				for (k = 0; k < 64; k++)
+				{
+					if (k % 16 == 0)
+						printf("\n");
+					printf("%X ", l1_cache[i].data_b[k]);
+				}
+				flag = true;
+			}
+		}
+	}
+	if (!flag)
+		printf("Woops, not hit~~~");
+		
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -231,7 +317,8 @@ static struct {
 	{ "w", "Set a watchpoint", cmd_w},
 	{ "d", "Delete a watchpoint", cmd_d},
 	{ "bt", "Print all stack frames", cmd_bt},
-	{ "clear", "Clear the screen", cmd_clear}
+	{ "clear", "Clear the screen", cmd_clear},
+	{ "addr", "Check address in cache", cmd_addr}
 
 	/* TODO: Add more commands */
 
