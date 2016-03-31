@@ -14,9 +14,9 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	assert(len == 1 || len == 2 || len == 4);
 	
 	uint32_t musk = ~0u >> ((4 - len) << 3);
-	uint32_t tag = addr & 0xfffffe00, group = addr & 0x000001c0 >> 6, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
 	
-	uint32_t i, start = group * 128, end = start + 128;
+	uint32_t i, start =addr & 0x000001c0 << 1, end = start + 128;
 	for (i = start; i < end; i++)
 	{
 		if (l1_cache[i].sign && l1_cache[i].tag == tag)
@@ -30,7 +30,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 					loc++;
 				}
 				
-				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0 << 1, end_sp = start_sp + 128, loc_sp = 0;;
+				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0 << 1, end_sp = start_sp + 128, loc_sp = 0;
 				for (j = start_sp; j < end_sp; j++)
 				{
 					if (l1_cache[j].sign && l1_cache[j].tag == tag_sp)
@@ -92,6 +92,52 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 #ifdef CACHE
 	dram_write(addr, len, data);
+	
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
+	
+	uint32_t i, start = addr & 0x000001c0 << 1, end = start + 128;
+	for (i = start; i < end; i++)
+	{
+		if (l1_cache[i].sign && l1_cache[i].tag == tag)
+		{
+			if (tag_sp != tag)
+			{
+				uint8_t loc = 0;
+				while (((addr + loc) & 0xfffffe00) == tag)
+				{
+					l1_cache[i].data_b[offset + loc] = data & 0xff;
+					data >>= 8;
+					loc++;
+				}
+				
+				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0 << 1, end_sp = start_sp + 128, loc_sp = 0;
+				for (j = start_sp; j < end_sp; j++)
+				{
+					if (l1_cache[j].sign && l1_cache[j].tag == tag_sp)
+					{
+						assert(loc < len);
+						while (loc < len)
+						{
+							l1_cache[j].data_b[loc_sp] = data & 0xff;
+							data >>= 8;
+							loc++;
+							loc_sp++;
+						}
+					}
+				}
+				break;
+			}
+			else
+			{
+				uint32_t j, temp_end = offset + len;
+				for (j = offset; j < temp_end; j++)
+				{
+					l1_cache[i].data_b[j] = data & 0xff;
+					data >>= 8;
+				}
+			}
+		}
+	}
 #endif
 
 #ifndef CACHE
