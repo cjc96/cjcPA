@@ -26,7 +26,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 				uint8_t ans[4], *temp = ans, loc = 0;
 				while (((addr + loc) & 0xfffffe00) == tag)
 				{
-					ans[loc] = l1_cache[i].data[offset + loc];
+					ans[loc] = l1_cache[i].data_b[offset + loc];
 					loc++;
 				}
 				
@@ -38,7 +38,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 						assert(loc < len);
 						while (loc < len)
 						{
-							ans[loc] = l1_cache[j].data[loc_sp];
+							ans[loc] = l1_cache[j].data_b[loc_sp];
 							loc++;
 							loc_sp++;
 						}
@@ -54,7 +54,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			}
 			else
 			{
-				uint8_t *temp = &l1_cache[i].data[offset];
+				uint8_t *temp = &l1_cache[i].data_b[offset];
 				if (len == 1)
 					return *(uint32_t *)temp & musk;
 				else if (len == 2)
@@ -67,7 +67,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t temp = rand() % 128 + start;
 	for (i = 0; i < 16; i++)
 	{
-		l1_cache[temp].larger_data[i] = dram_read(tag + i * 4, 4);
+		l1_cache[temp].data_d[i] = dram_read(tag + i * 4, 4);
 	}
 	l1_cache[temp].tag = tag;
 	l1_cache[temp].sign = 1;
@@ -75,7 +75,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	{
 		for (i = 0; i < 16; i++)
 		{	
-			l1_cache[temp + 1].larger_data[i] = dram_read(tag_sp + i * 4, 4);
+			l1_cache[temp + 1].data_d[i] = dram_read(tag_sp + i * 4, 4);
 		}
 		l1_cache[temp + 1].tag = tag_sp;
 		l1_cache[temp + 1].sign = 1;
