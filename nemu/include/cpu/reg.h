@@ -20,6 +20,7 @@ typedef struct {
 	uint32_t tag;
 	union
 	{
+		uint32_t larger_data[16];
 		uint8_t data[64];
 	};
 }l1_cache_state;

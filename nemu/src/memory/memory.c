@@ -67,7 +67,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t temp = rand() % 128 + start;
 	for (i = 0; i < 16; i++)
 	{
-		l1_cache[temp].data[4*i] = dram_read(tag + i * 4, 4);
+		l1_cache[temp].larger_data[i] = dram_read(tag + i * 4, 4);
 	}
 	l1_cache[temp].tag = tag;
 	l1_cache[temp].sign = 1;
@@ -75,7 +75,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	{
 		for (i = 0; i < 16; i++)
 		{	
-			l1_cache[temp + 1].data[4*i] = dram_read(tag_sp + i * 4, 4);
+			l1_cache[temp + 1].larger_data[i] = dram_read(tag_sp + i * 4, 4);
 		}
 		l1_cache[temp + 1].tag = tag_sp;
 		l1_cache[temp + 1].sign = 1;
