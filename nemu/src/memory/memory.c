@@ -64,7 +64,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			}
 		}
 	}
-	printf("tag = %X\naddr = %X\n", tag, addr);
+	
 	uint32_t temp = rand() % 128 + start;
 	for (i = 0; i < 16; i++)
 	{
@@ -91,7 +91,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 #ifdef CACHE
-
+	dram_write(addr, len, data);
 #endif
 
 #ifndef CACHE
