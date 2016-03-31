@@ -64,7 +64,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			}
 		}
 	}
-	printf("tag = %x\n", tag);
+	printf("tag = %X\naddr = %X\n", tag, addr);
 	uint32_t temp = rand() % 128 + start;
 	for (i = 0; i < 16; i++)
 	{
