@@ -318,8 +318,10 @@ static struct {
 	{ "w", "Set a watchpoint", cmd_w},
 	{ "d", "Delete a watchpoint", cmd_d},
 	{ "bt", "Print all stack frames", cmd_bt},
-	{ "clear", "Clear the screen", cmd_clear},
-	{ "addr", "Check address in cache", cmd_addr}
+#ifdef CACHE
+	{ "addr", "Check address in cache", cmd_addr},
+#endif
+	{ "clear", "Clear the screen", cmd_clear}
 
 	/* TODO: Add more commands */
 
