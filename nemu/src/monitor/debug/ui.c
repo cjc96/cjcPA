@@ -216,6 +216,7 @@ static int cmd_bt()
 	return 0;
 }
 
+#ifdef CACHE
 static int cmd_addr(char *args)
 {
 	uint32_t addr, len;
@@ -302,6 +303,7 @@ static int cmd_addr(char *args)
 		
 	return 0;
 }
+#endif
 
 static struct {
 	char *name;
