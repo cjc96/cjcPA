@@ -59,12 +59,11 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			else
 			{
 				uint8_t *temp = &l1_cache[i].data_b[offset];
+				if (addr == 0x100019) printf("haha\n");
 				return *(uint32_t *)temp & musk;
 			}
 		}
 	}
-	if (addr == 0x100019) printf("haha\n");
-	printf("11");
 	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
 	//if (temp == 259)
 		//printf("%x %zu\n", addr, len);
