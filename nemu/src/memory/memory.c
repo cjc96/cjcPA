@@ -24,8 +24,8 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
 	
 	uint32_t i, start =addr & 0x000001c0, end = start + 128;
-	if (addr == 0x1000c0)
-		printf("%zu\n", len);
+	//if (addr == 0x1000c0)
+		//printf("%zu\n", len);
 	for (i = start; i < end; i++)
 	{
 		if (l1_cache[i].sign && l1_cache[i].tag == tag)
@@ -65,6 +65,9 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	}
 	
 	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
+	if (temp == 259)
+		printf("%x %zu\n", addr, len);
+		
 	for (i = 0; i < 16; i++)
 	{
 		l1_cache[temp].data_d[i] = dram_read(temp_set + i * 4, 4);
@@ -80,7 +83,6 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 		l1_cache[temp + 1].tag = tag_sp;
 		l1_cache[temp + 1].sign = 1;
 	}
-	
 	//printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
 	
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
