@@ -24,7 +24,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
 	
 	uint32_t i, start =addr & 0x000001c0, end = start + 128;
-	if (addr == 0x1000bf)
+	if (addr == 0x1000c0)
 		printf("%zu\n", len);
 	for (i = start; i < end; i++)
 	{
