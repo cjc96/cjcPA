@@ -63,7 +63,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			}
 		}
 	}
-	
+	if (addr == 0x100019) printf("haha\n");
 	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
 	//if (temp == 259)
 		//printf("%x %zu\n", addr, len);
@@ -84,8 +84,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 		l1_cache[start_sp_temp].tag = tag_sp;
 		l1_cache[start_sp_temp].sign = 1;
 	}
-	printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
-	if (addr == 0x100019) printf("haha\n");
+	//printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
 #endif
 
