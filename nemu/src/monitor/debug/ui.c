@@ -223,10 +223,10 @@ static int cmd_addr(char *args)
 	sscanf(args, "%x %d", &addr, &len);
 	
 	uint32_t musk = ~0u >> ((4 - len) << 3);
-	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = (addr + len - 1) & 0x000001c0 << 1;
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = ((addr + len - 1) & 0x000001c0) << 1;
 	bool flag = 0;
 	
-	uint32_t i, start =addr & 0x000001c0 << 1, end = start + 128;
+	uint32_t i, start =(addr & 0x000001c0) << 1, end = start + 128;
 	for (i = start; i < end; i++)
 	{
 		if (l1_cache[i].sign && l1_cache[i].tag == tag)
@@ -234,7 +234,7 @@ static int cmd_addr(char *args)
 			if (start_sp != start)
 			{
 				uint8_t ans[4], *temp = ans, loc = 0;
-				while (((addr + loc) & 0x000001c0 << 1) == start)
+				while ((((addr + loc) & 0x000001c0) << 1) == start)
 				{
 					ans[loc] = l1_cache[i].data_b[offset + loc];
 					loc++;
@@ -255,7 +255,7 @@ static int cmd_addr(char *args)
 						
 						printf("Hit in Two Blocks!!!!!!!!!!\n");
 						printf("Ans = 0x%X\n",*(uint32_t *)temp & musk);
-						printf("Group_id = %X\n", addr & 0x000001c0 << 1);
+						printf("Group_id = %X\n", (addr & 0x000001c0) << 1);
 						printf("Offset = %x\n", offset);
 						printf("Tag = 0x%X\tTag_sp = %X\n\n", tag, tag_sp);
 						uint32_t k;
@@ -282,7 +282,7 @@ static int cmd_addr(char *args)
 			{
 				uint8_t *temp = &l1_cache[i].data_b[offset];
 				printf("Ans = 0x%X\n",*(uint32_t *)temp & musk);
-				printf("Group_id = %X\n", addr & 0x000001c0 << 1);
+				printf("Group_id = %X\n", (addr & 0x000001c0) << 1);
 				printf("Offset = %x\n", offset);
 				printf("Tag = 0x%X\n\n", tag);
 				uint32_t k;
