@@ -9,6 +9,14 @@ void dram_write(hwaddr_t, size_t, uint32_t);
 
 /* Memory accessing interfaces */
 
+#ifdef CACHE
+static uint32_t rand_temp()
+{
+	static uint32_t hahahaha;
+	return ++hahahaha;
+}
+#endif
+
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 #ifdef CACHE
 	
@@ -54,7 +62,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 		}
 	}
 	
-	uint32_t temp = rand() % 128 + start, temp_set = addr - offset;
+	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
 	for (i = 0; i < 16; i++)
 	{
 		l1_cache[temp].data_d[i] = dram_read(temp_set + i * 4, 4);
