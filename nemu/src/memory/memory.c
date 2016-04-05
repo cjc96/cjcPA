@@ -84,7 +84,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 		l1_cache[start_sp_temp].tag = tag_sp;
 		l1_cache[start_sp_temp].sign = 1;
 	}
-	//printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
+	printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
 	if (addr == 0x100019) printf("haha\n");
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
 #endif
