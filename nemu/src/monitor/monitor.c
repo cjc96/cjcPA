@@ -94,7 +94,11 @@ void restart() {
 #ifdef CACHE
 	/* Initialize cache */
 	int i;
-	for (i = 0; i < 1000; i++)
+	for (i = 0; i < 1024; i++)
 		l1_cache[i].sign = 0;
+	#ifdef L2_CACHE
+	for (i = 0; i < 65536; i++)
+		l2_cache[i].sign = 0;
+	#endif
 #endif
 }
