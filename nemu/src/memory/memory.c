@@ -67,7 +67,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
 	//if (temp == 259)
 		//printf("%x %zu\n", addr, len);
-	printf("1\n");
+	printf("2\n");
 	for (i = 0; i < 16; i++)
 	{
 		l1_cache[temp].data_d[i] = dram_read(temp_set + i * 4, 4);
