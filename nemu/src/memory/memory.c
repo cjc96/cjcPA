@@ -15,7 +15,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t musk = ~0u >> ((4 - len) << 3);
 	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
 	
-	uint32_t i, start =addr & 0x000001c0 << 1, end = start + 128;
+	uint32_t i, start =addr & 0x000001c0, end = start + 128;
 	for (i = start; i < end; i++)
 	{
 		if (l1_cache[i].sign && l1_cache[i].tag == tag)
