@@ -10,6 +10,11 @@
 #define LOG_FILE
 #define CACHE
 
+#ifdef CACHE
+//#define L2_CACHE
+#endif
+
+
 #include "debug.h"
 #include "macro.h"
 

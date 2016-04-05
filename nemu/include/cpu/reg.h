@@ -27,6 +27,18 @@ typedef struct {
 }l1_cache_state;
 
 extern l1_cache_state l1_cache[1024];
+
+#ifdef L2_CACHE
+typedef struct {
+	uint8_t sign, dirty;
+	uint32_t tag;
+	union
+	{
+	}
+}l2_cache_state;
+
+extern l2_cache_state l2_cache[];
+#endif
 #endif
 
 typedef struct {
