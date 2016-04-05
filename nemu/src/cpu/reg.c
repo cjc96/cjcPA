@@ -5,7 +5,7 @@
 #ifdef CACHE
 l1_cache_state l1_cache[1024];
 #ifdef L2_CACHE
-l2_cache_state l2_cache[];
+l2_cache_state l2_cache[ ];
 #endif
 #endif
 
