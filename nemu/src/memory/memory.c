@@ -24,6 +24,8 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
 	
 	uint32_t i, start =addr & 0x000001c0, end = start + 128;
+	if (addr == 0x1000bf)
+		printf("%zu\n", len);
 	for (i = start; i < end; i++)
 	{
 		if (l1_cache[i].sign && l1_cache[i].tag == tag)
@@ -79,7 +81,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 		l1_cache[temp + 1].sign = 1;
 	}
 	
-	printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
+	//printf("Not hit.\nval = %x\taddr = %x\n",dram_read(addr, len) & musk, addr);
 	
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
 #endif
