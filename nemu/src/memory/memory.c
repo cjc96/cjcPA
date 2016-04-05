@@ -59,7 +59,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			else
 			{
 				uint8_t *temp = &l1_cache[i].data_b[offset];
-				if (addr == 0x100019) printf("haha\n");
+				if (addr == 0x100019) printf("%x\n", *temp);
 				return *(uint32_t *)temp & musk;
 			}
 		}
