@@ -59,7 +59,6 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			else
 			{
 				uint8_t *temp = &l1_cache[i].data_b[offset];
-				if (addr == 0x100019) printf("%x\n", *temp);
 				return *(uint32_t *)temp & musk;
 			}
 		}
@@ -97,7 +96,7 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 #ifdef CACHE
 	dram_write(addr, len, data);
 	
-	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = (addr + len - 1) & 0xfffff1c0;
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = (addr + len - 1) & 0x000001c0;
 	
 	uint32_t i, start = addr & 0x000001c0, end = start + 128;
 	for (i = start; i < end; i++)
@@ -107,7 +106,7 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 			if (start_sp != start)
 			{
 				uint8_t loc = 0;
-				while (((addr + loc) & 0xfffff1c0) == start)
+				while (((addr + loc) & 0x000001c0) == start)
 				{
 					l1_cache[i].data_b[offset + loc] = data & 0xff;
 					data >>= 8;

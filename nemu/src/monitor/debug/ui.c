@@ -223,7 +223,7 @@ static int cmd_addr(char *args)
 	sscanf(args, "%x %d", &addr, &len);
 	
 	uint32_t musk = ~0u >> ((4 - len) << 3);
-	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = (addr + len - 1) & 0xfffff1c0;
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = (addr + len - 1) & 0x000001c0;
 	bool flag = 0;
 	
 	uint32_t i, start =addr & 0x000001c0, end = start + 128;
@@ -234,7 +234,7 @@ static int cmd_addr(char *args)
 			if (start_sp != start)
 			{
 				uint8_t ans[4], *temp = ans, loc = 0;
-				while (((addr + loc) & 0xfffff1c0) == start)
+				while (((addr + loc) & 0x000001c0) == start)
 				{
 					ans[loc] = l1_cache[i].data_b[offset + loc];
 					loc++;
