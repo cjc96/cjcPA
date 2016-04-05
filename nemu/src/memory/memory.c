@@ -102,7 +102,7 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 					loc++;
 				}
 				
-				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0 << 1, end_sp = start_sp + 128, loc_sp = 0;
+				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0, end_sp = start_sp + 128, loc_sp = 0;
 				for (j = start_sp; j < end_sp; j++)
 				{
 					if (l1_cache[j].sign && l1_cache[j].tag == tag_sp)

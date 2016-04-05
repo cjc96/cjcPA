@@ -226,7 +226,7 @@ static int cmd_addr(char *args)
 	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00;
 	bool flag = 0;
 	
-	uint32_t i, start =addr & 0x000001c0 << 1, end = start + 128;
+	uint32_t i, start =addr & 0x000001c0, end = start + 128;
 	for (i = start; i < end; i++)
 	{
 		if (l1_cache[i].sign && l1_cache[i].tag == tag)
@@ -240,7 +240,7 @@ static int cmd_addr(char *args)
 					loc++;
 				}
 				
-				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0 << 1, end_sp = start_sp + 128, loc_sp = 0;
+				uint32_t j, start_sp = (addr + len - 1) & 0x000001c0, end_sp = start_sp + 128, loc_sp = 0;
 				for (j = start_sp; j < end_sp; j++)
 				{
 					if (l1_cache[j].sign && l1_cache[j].tag == tag_sp)
