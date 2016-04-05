@@ -54,10 +54,10 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 		}
 	}
 	
-	uint32_t temp = rand() % 128 + start;
+	uint32_t temp = rand() % 128 + start, temp_set = addr - offset;
 	for (i = 0; i < 16; i++)
 	{
-		l1_cache[temp].data_d[i] = dram_read(tag + i * 4, 4);
+		l1_cache[temp].data_d[i] = dram_read(temp_set + i * 4, 4);
 	}
 	l1_cache[temp].tag = tag;
 	l1_cache[temp].sign = 1;

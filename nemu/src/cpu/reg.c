@@ -3,7 +3,7 @@
 #include <time.h>
 
 #ifdef CACHE
-l1_cache_state l1_cache[1000];
+l1_cache_state l1_cache[1024];
 #endif
 
 CPU_state cpu;

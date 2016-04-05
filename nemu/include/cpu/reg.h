@@ -26,7 +26,7 @@ typedef struct {
 	};
 }l1_cache_state;
 
-extern l1_cache_state l1_cache[1000];
+extern l1_cache_state l1_cache[1024];
 #endif
 
 typedef struct {
