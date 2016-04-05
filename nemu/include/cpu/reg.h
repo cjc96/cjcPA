@@ -21,7 +21,7 @@ typedef struct {
 	union
 	{
 		uint32_t data_d[16];
-		//uint16_t data_w[32];
+		uint16_t data_w[32];
 		uint8_t data_b[64];
 	};
 }l1_cache_state;
@@ -34,7 +34,10 @@ typedef struct {
 	uint32_t tag;
 	union
 	{
-	}
+		uint32_t data_d[16];
+		uint16_t data_w[32];
+		uint8_t data_b[64];
+	};
 }l2_cache_state;
 
 extern l2_cache_state l2_cache[65536];
