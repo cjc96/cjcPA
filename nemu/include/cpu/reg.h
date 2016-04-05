@@ -37,7 +37,7 @@ typedef struct {
 	}
 }l2_cache_state;
 
-extern l2_cache_state l2_cache[];
+extern l2_cache_state l2_cache[65536];
 #endif
 #endif
 

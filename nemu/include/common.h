@@ -11,7 +11,7 @@
 #define CACHE
 
 #ifdef CACHE
-//#define L2_CACHE
+#define L2_CACHE
 #endif
 
 
