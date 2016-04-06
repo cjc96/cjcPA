@@ -16,7 +16,7 @@ enum { R_AL, R_CL, R_DL                                                         
 
 #ifdef CACHE
 typedef struct {
-	uint8_t sign;
+	uint8_t valid;
 	uint32_t tag;
 	union
 	{
@@ -30,7 +30,7 @@ extern l1_cache_state l1_cache[1024];
 
 #ifdef L2_CACHE
 typedef struct {
-	uint8_t sign, dirty;
+	uint8_t valid, dirty;
 	uint32_t tag;
 	union
 	{

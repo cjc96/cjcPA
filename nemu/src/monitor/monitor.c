@@ -95,10 +95,10 @@ void restart() {
 	/* Initialize cache */
 	int i;
 	for (i = 0; i < 1024; i++)
-		l1_cache[i].sign = 0;
+		l1_cache[i].valid = 0;
 	#ifdef L2_CACHE
 	for (i = 0; i < 65536; i++)
-		l2_cache[i].sign = 0;
+		l2_cache[i].valid = 0;
 	#endif
 #endif
 }
