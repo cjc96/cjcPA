@@ -12,7 +12,7 @@
 #ifdef CACHE
 #define L2_CACHE
 #endif
-#define IA32_SEG
+
 
 #include "debug.h"
 #include "macro.h"
