@@ -34,4 +34,9 @@ typedef union CR3 {
 	uint32_t val;
 } CR3;
 
+typedef struct GDTR {
+		uint32_t base;
+		uint16_t limit;
+} GDTR;
+
 #endif
