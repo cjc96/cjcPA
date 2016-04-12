@@ -8,6 +8,7 @@
 #include "data-mov/pop.h"
 #include "data-mov/cmovcc.h"
 #include "data-mov/leave.h"
+#include "data-mov/lgdt.h"
 
 #include "arith/dec.h"
 #include "arith/inc.h"
