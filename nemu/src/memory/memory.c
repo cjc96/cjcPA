@@ -60,6 +60,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 			}
 		}
 	}
+#ifndef L2_CACHE
 	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
 	
 	for (i = 0; i < 16; i++)
@@ -80,6 +81,12 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	}
 	
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+#endif
+
+#ifdef L2_CACHE
+
+#endif
+
 #endif
 
 #ifndef CACHE
