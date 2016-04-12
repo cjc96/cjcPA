@@ -100,5 +100,6 @@ void restart() {
 	for (i = 0; i < 65536; i++)
 		l2_cache[i].valid = 0;
 	#endif
+	cpu.cr0 = 0;
 #endif
 }
