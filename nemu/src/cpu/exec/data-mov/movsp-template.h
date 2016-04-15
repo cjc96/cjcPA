@@ -4,6 +4,7 @@
 
 static void do_execute () {
 	uint32_t temp = swaddr_read(cpu.eip, 1), rmcode = (swaddr_read(cpu.eip + 1, 1) >> 3) & 0x7;
+	printf("%d \n", rmcode);
 	printf("%x %x", temp, rmcode);
 	if (temp == 0x20)
 	{
