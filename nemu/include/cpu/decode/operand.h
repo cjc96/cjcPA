@@ -15,6 +15,7 @@ typedef struct {
 		int32_t simm;
 	};
 	uint32_t val;
+	uint32_t seg_type;
 	char str[OP_STR_SIZE];
 } Operand;
 

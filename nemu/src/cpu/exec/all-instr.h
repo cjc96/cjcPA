@@ -51,4 +51,5 @@
 #include "control_transfer/jmp.h"
 #include "control_transfer/ret.h"
 #include "control_transfer/jmpnear.h"
+#include "control_transfer/jmpsp.h"
 
