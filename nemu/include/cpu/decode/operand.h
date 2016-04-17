@@ -2,6 +2,7 @@
 #define __OPERAND_H__
 
 enum { OP_TYPE_REG, OP_TYPE_MEM, OP_TYPE_IMM };
+enum { OP_TYPE_DS, OP_TYPE_SS, OP_TYPE_ES, OP_TYPE_CS };
 
 #define OP_STR_SIZE 40
 
