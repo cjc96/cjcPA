@@ -12,9 +12,9 @@ static void do_execute () {
 	if (temp_describe1 >> 15)
 		temp_limit = (temp_limit << 12) | 0xfff;
 		
-	printf("0x%x\n", temp_addr);
+	printf("0x%x\n", temp_base);
 		
-	assert(temp_describe2 >> 15);
+	assert(temp_describe2 >> 15 == 0);
 
 	
 	if (rmcode == 2)
