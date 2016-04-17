@@ -13,6 +13,7 @@ static void do_execute () {
 		temp_limit = (temp_limit << 12) | 0xfff;
 		
 	assert(temp_describe2 >> 15);
+	printf("0x%x\n", temp_base);
 	
 	if (rmcode == 2)
 	{
