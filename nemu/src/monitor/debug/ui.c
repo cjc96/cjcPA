@@ -80,7 +80,7 @@ static int cmd_info(char *args)
 		printf("CH = 0x%02X\t\t",cpu.ch);
 		printf("BH = 0x%02X\n",cpu.bh);*/
 		printf("EIP = 0x%08X\n",cpu.eip);
-		printf("gdtr.limit = 0x%02X\tgdtr.base = 0x%08X\n", cpu.gdtr.limit, cpu.gdtr.base);
+		printf("gdtr.limit = 0x%04X\tgdtr.base = 0x%08X\n", cpu.gdtr.limit, cpu.gdtr.base);
 		printf("EFLAGS = 0x%08X\n",cpu.EFLAGS);
 		printf("CF = %d\t",cpu.CF);
 		printf("OF = %d\t",cpu.OF);
