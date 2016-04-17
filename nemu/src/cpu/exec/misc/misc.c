@@ -1,6 +1,14 @@
 #include "cpu/exec/helper.h"
 #include "cpu/decode/modrm.h"
 
+make_helper(std)
+{
+	cpu.DF = 1;
+	print_asm("std");
+	
+	return 1;
+}
+
 make_helper(cwtl) 
 {
 	int16_t temp1 = cpu.ax;

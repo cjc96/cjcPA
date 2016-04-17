@@ -7,5 +7,6 @@ make_helper(lea);
 make_helper(cltd);
 make_helper(cwtl);
 make_helper(cld);
+make_helper(std);
 
 #endif
