@@ -79,7 +79,7 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 
 	rm->type = OP_TYPE_MEM;
 	rm->addr = addr;
-	printf("%x\n",rm->type);
+	printf("%x\n",rm->reg);
 
 	return instr_len;
 }
