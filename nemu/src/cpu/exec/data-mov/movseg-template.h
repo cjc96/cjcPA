@@ -12,8 +12,10 @@ static void do_execute () {
 	if (temp_describe1 >> 15)
 		temp_limit = (temp_limit << 12) | 0xfff;
 		
-	assert(temp_describe2 >> 15);
 	printf("0x%x\n", temp_base);
+		
+	assert(temp_describe2 >> 15);
+
 	
 	if (rmcode == 2)
 	{
