@@ -12,14 +12,7 @@ static void do_execute () {
 	if (temp_describe1 >> 15)
 		temp_limit = (temp_limit << 12) | 0xfff;
 		
-	/*printf("0x%x\n", temp_describe0);
-	printf("0x%x\n", temp_describe1);
-	printf("0x%x\n", temp_describe2);
-	printf("0x%x\n", temp_describe3);
-	printf("0x%x\n", temp_describe4);
-	printf("0x%x\n", temp_describe5);
-	printf("0x%x\n", temp_describe6);
-	printf("0x%x\n", temp_describe7);*/
+	printf("0x%x\n", temp_base);
 		
 	assert(temp_describe2 >> 15 == 0);
 
