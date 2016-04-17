@@ -101,5 +101,7 @@ void restart() {
 		l2_cache[i].valid = 0;
 	#endif
 	cpu.cr0 = 0;
+	cpu.CS.cache.limit = 0xffffffff;
+	cpu.CS.cache.base  = 0x0;
 #endif
 }
