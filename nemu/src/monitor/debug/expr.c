@@ -297,7 +297,14 @@ static bool make_token(char *e) {
 							tokens[nr_token].num = cpu.bh;
 						if (strcmp(regtemp,"eip") == 0)
 							tokens[nr_token].num = cpu.eip;
-							
+						if (strcmp(regtemp,"CS") == 0)
+							tokens[nr_token].num = cpu.CS;
+						if (strcmp(regtemp,"DS") == 0)
+							tokens[nr_token].num = cpu.DS;
+						if (strcmp(regtemp,"ES") == 0)
+							tokens[nr_token].num = cpu.ES;
+						if (strcmp(regtemp,"SS") == 0)
+							tokens[nr_token].num = cpu.SS;
 						nr_token++;
 						break;
 						
