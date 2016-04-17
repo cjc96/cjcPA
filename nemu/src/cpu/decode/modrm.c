@@ -47,7 +47,7 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 	if(index_reg != -1) {
 		addr += reg_l(index_reg) << scale;
 	}
-
+	
 #ifdef DEBUG
 	char disp_buf[16];
 	char base_buf[8];
@@ -79,6 +79,16 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 
 	rm->type = OP_TYPE_MEM;
 	rm->addr = addr;
+	
+	if (base_reg == -1 || m->R_M == R_EBP || m->R_M == R_ESP)
+	{
+		rm->seg_type = SEG_TYPE_SS;
+	}
+	else
+	{
+		rm->seg_type = SEG_TYPE_DS;
+	}
+
 
 	return instr_len;
 }
@@ -109,7 +119,6 @@ int read_ModR_M(swaddr_t eip, Operand *rm, Operand *reg) {
 	}
 	else {
 		int instr_len = load_addr(eip, &m, rm);
-		printf("%x\n",rm->reg);
 		rm->val = swaddr_read(rm->addr, rm->size);
 		return instr_len;
 	}
