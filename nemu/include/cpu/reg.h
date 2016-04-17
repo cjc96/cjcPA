@@ -160,7 +160,7 @@ typedef struct {
 	
 	GDTR gdtr;
 	
-	uint32_t SS, DS, ES, CS;
+	SEGMENT_STATE SS, DS, ES, CS;
 	
 	CR0 cr0;
 	
