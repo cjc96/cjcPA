@@ -44,7 +44,7 @@ static struct rule {
 	{"\\|", AOR},					// algebra or
 	{"~", AN},						// algebra not
 	{"[0-9]+", NUM},				// number
-	{"\\$[a-z]+", REG},				// register
+	{"\\$[a-zA-Z]+", REG},				// register
 	{"[a-zA-Z_][a-zA-Z0-9_]*",OBJ}  // object
 
 	
