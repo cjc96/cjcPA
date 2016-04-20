@@ -3,7 +3,12 @@
 #define instr pop
 
 static void do_execute () {
-	OPERAND_W(op_src, swaddr_read(cpu.esp,DATA_BYTE));
+#ifdef SEGMENT
+	OPERAND_W(op_src, swaddr_read(cpu.esp, DATA_BYTE, SEG_TYPE_SS));
+#endif
+#ifdef SEGMENT
+	OPERAND_W(op_src, swaddr_read(cpu.esp, DATA_BYTE));
+#endif
 	cpu.esp += DATA_BYTE;
 	
 	print_asm_template1();

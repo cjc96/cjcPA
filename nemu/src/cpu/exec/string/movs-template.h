@@ -8,8 +8,12 @@ make_helper(concat(movs_, SUFFIX)) {
 	
 	if (DATA_BYTE == 1)
 	{
-	
+#ifndef SEGMENT	
 		swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE));
+#endif
+#ifdef SEGMENT
+        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_DS);
+#endif
 	
 		if (!cpu.DF)
 			incdec = 1;
@@ -19,7 +23,12 @@ make_helper(concat(movs_, SUFFIX)) {
 	else if (DATA_BYTE == 2)
 	{
 	
+#ifndef SEGMENT	
 		swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE));
+#endif
+#ifdef SEGMENT
+        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_DS);
+#endif
 	
 		if (!cpu.DF)
 			incdec = 2;
@@ -29,7 +38,12 @@ make_helper(concat(movs_, SUFFIX)) {
 	else
 	{
 
+#ifndef SEGMENT	
 		swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE));
+#endif
+#ifdef SEGMENT
+        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_DS);
+#endif
 	
 		if (!cpu.DF)
 			incdec = 4;

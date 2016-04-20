@@ -4,7 +4,12 @@
 
 static void do_execute () {
 	cpu.esp -= DATA_BYTE;
-	swaddr_write(cpu.esp,DATA_BYTE,op_src->val);
+#ifdef SEGMENT
+	swaddr_write(cpu.esp, DATA_BYTE, op_src->val, SEG_TYPE_SS);
+#endif
+#ifndef SEGMENT
+	swaddr_write(cpu.esp, DATA_BYTE, op_src->val);
+#endif
 	
 	print_asm_template1();
 }

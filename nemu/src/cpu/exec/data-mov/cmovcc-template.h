@@ -3,7 +3,7 @@
 #define instr cmovcc
 
 static void do_execute () {
-	int op_temp = swaddr_read(cpu.eip + 1,1);
+	int op_temp = instr_fetch(cpu.eip + 1,1);
 	
 	switch (op_temp)
 	{
