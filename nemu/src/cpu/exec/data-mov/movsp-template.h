@@ -3,7 +3,7 @@
 #define instr movsp
 
 static void do_execute () {
-	uint32_t temp = swaddr_read(cpu.eip + 1, 1), rmcode = (swaddr_read(cpu.eip + 2, 1) >> 3) & 0x7;
+	uint32_t temp = instr_fetch(cpu.eip + 1, 1), rmcode = (instr_fetch(cpu.eip + 2, 1) >> 3) & 0x7;
 	
 	if (temp == 0x20)
 	{

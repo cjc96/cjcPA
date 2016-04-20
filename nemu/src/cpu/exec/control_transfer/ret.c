@@ -4,7 +4,12 @@
 
 make_helper(ret)
 {
-	cpu.eip = swaddr_read(cpu.esp,4);
+#ifdef SEGMENT
+	cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
+#endif
+#ifndef SEGMENT
+	cpu.eip = swaddr_read(cpu.esp, 4);
+#endif
 	cpu.esp += 4;
 
 	print_asm("ret");
@@ -13,7 +18,12 @@ make_helper(ret)
 
 make_helper(ret_i_w)
 {
-	cpu.eip = swaddr_read(cpu.esp,4);
+#ifdef SEGMENT
+	cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
+#endif
+#ifndef SEGMENT
+	cpu.eip = swaddr_read(cpu.esp, 4);
+#endif
 	cpu.esp += 4;
 	int16_t temp = (op_src->val & 0x0000ffff);
 	cpu.esp += (int32_t)temp;
