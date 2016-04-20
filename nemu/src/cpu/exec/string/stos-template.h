@@ -10,7 +10,7 @@ make_helper(concat(stos_, SUFFIX)) {
 		swaddr_write(cpu.edi, DATA_BYTE, cpu.al);
 #endif
 #ifdef SEGMENT
-        swaddr_write(cpu.edi, DATA_BYTE, cpu.al, SEG_TYPE_DS);
+        swaddr_write(cpu.edi, DATA_BYTE, cpu.al, SEG_TYPE_ES);
 #endif
 		if (!cpu.DF)
 			cpu.edi += 1;
@@ -23,7 +23,7 @@ make_helper(concat(stos_, SUFFIX)) {
 		swaddr_write(cpu.edi, DATA_BYTE, cpu.ax);
 #endif
 #ifdef SEGMENT
-		swaddr_write(cpu.edi, DATA_BYTE, cpu.ax, SEG_TYPE_DS);
+		swaddr_write(cpu.edi, DATA_BYTE, cpu.ax, SEG_TYPE_ES);
 #endif
 		if (!cpu.DF)
 			cpu.edi += 2;
@@ -36,7 +36,7 @@ make_helper(concat(stos_, SUFFIX)) {
 		swaddr_write(cpu.edi, DATA_BYTE, cpu.eax);
 #endif
 #ifdef SEGMENT
-	swaddr_write(cpu.edi, DATA_BYTE, cpu.eax, SEG_TYPE_DS);
+	swaddr_write(cpu.edi, DATA_BYTE, cpu.eax, SEG_TYPE_ES);
 #endif	
 		if (!cpu.DF)
 			cpu.edi += 4;

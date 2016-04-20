@@ -12,7 +12,7 @@ make_helper(concat(movs_, SUFFIX)) {
 		swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE));
 #endif
 #ifdef SEGMENT
-        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_DS);
+        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_ES);
 #endif
 	
 		if (!cpu.DF)
@@ -27,7 +27,7 @@ make_helper(concat(movs_, SUFFIX)) {
 		swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE));
 #endif
 #ifdef SEGMENT
-        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_DS);
+        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_ES);
 #endif
 	
 		if (!cpu.DF)
@@ -42,7 +42,7 @@ make_helper(concat(movs_, SUFFIX)) {
 		swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE));
 #endif
 #ifdef SEGMENT
-        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_DS);
+        swaddr_write(cpu.edi, DATA_BYTE, swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), SEG_TYPE_ES);
 #endif
 	
 		if (!cpu.DF)
