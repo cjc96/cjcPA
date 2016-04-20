@@ -1,6 +1,6 @@
 #include "cpu/exec/template-start.h"
 
-#define instr movsp
+#define instr movcr
 
 static void do_execute () {
 	uint32_t temp = instr_fetch(cpu.eip + 1, 1), rmcode = (instr_fetch(cpu.eip + 2, 1) >> 3) & 0x7;
