@@ -7,6 +7,11 @@ void dram_write(hwaddr_t, size_t, uint32_t);
 #include "cpu/reg.h"
 #endif
 
+#ifdef SEGMENT
+#include "cpu/reg.h"
+extern CPU_state cpu;
+#endif
+
 /* Memory accessing interfaces */
 
 #ifdef CACHE
@@ -158,17 +163,64 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 	hwaddr_write(addr, len, data);
 }
 
+#ifndef SEGMENT
 uint32_t swaddr_read(swaddr_t addr, size_t len) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
 	return lnaddr_read(addr, len);
 }
+#endif
 
+#ifdef SEGMENT
+uint32_t swaddr_read(swaddr_t addr, size_t len, uint32_t seg) {
+#ifdef DEBUG
+    assert(len == 1 || len == 2 || len ==4);
+#endif
+	uint32_t temp;
+	if (seg == 0)
+		temp = cpu.DS.cache.base;
+	else if (seg == 1)
+		temp = cpu.SS.cache.base;
+	else if (seg == 2)
+		temp = cpu.ES.cache.base;
+	else if (seg == 3)
+		temp = cpu.CS.cache.base;
+#ifdef DEBUG
+	else
+		assert(0);
+#endif	 
+	return lnaddr_read(addr + temp, len);
+}
+#endif
+
+#ifndef SEGMENT
 void swaddr_write(swaddr_t addr, size_t len, uint32_t data) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
 	lnaddr_write(addr, len, data);
 }
+#endif
 
+#ifdef SEGMENT
+void swaddr_write(swaddr_t addr, size_t len, uint32_t data, uint32_t seg) {
+#ifdef DEBUG
+	assert(len == 1 || len == 2 || len == 4);
+#endif
+	uint32_t temp;
+	if (seg == 0)
+		temp = cpu.DS.cache.base;
+	else if (seg == 1)
+		temp = cpu.SS.cache.base;
+	else if (seg == 2)
+		temp = cpu.ES.cache.base;
+	else if (seg == 3)
+		temp = cpu.CS.cache.base;
+#ifdef DEBUG
+	else
+		assert(0);
+#endif
+	lnaddr_write(addr + temp, len, data);
+}
+#endif

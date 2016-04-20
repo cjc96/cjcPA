@@ -6,14 +6,14 @@
 /* You will define this macro in PA4 */
 //#define HAS_DEVICE
 
-//#define DEBUG
+#define DEBUG
 #define LOG_FILE
 //#define CACHE
 #ifdef CACHE
 #define L2_CACHE
 #endif
 #define SEGMENT
-
+//#define PAGE
 
 #include "debug.h"
 #include "macro.h"
