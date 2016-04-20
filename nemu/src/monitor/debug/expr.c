@@ -573,7 +573,12 @@ uint32_t expr(char *e, bool *success) {
 				
 			case POINTER:
 				temp2 = sta[sta_len-1];
+#ifdef SEGMENT
 				sta[sta_len-1] = swaddr_read(temp2, 4, 0);
+#endif
+#ifndef SEGMENT
+				sta[sta_len-1] = swaddr_read(temp2, 4);
+#endif
 				break;
 						
 			case '+': 
