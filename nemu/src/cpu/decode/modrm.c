@@ -119,7 +119,12 @@ int read_ModR_M(swaddr_t eip, Operand *rm, Operand *reg) {
 	}
 	else {
 		int instr_len = load_addr(eip, &m, rm);
+		#ifdef SEGMENT
+		rm->val = swaddr_read(rm->addr, rm->size, rm->seg_type);
+		#endif
+		#ifndef SEGMENT
 		rm->val = swaddr_read(rm->addr, rm->size);
+		#endif
 		return instr_len;
 	}
 }
