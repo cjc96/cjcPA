@@ -71,7 +71,12 @@ void cpu_exec(volatile uint32_t n) {
 		if (do_call)
 		{
 			cpu.esp -= 4;
+#ifndef SEGMENT
 			swaddr_write(cpu.esp,4,former_eip);
+#endif
+#ifdef SEGMENT
+			swaddr_write(cpu.esp,4,former_eip,SEG_TYPE_SS);
+#endif
 			
 			if (do_rm_call)
 				cpu.eip -= instr_len;

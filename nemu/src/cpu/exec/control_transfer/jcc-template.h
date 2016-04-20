@@ -4,10 +4,10 @@
 
 static void do_execute () {
 	int op_temp;
-	op_temp = swaddr_read(cpu.eip,1);
+	op_temp = instr_fetch(cpu.eip,1);
 	if (op_temp == 0x0f)
 	{
-		op_temp = swaddr_read(cpu.eip + 1, 1);
+		op_temp = instr_fetch(cpu.eip + 1, 1);
 		switch (op_temp)
 			{
 				case 0x80 : if (cpu.OF) cpu.eip += op_src->val; break;

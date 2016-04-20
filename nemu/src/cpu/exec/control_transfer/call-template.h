@@ -3,7 +3,7 @@
 #define instr call
 
 static void do_execute () {
-	uint32_t temp = swaddr_read(cpu.eip, 1);
+	uint32_t temp = instr_fetch(cpu.eip, 1);
 	if (temp == 0xe8)
 		cpu.eip += op_src->val;
 	else if (temp == 0xff)

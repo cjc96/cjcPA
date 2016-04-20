@@ -3,8 +3,8 @@
 
 make_helper(jmpsp) 
 {
-	uint32_t temp1 = swaddr_read(cpu.eip + 1, 4);
-	uint16_t temp2 = swaddr_read(cpu.eip + 3, 2);
+	uint32_t temp1 = instr_fetch(cpu.eip + 1, 4);
+	uint16_t temp2 = instr_fetch(cpu.eip + 3, 2);
 	cpu.CS.val = temp2;
 	cpu.eip = temp1;	
 

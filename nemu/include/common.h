@@ -12,7 +12,7 @@
 #ifdef CACHE
 #define L2_CACHE
 #endif
-//#define SEGMENT
+#define SEGMENT
 //#define PAGE
 
 #include "debug.h"

@@ -8,6 +8,10 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+#ifdef SEGMENT
+enum { SEG_TYPE_DS, SEG_TYPE_SS, SEG_TYPE_ES, SEG_TYPE_CS };
+#endif
+
 void cpu_exec(uint32_t);
 
 /* We use the ``readline'' library to provide more flexibility to read from stdin. */
@@ -117,8 +121,14 @@ static int cmd_x(char *args)
 	sscanf(temp,"%d",&n);
 	sscanf(temp + strlen(temp)+1 , "%x" , &addr);
 	
+#ifndef SEGMENT
 	for (i = 0; i < n; i++)
 		printf("%x\t :\t %d\n",addr+i,swaddr_read(addr+i,4));
+#endif
+#ifdef SEGMENT
+    for (i = 0; i < n; i++)
+        printf("%x\t :\t %d\n",addr+i,swaddr_read(addr + i, 4, SEG_TYPE_DS));
+#endif
 
 	return 0;
 }
@@ -204,13 +214,24 @@ static int cmd_bt()
 	if (nend_flag)
 		while (temp != 0 && flag)
 		{
+#ifndef SEGMENT
 			printf("#%d 0x%x in ",label,swaddr_read(temp+4,4));
+#endif
+#ifdef SEGMENT
+			printf("#%d 0x%x in ",label,swaddr_read(temp+4,4,SEG_TYPE_SS));
+#endif
+
 		
 			extern int get_func_name(uint32_t);
 			if (get_func_name(temp))
 				flag = 0;
-		
+#ifndef SEGMENT	
 			temp = swaddr_read(temp,4);
+#endif
+#ifdef SEGMENT
+			temp = swaddr_read(temp,4,SEG_TYPE_SS);
+#endif
+
 			label++;
 		}
 		
