@@ -9,7 +9,12 @@ make_helper(concat(cmps_, SUFFIX)) {
 	if (DATA_BYTE == 1)
 	{
 		int sin = 1, cin = 1;
+#ifndef SEGMENT
 		int ain = swaddr_read(cpu.esi, 1), bin = swaddr_read(cpu.edi, 1);
+#endif
+#ifdef SEGMENT
+		int ain = swaddr_read(cpu.esi, 1, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, 1, SEG_TYPE_DS);
+#endif
 		set_eflags(ain, bin, sin, cin);
 	
 		if (!cpu.DF)
@@ -20,7 +25,12 @@ make_helper(concat(cmps_, SUFFIX)) {
 	else if (DATA_BYTE == 2)
 	{
 		int sin = 1,cin = 1;
+#ifndef SEGMENT
 		int ain = swaddr_read(cpu.esi, 2), bin = swaddr_read(cpu.edi, 2);
+#endif
+#ifdef SEGMENT
+		int ain = swaddr_read(cpu.esi, 2, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, 2, SEG_TYPE_DS);
+#endif
 		set_eflags(ain, bin, sin, cin);
 	
 		if (!cpu.DF)
@@ -31,7 +41,12 @@ make_helper(concat(cmps_, SUFFIX)) {
 	else
 	{
 		int sin = 1,cin = 1;
+#ifndef SEGMENT
 		int ain = swaddr_read(cpu.esi, 4), bin = swaddr_read(cpu.edi, 4);
+#endif
+#ifdef SEGMENT
+		int ain = swaddr_read(cpu.esi, 4, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, 4, SEG_TYPE_DS);
+#endif
 		set_eflags(ain, bin, sin, cin);
 	
 		if (!cpu.DF)
