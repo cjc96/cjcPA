@@ -169,38 +169,45 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 
 hwaddr_t page_translate(lnaddr_t addr)
 {
-	if (cpu.cr0.paging)
 		return (hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xffc00000) + (addr & 0xfff);
-	else 
-		return addr;
 }
 
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-	if ((addr+len) >> 12 != addr >> 12) {
-		/* this is a special case, you can handle it later. */
-		assert(0);
+	if (cpu.cr0.paging)
+	{
+		if ((addr+len) >> 12 != addr >> 12) {
+			/* this is a special case, you can handle it later. */
+			assert(0);
+		}
+		else {
+			hwaddr_t hwaddr = page_translate(addr);
+			return hwaddr_read(hwaddr, len);
+		}
 	}
-	else {
-		hwaddr_t hwaddr = page_translate(addr);
-		return hwaddr_read(hwaddr, len);
-	}
+	else
+		return hwaddr_read(addr, len);
 }
 
 void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-	if ((addr+len) >> 12 != addr >> 12) {
-		/* this is a special case, you can handle it later. */
-		assert(0);
+	if (cpu.cr0.paging)
+	{
+		if ((addr+len) >> 12 != addr >> 12) {
+			/* this is a special case, you can handle it later. */
+			assert(0);
+		}
+		else {
+			hwaddr_t hwaddr = page_translate(addr);
+			hwaddr_write(hwaddr, len, data);
+		}
 	}
-	else {
-		hwaddr_t hwaddr = page_translate(addr);
-		hwaddr_write(hwaddr, len, data);
-	}
+	else
+		return hwaddr_write(addr, len, data);
 }
 #endif
 
