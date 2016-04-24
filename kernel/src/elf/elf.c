@@ -35,37 +35,34 @@ uint32_t loader() {
 	uint32_t *p_magic = (void *)buf;
 	nemu_assert(*p_magic == elf_magic);
 
-	
-
-/*#ifdef HAS_DEVICE
-	ide_read(ph_buf,elf->e_phoff,elf->e_phentsize*elf->e_phnum);
-#else
-	ramdisk_read(ph_buf,elf->e_phoff,elf->e_phentsize*elf->e_phnum);
-#endif */
-
 	/* Load each program segment */
-	int i;
-	for(i=0;i<elf->e_phnum;i++ ) {
+	
+	int index;
+	for(index = 0; index < elf->e_phnum; index++) {
 		/* Scan the program header table, load each segment into memory */
-		ph=(void *) elf->e_phoff+i*elf->e_phentsize;
+		ph = (void *)buf + elf->e_phoff + index * elf->e_phentsize;
 		if(ph->p_type == PT_LOAD) {
 			/* TODO: read the content of the segment from the ELF file 
 			 * to the memory region [VirtAddr, VirtAddr + FileSiz)
-			 */			 
-			/* TODO: zero the memory region 
-			 * [VirtAddr + FileSiz, VirtAddr + MemSiz)
 			 */
- 
+			uint32_t temp_paddr = ph->p_vaddr;
+			
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
 			extern uint32_t brk;
 			uint32_t new_brk = ph->p_vaddr + ph->p_memsz - 1;
-     		if(brk < new_brk) { brk = new_brk; }
+			if(brk < new_brk) { brk = new_brk; }
 			uint32_t pa=mm_malloc(ph->p_vaddr,ph->p_memsz);
-#endif  
+			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
+#endif
+#ifndef IA32_PAGE	
+			ramdisk_read((void *)temp_paddr, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
+#endif
 
-			ramdisk_read((void*)pa+KOFFSET,ELF_OFFSET_IN_DISK+ph->p_offset,ph->p_filesz); 
-			memset((void*)(pa+ph->p_filesz+KOFFSET),0,ph->p_memsz-ph->p_filesz);
+			/* TODO: zero the memory region 
+			 * [VirtAddr + FileSiz, VirtAddr + MemSiz)
+			 */
+			memset((void *)temp_paddr + ph->p_filesz, 0 , ph->p_memsz - ph->p_filesz);
 		}
 	}
 
@@ -83,4 +80,3 @@ uint32_t loader() {
 
 	return entry;
 }
-

@@ -169,7 +169,10 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 
 hwaddr_t page_translate(lnaddr_t addr)
 {
-	return (hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xffc00000) + (addr & 0xfff);
+	if (cpu.cr0.paging)
+		return (hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xffc00000) + (addr & 0xfff);
+	else 
+		return addr;
 }
 
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
@@ -216,18 +219,23 @@ uint32_t swaddr_read(swaddr_t addr, size_t len, uint32_t seg) {
     assert(len == 1 || len == 2 || len ==4);
 #endif
 	uint32_t temp;
-	if (seg == 0)
-		temp = cpu.DS.cache.base;
-	else if (seg == 1)
-		temp = cpu.SS.cache.base;
-	else if (seg == 2)
-		temp = cpu.ES.cache.base;
-	else if (seg == 3)
-		temp = cpu.CS.cache.base;
-#ifdef DEBUG
+	if (!cpu.cr0.protect_enable)
+		temp = 0;
 	else
-		assert(0);
-#endif	 
+	{
+		if (seg == 0)
+			temp = cpu.DS.cache.base;
+		else if (seg == 1)
+			temp = cpu.SS.cache.base;
+		else if (seg == 2)
+			temp = cpu.ES.cache.base;
+		else if (seg == 3)
+			temp = cpu.CS.cache.base;
+#ifdef DEBUG
+		else
+			assert(0);
+#endif	
+	} 
 	return lnaddr_read(addr + temp, len);
 }
 #endif
@@ -247,18 +255,23 @@ void swaddr_write(swaddr_t addr, size_t len, uint32_t data, uint32_t seg) {
 	assert(len == 1 || len == 2 || len == 4);
 #endif
 	uint32_t temp;
-	if (seg == 0)
-		temp = cpu.DS.cache.base;
-	else if (seg == 1)
-		temp = cpu.SS.cache.base;
-	else if (seg == 2)
-		temp = cpu.ES.cache.base;
-	else if (seg == 3)
-		temp = cpu.CS.cache.base;
-#ifdef DEBUG
+	if (!cpu.cr0.protect_enable)
+		temp = 0;
 	else
-		assert(0);
+	{
+		if (seg == 0)
+			temp = cpu.DS.cache.base;
+		else if (seg == 1)
+			temp = cpu.SS.cache.base;
+		else if (seg == 2)
+			temp = cpu.ES.cache.base;
+		else if (seg == 3)
+			temp = cpu.CS.cache.base;
+#ifdef DEBUG
+		else
+			assert(0);
 #endif
+	}
 	lnaddr_write(addr + temp, len, data);
 }
 #endif
