@@ -42,18 +42,21 @@ uint32_t loader() {
 		/* Scan the program header table, load each segment into memory */
 		ph = (void *)buf + elf->e_phoff + index * elf->e_phentsize;
 		if(ph->p_type == PT_LOAD) {
-
 			/* TODO: read the content of the segment from the ELF file 
 			 * to the memory region [VirtAddr, VirtAddr + FileSiz)
 			 */
 			uint32_t temp_paddr = ph->p_vaddr;
+			
+#ifdef IA32_PAGE
+			addr *temp = mm_malloc(, STACK_SIZE);
+#endif
+			
 			ramdisk_read((void *)temp_paddr, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
-			 
+			
 			/* TODO: zero the memory region 
 			 * [VirtAddr + FileSiz, VirtAddr + MemSiz)
 			 */
 			memset((void *)temp_paddr + ph->p_filesz, 0 , ph->p_memsz - ph->p_filesz);
-
 
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
