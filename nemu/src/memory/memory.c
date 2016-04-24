@@ -172,13 +172,7 @@ hwaddr_t page_translate(lnaddr_t addr)
 	uint32_t temp1 = hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4);
 	uint32_t temp2 = hwaddr_read((temp1 & 0xfffff000) + ((addr >> 12) & 0x3ff) * 4, 4);
 	uint32_t temp3 = (temp2 & 0xfffff000) + (addr & 0xfff);
-	//uint32_t temp = ((hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xfffff000) >> 0) + (addr & 0xfff);
-	//assert(temp3 == temp);
-	if (addr == 0x100a3c)
-	{
-		printf("%x\n",page_translate(0xc0101300));
-		printf("%x\n",temp3);
-	}
+	
 	return temp3;
 }
 
