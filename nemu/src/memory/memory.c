@@ -167,11 +167,13 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 
 hwaddr_t page_translate(lnaddr_t addr)
 {	
+#ifdef CACHE_TLB
 	uint32_t i;
 	for (i = 0; i < 64; i++)
 		if (cpu.tlb[i].tag == (addr & 0xfffff000) && cpu.tlb[i].valid)
 			return cpu.tlb[i].val;
-	
+#endif
+
 	uint32_t temp1 = hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4);
 	uint32_t temp2 = hwaddr_read((temp1 & 0xfffff000) + ((addr >> 12) & 0x3ff) * 4, 4);
 	uint32_t temp3 = (temp2 & 0xfffff000) + (addr & 0xfff);
