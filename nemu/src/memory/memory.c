@@ -169,7 +169,7 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 
 hwaddr_t page_translate(lnaddr_t addr)
 {
-	uint32_t temp = (hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xfffff000) + (addr & 0xfff);
+	uint32_t temp = ((hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xfffff000) >> 1) + (addr & 0xfff);
 	if (addr == 0x100a3c)
 	{
 		printf("%x\n",page_translate(0xc0101300));
