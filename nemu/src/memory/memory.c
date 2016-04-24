@@ -16,8 +16,8 @@ extern CPU_state cpu;
 #ifdef RANDOM
 static uint32_t rand_temp()
 {
-	static uint32_t hahahaha;
-	return ++hahahaha;
+	static uint32_t rand_num;
+	return ++rand_num;
 }
 #endif
 
