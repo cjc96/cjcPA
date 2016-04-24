@@ -176,7 +176,7 @@ uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-	if (cpu.cr0.paging)
+	if (cpu.cr0.paging && cpu.cr0.protect_enable)
 	{
 		if ((addr+len) >> 12 != addr >> 12) {
 			/* this is a special case, you can handle it later. */
@@ -195,7 +195,7 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-	if (cpu.cr0.paging)
+	if (cpu.cr0.paging && cpu.cr0.protect_enable)
 	{
 		if ((addr+len) >> 12 != addr >> 12) {
 			/* this is a special case, you can handle it later. */
