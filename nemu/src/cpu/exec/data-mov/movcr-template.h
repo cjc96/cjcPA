@@ -8,9 +8,9 @@ static void do_execute () {
 	if (temp == 0x20)
 	{
 		if (rmcode == 0)
-			op_src->val = cpu.cr0.val;
+			cpu.eax = cpu.cr0.val;
 		else if (rmcode == 3)
-			op_src->val = cpu.cr3.val;
+			cpu.eax = cpu.cr3.val;
 		else
 			assert(0);
 	}
