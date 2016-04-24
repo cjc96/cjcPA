@@ -48,9 +48,10 @@ uint32_t loader() {
 			uint32_t temp_paddr = ph->p_vaddr;
 			
 #ifdef IA32_PAGE
+			/* Record the program break for future use. */
 			extern uint32_t brk;
 			uint32_t new_brk = ph->p_vaddr + ph->p_memsz - 1;
-     		if(brk < new_brk) { brk = new_brk; }
+			if(brk < new_brk) { brk = new_brk; }
 			uint32_t pa=mm_malloc(ph->p_vaddr,ph->p_memsz);
 			ramdisk_read((void*)pa+KOFFSET,ELF_OFFSET_IN_DISK+ph->p_offset,ph->p_filesz); 
 #endif
@@ -62,13 +63,6 @@ uint32_t loader() {
 			 * [VirtAddr + FileSiz, VirtAddr + MemSiz)
 			 */
 			memset((void *)temp_paddr + ph->p_filesz, 0 , ph->p_memsz - ph->p_filesz);
-
-#ifdef IA32_PAGE
-			/* Record the program break for future use. */
-			extern uint32_t brk;
-			uint32_t new_brk = ph->p_vaddr + ph->p_memsz - 1;
-			if(brk < new_brk) { brk = new_brk; }
-#endif
 		}
 	}
 
