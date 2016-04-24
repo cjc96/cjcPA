@@ -96,12 +96,16 @@ void restart() {
 	int i;
 	for (i = 0; i < 1024; i++)
 		l1_cache[i].valid = 0;
-	#ifdef L2_CACHE
+#ifdef L2_CACHE
 	for (i = 0; i < 65536; i++)
 		l2_cache[i].valid = 0;
-	#endif
+#endif
 	cpu.cr0 = 0;
 	cpu.CS.cache.limit = 0xffffffff;
-	cpu.CS.cache.base  = 0x0;
+	cpu.CS.cache.base  = 0x0;	
+#endif
+#ifdef tlb
+	int tlb_i;
+	for (tlb_i = 0; tlb_i < 64; i++) cpu.tlb[i].valid = 0;
 #endif
 }

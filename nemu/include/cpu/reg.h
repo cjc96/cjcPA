@@ -166,6 +166,7 @@ typedef struct {
 	
 	CR3 cr3;
 	
+	TLB tlb[64];
 } CPU_state;
 
 extern CPU_state cpu;

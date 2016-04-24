@@ -47,4 +47,7 @@ typedef struct SEGMENT_STATE {
 		} cache;
 } SEGMENT_STATE;
 
+typedef struct TLB {
+	uint32_t tag, valid, val;
+} TLB;
 #endif

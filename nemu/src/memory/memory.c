@@ -14,13 +14,11 @@ extern CPU_state cpu;
 
 /* Memory accessing interfaces */
 
-#ifdef CACHE
 static uint32_t rand_temp()
 {
 	static uint32_t hahahaha;
 	return ++hahahaha;
 }
-#endif
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 #ifdef CACHE	
@@ -168,15 +166,22 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 #ifdef PAGE
 
 hwaddr_t page_translate(lnaddr_t addr)
-{
+{	
+	uint32_t i;
+	for (i = 0; i < 64; i++)
+		if (cpu.tlb[i].tag == (addr & 0xfffff000) && cpu.tlb[i].valid)
+			return cpu.tlb[i].val;
+	
 	uint32_t temp1 = hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4);
 	uint32_t temp2 = hwaddr_read((temp1 & 0xfffff000) + ((addr >> 12) & 0x3ff) * 4, 4);
 	uint32_t temp3 = (temp2 & 0xfffff000) + (addr & 0xfff);
-	if (addr == 0x80496D0)
-	{
-		printf("%x\n", hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4));
-		printf("%x\n%x\n%x\n",temp1,temp2,temp3);
-	}
+#ifdef CACHE_TLB
+	uint32_t temp_id = rand_temp() % 64;
+	cpu.tlb[temp_id].tag = addr&0xfffff000;
+	cpu.tlb[temp_id].valid = 1;
+	cpu.tlb[temp_id].val = temp3;
+#endif	
+
 	return temp3;
 }
 
