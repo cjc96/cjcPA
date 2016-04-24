@@ -8,18 +8,18 @@ static void do_execute () {
 	if (temp == 0x20)
 	{
 		if (rmcode == 0)
-			op_dest->val = cpu.cr0.val;
+			op_src->val = cpu.cr0.val;
 		else if (rmcode == 3)
-			op_dest->val = cpu.cr3.val;
+			op_src->val = cpu.cr3.val;
 		else
 			assert(0);
 	}
 	else
 	{
 		if (rmcode == 0)
-			cpu.cr0.val = op_src->val;
+			cpu.cr0.val = op_dest->val;
 		else if (rmcode == 3)
-			cpu.cr3.val = op_src->val;
+			cpu.cr3.val = op_dest->val;
 		else
 			assert(0);
 	}
