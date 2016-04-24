@@ -14,7 +14,8 @@
 #endif
 #define SEGMENT
 #define PAGE
-#define CACHE_TLB
+//#define CACHE_TLB
+//#define RANDOM
 
 #include "debug.h"
 #include "macro.h"

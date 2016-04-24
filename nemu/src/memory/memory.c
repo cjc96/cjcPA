@@ -13,12 +13,13 @@ extern CPU_state cpu;
 #endif
 
 /* Memory accessing interfaces */
-
+#ifdef RANDOM
 static uint32_t rand_temp()
 {
 	static uint32_t hahahaha;
 	return ++hahahaha;
 }
+#endif
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 #ifdef CACHE	
