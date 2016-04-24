@@ -54,7 +54,7 @@ uint32_t loader() {
 			if(brk < new_brk) { brk = new_brk; }
 			uint32_t pa = mm_malloc(ph->p_vaddr,ph->p_memsz);
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
-			
+			if (ph->p_vaddr + ph->p_memsz >= 0x80496D0 && ph->p_vaddr < 0x80496D0) assert(0);
 #endif
 #ifndef IA32_PAGE	
 			ramdisk_read((void *)temp_paddr, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
