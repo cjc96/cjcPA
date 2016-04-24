@@ -3,12 +3,9 @@
 #define instr jmpnear
 
 static void do_execute () {
-#ifndef PAGE
+
 	cpu.eip = op_src->val;
-#endif
-#ifdef PAGE
-	cpu.eip = op_src->val;
-#endif
+
 	extern int do_jmpnear;
 	do_jmpnear = 1;
 	
