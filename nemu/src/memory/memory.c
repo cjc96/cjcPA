@@ -248,10 +248,8 @@ uint32_t swaddr_read(swaddr_t addr, size_t len, uint32_t seg) {
 			temp = cpu.ES.cache.base;
 		else if (seg == 3)
 			temp = cpu.CS.cache.base;
-#ifdef DEBUG
 		else
 			assert(0);
-#endif	
 	} 
 	return lnaddr_read(addr + temp, len);
 }
@@ -284,10 +282,8 @@ void swaddr_write(swaddr_t addr, size_t len, uint32_t data, uint32_t seg) {
 			temp = cpu.ES.cache.base;
 		else if (seg == 3)
 			temp = cpu.CS.cache.base;
-#ifdef DEBUG
 		else
 			assert(0);
-#endif
 	}
 	lnaddr_write(addr + temp, len, data);
 }
