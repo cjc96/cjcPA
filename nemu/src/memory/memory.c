@@ -166,11 +166,17 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 #endif
 
 #ifdef PAGE
+
+hwaddr_t page_translate(lnaddr_t addr)
+{
+	return (hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xffc00000) + (addr & 0xfff);
+}
+
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-	if (data cross the page boundary) {
+	if ((addr+len) >> 12 != addr >> 12) {
 		/* this is a special case, you can handle it later. */
 		assert(0);
 	}
@@ -184,7 +190,7 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-	if (data cross the page boundary) {
+	if ((addr+len) >> 12 != addr >> 12) {
 		/* this is a special case, you can handle it later. */
 		assert(0);
 	}
