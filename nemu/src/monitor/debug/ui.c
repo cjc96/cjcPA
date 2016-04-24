@@ -9,7 +9,7 @@
 #include <readline/history.h>
 
 #ifdef SEGMENT
-enum { SEG_TYPE_DS, SEG_TYPE_SS, SEG_TYPE_ES, SEG_TYPE_CS };
+enum { SEG_TYPE_DS, SEG_TYPE_SS, SEG_TYPE_ES, SEG_TYPE_CS,SEG_TYPE_NONE };
 #endif
 
 void cpu_exec(uint32_t);
@@ -85,6 +85,7 @@ static int cmd_info(char *args)
 		printf("BH = 0x%02X\n",cpu.bh);*/
 		printf("EIP = 0x%08X\n",cpu.eip);
 		printf("gdtr.limit = 0x%04X\tgdtr.base = 0x%08X\n", cpu.gdtr.limit, cpu.gdtr.base);
+		printf("CR0 = 0x%08x\tCR3 = 0x%08x\n", cpu.cr0.val, cpu.cr3.val);
 		printf("EFLAGS = 0x%08X\n",cpu.EFLAGS);
 		printf("CF = %d\t",cpu.CF);
 		printf("OF = %d\t",cpu.OF);
