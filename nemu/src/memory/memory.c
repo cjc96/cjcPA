@@ -169,7 +169,7 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 
 hwaddr_t page_translate(lnaddr_t addr)
 {
-		return (hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) & 0xffc00000) + (addr & 0xfff);
+		return hwaddr_read(hwaddr_read(cpu.cr3.val + (addr >> 22) * 4, 4) + ((addr >> 12) & 0x3ff) * 4, 4) + (addr & 0xfff);
 }
 
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
