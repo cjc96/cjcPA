@@ -172,7 +172,7 @@ hwaddr_t page_translate(lnaddr_t addr)
 	uint32_t i;
 	for (i = 0; i < 64; i++)
 		if (cpu.tlb[i].tag == (addr & 0xfffff000) && cpu.tlb[i].valid)
-			return cpu.tlb[i].val;
+			return cpu.tlb[i].val + (addr & 0xfff);
 #endif
 
 	uint32_t temp1 = hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4);
@@ -182,7 +182,7 @@ hwaddr_t page_translate(lnaddr_t addr)
 	uint32_t temp_id = rand_temp() % 64;
 	cpu.tlb[temp_id].tag = addr & 0xfffff000;
 	cpu.tlb[temp_id].valid = 1;
-	cpu.tlb[temp_id].val = temp3;
+	cpu.tlb[temp_id].val = temp2 & 0xfffff000;
 #endif	
 
 	return temp3;
