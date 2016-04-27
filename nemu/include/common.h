@@ -8,9 +8,9 @@
 
 #define DEBUG
 #define LOG_FILE
-//#define CACHE
+#define CACHE
 #ifdef CACHE
-#define L2_CACHE
+//#define L2_CACHE
 #endif
 #define SEGMENT
 #define PAGE

@@ -43,7 +43,7 @@ typedef struct SEGMENT_STATE {
 		uint32_t val;
 		struct cache {
 			uint32_t base;
-			uint16_t limit;
+			uint32_t limit;
 		} cache;
 } SEGMENT_STATE;
 

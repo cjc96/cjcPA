@@ -99,10 +99,12 @@ void restart() {
 #ifdef L2_CACHE
 	for (i = 0; i < 65536; i++)
 		l2_cache[i].valid = 0;
+#endif	
 #endif
-	cpu.cr0 = 0;
+#ifdef SEGMENT
 	cpu.CS.cache.limit = 0xffffffff;
-	cpu.CS.cache.base  = 0x0;	
+	cpu.CS.cache.base  = 0x0;
+	cpu.cr0.val = 0;
 #endif
 #ifdef tlb
 	int tlb_i;
