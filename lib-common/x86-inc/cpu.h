@@ -39,6 +39,11 @@ typedef struct GDTR {
 		uint16_t limit;
 } GDTR;
 
+typedef struct IDTR {
+		uint32_t base;
+		uint16_t limit;
+} IDTR;
+
 typedef struct SEGMENT_STATE {
 		uint32_t val;
 		struct cache {

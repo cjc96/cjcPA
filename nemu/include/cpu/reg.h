@@ -160,6 +160,8 @@ typedef struct {
 	
 	GDTR gdtr;
 	
+	IDTR idtr;
+	
 	SEGMENT_STATE SS, DS, ES, CS;
 	
 	CR0 cr0;
