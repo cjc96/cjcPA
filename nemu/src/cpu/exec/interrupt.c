@@ -8,7 +8,6 @@ enum { SEG_TYPE_DS, SEG_TYPE_SS, SEG_TYPE_ES, SEG_TYPE_CS , SEG_TYPE_NONE};
 extern jmp_buf jbuf;
 
 void raise_intr(uint8_t NO) {
-	assert(0);
     assert(NO * 8 <= cpu.idtr.limit);
     lnaddr_t pidt = cpu.idtr.base + NO * 8;
     uint64_t idt_des = ((uint64_t) lnaddr_read(pidt + 4, 4) << 32) | lnaddr_read(pidt, 4); 
@@ -49,6 +48,7 @@ void raise_intr(uint8_t NO) {
     cpu.CS.cache.limit = temp_limit;
     
     cpu.eip = (idt_des & 0xFFFF) | ((idt_des >> 32LL) & 0xFFFF0000);
+    printf("%d\n",cpu.eip);
     
     /* Jump back to cpu_exec() */
     longjmp(jbuf, 1);
