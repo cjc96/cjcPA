@@ -5,9 +5,8 @@
 
 make_helper(int_i_b)
 {
-	printf("%d\n",op_src->val);
 	print_asm_template1();
-	raise_intr(swaddr_read(cpu.eip+1,1,0));
+	raise_intr(swaddr_read(cpu.eip+1,1,SEG_TYPE_CS));
 	
 	return 1;
 }
