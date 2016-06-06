@@ -3,7 +3,7 @@
 #define instr push
 
 static void do_execute () {
-	cpu.esp -= DATA_BYTE;
+	cpu.esp -= 4;
 #ifdef SEGMENT
 	swaddr_write(cpu.esp, DATA_BYTE, op_src->val, SEG_TYPE_SS);
 #endif
