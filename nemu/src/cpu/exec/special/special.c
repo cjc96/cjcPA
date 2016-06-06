@@ -30,7 +30,7 @@ make_helper(nemu_trap) {
 		case 2:
 			printf("123");
 			for (temp = 0; temp < cpu.edx; temp--)
-				printf("%c", swaddr_read(cpu.ecx, 1, SEG_TYPE_DS));
+				printf("%c1", swaddr_read(cpu.ecx, 1, SEG_TYPE_DS));
 		   	break;
 
 		default:
