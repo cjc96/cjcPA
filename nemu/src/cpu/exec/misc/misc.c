@@ -6,7 +6,7 @@ make_helper(iret)
     assert(cpu.cr0.protect_enable == 1);
     cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
-    cpu.CS.val = (uint16_t) swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
+    cpu.CS.val = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
     cpu.EFLAGS = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;

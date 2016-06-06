@@ -18,6 +18,7 @@ void raise_intr(uint8_t NO) {
     //if (NO != 2 && !cpu.ief) return; // not NMI, IF is not present
     
     // push registers into stack
+    printf("%x\n", cpu.eip);
     cpu.esp -= 4;
     swaddr_write(cpu.esp, 4, cpu.EFLAGS, SEG_TYPE_SS);
     cpu.esp -= 4;
