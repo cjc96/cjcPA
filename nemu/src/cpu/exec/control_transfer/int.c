@@ -1,13 +1,18 @@
 #include "cpu/exec/helper.h"
-#include "cpu/exec/interrupt.h"
+
+#define DATA_BYTE 1
+#include "int-template.h"
+#undef DATA_BYTE
+
+#define DATA_BYTE 2
+#include "int-template.h"
+#undef DATA_BYTE
+
+#define DATA_BYTE 4
+#include "int-template.h"
+#undef DATA_BYTE
 
 /* for instruction encoding overloading */
 
-make_helper(int_i_b)
-{
-	raise_intr(swaddr_read(cpu.eip + 1, 1, SEG_TYPE_CS));
-	cpu.eip += 1;
-	print_asm_template1();
-	return 1;
-}
+make_helper_v(int_i)
 
