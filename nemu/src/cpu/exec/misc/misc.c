@@ -25,8 +25,7 @@ make_helper(iret)
     
     cpu.CS.cache.base = temp_base;
     cpu.CS.cache.limit = temp_limit;
-    printf("%x\n", temp_limit);
-    assert(cpu.eip < cpu.CS.cache.limit);
+    
     print_asm("iret");
     
     return 1;
