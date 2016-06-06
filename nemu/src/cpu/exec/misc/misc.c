@@ -4,7 +4,7 @@
 make_helper(iret)
 {
     assert(cpu.cr0.protect_enable == 1);
-    printf("%x\t%x\n", cpu.eip, cpu.esp);
+    //printf("%x\t%x\n", cpu.eip, cpu.esp);
     cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
     cpu.CS.val = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
@@ -29,7 +29,7 @@ make_helper(iret)
     assert(cpu.eip < cpu.CS.cache.limit);
     print_asm("iret");
     
-    return 0;
+    return 1;
 }
 
 make_helper(popa)
