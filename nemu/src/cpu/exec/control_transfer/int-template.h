@@ -4,6 +4,7 @@
 #define instr int
 
 static void do_execute () {
+	/* This is VERY IMPROPER */
 	cpu.eip++;
 	raise_intr(op_src->val);
 	
