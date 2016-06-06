@@ -6,8 +6,8 @@
 make_helper(int_i_b)
 {
 	print_asm_template1();
-	raise_intr(swaddr_read(cpu.eip+1,1,SEG_TYPE_CS));
+	raise_intr(swaddr_read(cpu.eip + 1, 1, SEG_TYPE_CS));
 	
-	return 1;
+	return 2;
 }
 
