@@ -4,7 +4,7 @@
 make_helper(iret)
 {
     assert(cpu.cr0.protect_enable == 1);
-	printf("%x\n", cpu.esp);
+	
     cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
     cpu.CS.val = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
@@ -25,7 +25,7 @@ make_helper(iret)
     
     cpu.CS.cache.base = temp_base;
     cpu.CS.cache.limit = temp_limit;
-    
+    printf("%x\n", temp_limit);
     assert(cpu.eip < cpu.CS.cache.limit);
     print_asm("iret");
     
