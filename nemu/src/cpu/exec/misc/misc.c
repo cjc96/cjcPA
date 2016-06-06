@@ -28,7 +28,7 @@ make_helper(iret)
     assert(cpu.eip < cpu.CS.cache.limit);
     print_asm("iret");
     
-    return 1;
+    return 0;
 }
 
 make_helper(popa)
