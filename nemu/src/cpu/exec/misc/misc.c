@@ -4,7 +4,7 @@
 make_helper(iret)
 {
     assert(cpu.cr0.protect_enable == 1);
-    //printf("%x\t%x\n", cpu.eip, cpu.esp);
+	printf("%x\n", cpu.esp);
     cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
     cpu.CS.val = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
@@ -34,7 +34,6 @@ make_helper(iret)
 
 make_helper(popa)
 {
-	printf("%x\n", cpu.esp);
 	cpu.edi = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
 	cpu.esp += 4;
 	
@@ -82,7 +81,7 @@ make_helper(pusha)
 	swaddr_write(cpu.esp, 4, cpu.esi, SEG_TYPE_SS);
 	cpu.esp -= 4;
 	swaddr_write(cpu.esp, 4, cpu.edi, SEG_TYPE_SS);
-	printf("%x\n", cpu.esp);
+
 	print_asm("pusha");
 	
 	return 1;
