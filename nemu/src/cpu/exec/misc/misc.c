@@ -55,6 +55,7 @@ make_helper(popa)
 	cpu.esp += 4;
 	
 	cpu.eax = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
+	
 	cpu.esp += 4;
 	print_asm("popa");
 	
