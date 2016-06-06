@@ -28,6 +28,7 @@ make_helper(nemu_trap) {
 
 	switch(cpu.eax) {
 		case 2:
+			printf("%x\n", cpu.eip);
 			for (temp = 0; temp < cpu.edx; temp++)
 				printf("%c", swaddr_read(cpu.ecx + temp, 1, SEG_TYPE_DS));
 		   	break;
