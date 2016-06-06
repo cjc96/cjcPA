@@ -3,10 +3,10 @@
 
 /* for instruction encoding overloading */
 
-make_helper(ret_i_b)
+make_helper(int_i_b)
 {
 	print_asm_template1();
-	raise_intr(op_src->val);
+	//raise_intr(op_src->val);
 	
 	return 1;
 }
