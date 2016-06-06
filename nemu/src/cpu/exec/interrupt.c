@@ -48,7 +48,7 @@ void raise_intr(uint8_t NO) {
     cpu.CS.cache.limit = temp_limit;
     
     cpu.eip = (idt_des & 0xFFFF) | ((idt_des >> 32LL) & 0xFFFF0000);
-    printf("%x\n",cpu.eip);
+    printf("%x\n",temp_base);
     
     /* Jump back to cpu_exec() */
     longjmp(jbuf, 1);
