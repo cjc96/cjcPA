@@ -4,6 +4,7 @@
 make_helper(iret)
 {
     assert(cpu.cr0.protect_enable == 1);
+    printf("%x\t%x\n", cpu.eip, cpu.esp);
     cpu.eip = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
     cpu.CS.val = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
