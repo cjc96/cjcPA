@@ -26,7 +26,7 @@ void raise_intr(uint8_t NO) {
     cpu.esp -= 4;
     swaddr_write(cpu.esp, 4, cpu.eip, SEG_TYPE_SS); // next instruction now
     
-    // no error code currently
+     // no error code currently
     if (gate_type == 6) { // interrupt gate
         cpu.IF = 0;
     }
