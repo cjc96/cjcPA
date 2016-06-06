@@ -4,6 +4,7 @@
 #define instr int
 
 static void do_execute () {
+	cpu.eip++;
 	raise_intr(op_src->val);
 	
 	print_asm_template1();
