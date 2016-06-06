@@ -18,14 +18,14 @@ void raise_intr(uint8_t NO) {
     //if (NO != 2 && !cpu.ief) return; // not NMI, IF is not present
     
     // push registers into stack
-    printf("%x\t%x\n", cpu.eip, cpu.esp-12);
+    
     cpu.esp -= 4;
     swaddr_write(cpu.esp, 4, cpu.EFLAGS, SEG_TYPE_SS);
     cpu.esp -= 4;
     swaddr_write(cpu.esp, 4, cpu.CS.val, SEG_TYPE_SS);
     cpu.esp -= 4;
     swaddr_write(cpu.esp, 4, cpu.eip, SEG_TYPE_SS); // next instruction now
-    
+    printf("%x\t\n", cpu.esp);
     // no error code currently
     if (gate_type == 6) { // interrupt gate
         cpu.IF = 0;
