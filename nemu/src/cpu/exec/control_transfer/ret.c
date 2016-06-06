@@ -13,7 +13,7 @@ make_helper(ret)
 	cpu.esp += 4;
 
 	print_asm("ret");
-	return 1;
+	return 0;
 }
 
 make_helper(ret_i_w)
@@ -29,6 +29,6 @@ make_helper(ret_i_w)
 	cpu.esp += (int32_t)temp;
 
 	print_asm("ret");
-	return 1;
+	return 0;
 }
 
