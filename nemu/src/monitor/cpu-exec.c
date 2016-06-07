@@ -129,6 +129,7 @@ void cpu_exec(volatile uint32_t n) {
 			printf("%x,%x\n", intr_no, cpu.eip);
 			i8259_ack_intr();
 			raise_intr(intr_no);
+			printf("%x,%x\n", intr_no, cpu.eip);
 		}
 
 		if(nemu_state != RUNNING) { return; }
