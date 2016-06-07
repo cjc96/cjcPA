@@ -168,6 +168,8 @@ typedef struct {
 	
 	CR3 cr3;
 	
+	bool INTR;
+	
 	TLB tlb[64];
 } CPU_state;
 
