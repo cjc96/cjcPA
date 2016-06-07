@@ -2,6 +2,14 @@
 #include "cpu/decode/modrm.h"
 #include "device/port-io.h"
 
+make_helper(hlt)
+{
+	while (!cpu.INTR);
+	print_asm("hlt");
+	
+	return 1;
+}
+
 make_helper(out)
 {
 	//opcode = ef

@@ -13,5 +13,6 @@ make_helper(popa);
 make_helper(iret);
 make_helper(in);
 make_helper(out);
+make_helper(hlt);
 
 #endif
