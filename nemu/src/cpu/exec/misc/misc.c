@@ -1,10 +1,11 @@
 #include "cpu/exec/helper.h"
 #include "cpu/decode/modrm.h"
+#include "device/port-io.h"
 
 make_helper(out)
 {
 	//opcode = ef
-	pio.write(cpu.dx, 4, cpu.eax);
+	pio_write(cpu.dx, 4, cpu.eax);
 	print_asm("out");
 	
 	return 1;
