@@ -29,6 +29,7 @@ void raise_intr(uint8_t NO) {
      // no error code currently
     if (gate_type == 6) { // interrupt gate
         cpu.IF = 0;
+        printf("set1");
     }
     
     // long jump
