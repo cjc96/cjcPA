@@ -397,6 +397,7 @@ void ui_mainloop() {
 #ifdef HAS_DEVICE
 		extern void sdl_clear_event_queue(void);
 		sdl_clear_event_queue();
+		printf("1");
 #endif
 
 		int i;
