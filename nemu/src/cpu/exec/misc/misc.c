@@ -82,7 +82,7 @@ make_helper(iret)
     
     print_asm("iret");
     
-    return 0;
+    return 1;
 }
 
 make_helper(popa)
