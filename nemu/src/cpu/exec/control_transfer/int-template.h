@@ -5,7 +5,7 @@
 
 static void do_execute () {
 	/* This is VERY IMPROPER */
-	cpu.eip++;
+	cpu.eip += 2;
 	
 	raise_intr(op_src->val);
 	print_asm_template1();
