@@ -7,7 +7,7 @@ make_helper(sti)
 	cpu.IF = 1;
 	print_asm("sti");
 	
-	return 0;
+	return 1;
 }
 
 make_helper(hlt)
