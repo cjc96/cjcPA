@@ -54,7 +54,7 @@ uint32_t loader() {
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
 #else
 			ide_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
-			Log("%x\n", i);
+			
 #endif
 			memset((void*)(pa + ph->p_filesz + KOFFSET), 0, ph->p_memsz - ph->p_filesz);
 		}
