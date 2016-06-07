@@ -42,6 +42,7 @@ uint32_t loader() {
 		ph=(void *) elf->e_phoff+i*elf->e_phentsize;
 		Log("akehgagadsg");
 		if(ph->p_type == PT_LOAD) {
+		Log("akehgagadsg");
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
 			extern uint32_t brk;
