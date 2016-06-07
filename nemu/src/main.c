@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
 
 	/* Initialize the virtual computer system. */
 	restart();
-#ifdef HAS_DEVICE
+
 	/* Initialize device and sdl(PA4) */
 	init_device();
 	init_sdl();
-#endif
+
 	/* Receive commands from user. */
 	ui_mainloop();
 
