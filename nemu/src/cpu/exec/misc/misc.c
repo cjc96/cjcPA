@@ -65,7 +65,6 @@ make_helper(iret)
     cpu.esp += 4;
     cpu.EFLAGS = swaddr_read(cpu.esp, 4, SEG_TYPE_SS);
     cpu.esp += 4;
-    printf("%x\n", cpu.eip);
     
     uint32_t temp_addr = 8 * ((cpu.CS.val >> 3) & 0x1fff) + cpu.gdtr.base;
 	uint32_t temp_describe7 = swaddr_read(temp_addr, 1, SEG_TYPE_DS), temp_describe6 = swaddr_read(temp_addr + 1, 1, SEG_TYPE_DS), temp_describe5 = swaddr_read(temp_addr + 2, 1, SEG_TYPE_DS), temp_describe4 = swaddr_read(temp_addr + 3, 1, SEG_TYPE_DS), temp_describe3 = swaddr_read(temp_addr + 4, 1, SEG_TYPE_DS), temp_describe2 = swaddr_read(temp_addr + 5, 1, SEG_TYPE_DS), temp_describe1 = swaddr_read(temp_addr + 6, 1, SEG_TYPE_DS), temp_describe0 = swaddr_read(temp_addr + 7, 1, SEG_TYPE_DS);
@@ -83,7 +82,7 @@ make_helper(iret)
     
     print_asm("iret");
     
-    return 1;
+    return 0;
 }
 
 make_helper(popa)
