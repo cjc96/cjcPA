@@ -71,7 +71,7 @@ void cpu_exec(volatile uint32_t n) {
 		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
 		
-		if (cpu.eip == 0xc01013f7) printf("\n%d\n",instr_len);
+		if (cpu.eip == 0xc01013f7) printf("q947594u\n");
 		
 		cpu.eip += instr_len;
 		former_eip += instr_len;
