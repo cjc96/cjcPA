@@ -130,7 +130,6 @@ void cpu_exec(volatile uint32_t n) {
 		/* PA4:check if an interrupt is called whenever an instruction was excecuted */
 		if(cpu.INTR & cpu.IF) 
 		{
-			printf("%x\n", cpu.eip);
 			uint32_t intr_no = i8259_query_intr();
 			i8259_ack_intr();
 			raise_intr(intr_no);
