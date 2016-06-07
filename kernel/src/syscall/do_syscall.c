@@ -4,13 +4,15 @@
 
 void add_irq_handle(int, void (*)(void));
 void mm_brk(uint32_t);
+void serial_printc(char);
 
 static inline void sys_write(TrapFrame *tf) {
 	uint32_t fd = tf->ebx;
     char *buf = (char *)tf->ecx;
     uint32_t len = tf->edx, result = 0;
     if (fd == 1 || fd == 2) {
-        asm volatile (".byte 0xd6" : : "a"(2), "c"(buf), "d"(len));
+        //asm volatile (".byte 0xd6" : : "a"(2), "c"(buf), "d"(len));
+        while (len--) serial_printc(*(buf++));
         result = tf->edx;
     } else {
         assert(0);
