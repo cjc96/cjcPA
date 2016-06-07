@@ -49,12 +49,11 @@ uint32_t loader() {
 			uint32_t new_brk = ph->p_vaddr + ph->p_memsz - 1;
      		if(brk < new_brk) { brk = new_brk; }
 			uint32_t pa=mm_malloc(ph->p_vaddr,ph->p_memsz);
-			uint32_t seg_paddr = mm_malloc(ph->p_vaddr, ph->p_memsz);
 #endif  
 #ifndef HAS_DEVICE
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
 #else
-			ide_read((void *)seg_paddr, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
+			ide_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
 #endif
 			memset((void*)(pa + ph->p_filesz + KOFFSET), 0, ph->p_memsz - ph->p_filesz);
 		}
