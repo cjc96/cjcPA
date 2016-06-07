@@ -35,14 +35,13 @@ uint32_t loader() {
 	uint32_t *p_magic = (void *)buf;
 	nemu_assert(*p_magic == elf_magic);
 
-	
 	/* Load each program segment */
 	int i;
 	for(i=0;i<elf->e_phnum;i++ ) {
 		/* Scan the program header table, load each segment into memory */
 		ph=(void *) elf->e_phoff+i*elf->e_phentsize;
+		Log("akehgagadsg");
 		if(ph->p_type == PT_LOAD) {
- 			Log("akehgagadsg");
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
 			extern uint32_t brk;
