@@ -81,7 +81,7 @@ make_helper(iret)
     cpu.CS.cache.limit = temp_limit;
     
     print_asm("iret");
-    
+    printf("%x\n", cpu.eip);
     return 1;
 }
 
