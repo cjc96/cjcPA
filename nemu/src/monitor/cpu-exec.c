@@ -3,6 +3,8 @@
 #include <setjmp.h>
 #include "monitor/expr.h"
 #include "monitor/watchpoint.h"
+#include "device/i8259.h"
+#include "cpu/exec/interrupt.h"
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -119,7 +121,12 @@ void cpu_exec(volatile uint32_t n) {
 			temp_node = temp_node->next;
 		}
 		
-
+		/* PA4:check if an interrupt is called whenever an instruction was excecuted */
+		if(cpu.INTR & cpu.IF) {
+			uint32_t intr_no = i8259_query_intr();
+			i8259_ack_intr();
+			raise_intr(intr_no);
+		}
 
 		if(nemu_state != RUNNING) { return; }
 	}
