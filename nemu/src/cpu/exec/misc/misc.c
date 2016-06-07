@@ -14,7 +14,7 @@ make_helper(hlt)
 make_helper(outb)
 {
 	//opcode = ee
-	pio_write(cpu.dx, 4, cpu.al);
+	pio_write(cpu.dx, 1, cpu.al);
 	print_asm("outb");
 	
 	return 1;
@@ -32,7 +32,7 @@ make_helper(outd)
 make_helper(inb)
 {
 	//opcode = ec
-	cpu.al = pio_read(cpu.dx, 4);
+	cpu.al = pio_read(cpu.dx, 1);
 	print_asm("inb");
 	
 	return 1;
