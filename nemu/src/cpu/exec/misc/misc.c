@@ -4,6 +4,7 @@
 
 make_helper(hlt)
 {
+	//opcode = f4
 	while (!cpu.INTR);
 	print_asm("hlt");
 	
