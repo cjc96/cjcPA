@@ -17,7 +17,7 @@ static int handle_count = 0;
 
 void do_syscall(TrapFrame *);
 
-void
+void 
 add_irq_handle(int irq, void (*func)(void) ) {
 	assert(irq < NR_HARD_INTR);
 	assert(handle_count <= NR_IRQ_HANDLE);
@@ -37,7 +37,7 @@ void irq_handle(TrapFrame *tf) {
 	//panic("Have you re-organized the ``TrapFrame'' structure?");
 	
 	int irq = tf->irq;
-	Log("%d",irq);
+	
 	if (irq < 0) {
 		panic("Unhandled exception!");
 	} else if (irq == 0x80) {
@@ -46,6 +46,7 @@ void irq_handle(TrapFrame *tf) {
 		panic("Unexpected exception #%d at eip = %x", irq, tf->eip);
 	} else if (irq >= 1000) {
 		int irq_id = irq - 1000;
+		Log("%d",irq);
 		assert(irq_id < NR_HARD_INTR);
 		struct IRQ_t *f = handles[irq_id];
 
