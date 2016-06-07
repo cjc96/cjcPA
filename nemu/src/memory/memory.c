@@ -212,9 +212,14 @@ uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
 	if (cpu.cr0.paging && cpu.cr0.protect_enable)
 	{
 		if ((addr & 0xfff) + len > 4096) {
-		
 			/* this is a special case, you can handle it later. */
-			assert(0);
+			//assert(0);
+			uint32_t temp_ans = 0;
+			while (len--)
+			{
+				temp_ans = temp_ans * 0x100 + lnaddr_read(addr + len, 1);
+			}
+			return temp_ans;
 		}
 		else {
 			hwaddr_t hwaddr = page_translate(addr);
@@ -234,7 +239,15 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 		if ((addr & 0xfff) + len > 4096) {
 		
 			/* this is a special case, you can handle it later. */
-			assert(0);
+			//assert(0);
+			
+			uint32_t temp_loop;
+			for (temp_loop = 0; temp_loop < len; temp_loop++)
+			{
+				lnaddr_write(addr + temp_loop, 1, data & 0xff);
+				data >>= 8;
+			}
+			
 		}
 		else {
 			hwaddr_t hwaddr = page_translate(addr);
