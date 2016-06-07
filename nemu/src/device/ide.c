@@ -73,8 +73,7 @@ void ide_io_handler(ioaddr_t addr, size_t len, bool is_write) {
 			/* read 4 bytes data from disk */
 			assert(!ide_write);
 			ret = fread(ide_port_base, 4, 1, disk_fp);
-			assert(ret == 1);
-
+			//assert(ret == 1);
 			byte_cnt += 4;
 			if(byte_cnt == 512) {
 				/* finish */
