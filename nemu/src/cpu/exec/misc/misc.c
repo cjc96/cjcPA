@@ -11,20 +11,38 @@ make_helper(hlt)
 	return 1;
 }
 
-make_helper(out)
+make_helper(outb)
 {
-	//opcode = ef
-	pio_write(cpu.dx, 4, cpu.eax);
-	print_asm("out");
+	//opcode = ee
+	pio_write(cpu.dx, 4, cpu.al);
+	print_asm("outb");
 	
 	return 1;
 }
 
-make_helper(in)
+make_helper(outd)
+{
+	//opcode = ef
+	pio_write(cpu.dx, 4, cpu.eax);
+	print_asm("outd");
+	
+	return 1;
+}
+
+make_helper(inb)
+{
+	//opcode = ec
+	cpu.al = pio_read(cpu.dx, 4);
+	print_asm("inb");
+	
+	return 1;
+}
+
+make_helper(ind)
 {
 	//opcode = ed
 	cpu.eax = pio_read(cpu.dx, 4);
-	print_asm("in");
+	print_asm("ind");
 	
 	return 1;
 }
