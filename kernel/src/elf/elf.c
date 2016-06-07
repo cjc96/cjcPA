@@ -52,6 +52,7 @@ uint32_t loader() {
 #endif  
 #ifndef HAS_DEVICE
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
+			Log("akehgagadsg");
 #else
 			Log("akehgagadsg");
 			ide_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
