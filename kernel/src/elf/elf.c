@@ -39,10 +39,8 @@ uint32_t loader() {
 	int i;
 	for(i=0;i<elf->e_phnum;i++ ) {
 		/* Scan the program header table, load each segment into memory */
-		ph=(void *) elf->e_phoff+i*elf->e_phentsize;
-		Log("akehgagadsg");
+		ph=(void *)(elf->e_phoff + i * elf->e_phentsize + buf);
 		if(ph->p_type == PT_LOAD) {
-		Log("akehgagadsg");
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
 			extern uint32_t brk;
