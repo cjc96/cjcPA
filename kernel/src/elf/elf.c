@@ -38,6 +38,7 @@ uint32_t loader() {
 	
 	/* Load each program segment */
 	int i;
+	Log("ajkhgaegaergaer%x", elf->e_phnum);
 	for(i=0;i<elf->e_phnum;i++ ) {
 		/* Scan the program header table, load each segment into memory */
 		ph=(void *) elf->e_phoff+i*elf->e_phentsize;
@@ -54,7 +55,6 @@ uint32_t loader() {
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
 #else
 			ide_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
-			Log("a");
 #endif
 			memset((void*)(pa + ph->p_filesz + KOFFSET), 0, ph->p_memsz - ph->p_filesz);
 		}
