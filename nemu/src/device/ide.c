@@ -47,7 +47,7 @@ void ide_io_handler(ioaddr_t addr, size_t len, bool is_write) {
 					/* command: read from disk */
 					ide_write = false;
 					ret = fread(ide_port_base, 4, 1, disk_fp);
-					assert(ret == 1);
+					//assert(ret == 1);
 					ide_port_base[7] = 0x40;
 					i8259_raise_intr(IDE_IRQ);
 				}
