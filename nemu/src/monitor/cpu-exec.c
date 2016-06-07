@@ -71,8 +71,6 @@ void cpu_exec(volatile uint32_t n) {
 		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
 		
-		if (cpu.eip == 0xc01013f7) printf("q947594u\n");
-		
 		cpu.eip += instr_len;
 		former_eip += instr_len;
 		if (do_call)
@@ -132,6 +130,7 @@ void cpu_exec(volatile uint32_t n) {
 		/* PA4:check if an interrupt is called whenever an instruction was excecuted */
 		if(cpu.INTR & cpu.IF) 
 		{
+			printf("%x\n", cpu.eip);
 			uint32_t intr_no = i8259_query_intr();
 			i8259_ack_intr();
 			raise_intr(intr_no);
