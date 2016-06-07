@@ -1,6 +1,24 @@
 #include "cpu/exec/helper.h"
 #include "cpu/decode/modrm.h"
 
+make_helper(out)
+{
+	//opcode = ef
+	pio.write(cpu.dx, 4, cpu.eax);
+	print_asm("out");
+	
+	return 1;
+}
+
+make_helper(in)
+{
+	//opcode = ed
+	cpu.eax = pio_read(cpu.dx, 4);
+	print_asm("in");
+	
+	return 1;
+}
+
 make_helper(iret)
 {
     assert(cpu.cr0.protect_enable == 1);

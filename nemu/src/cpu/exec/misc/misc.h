@@ -11,5 +11,7 @@ make_helper(std);
 make_helper(pusha);
 make_helper(popa);
 make_helper(iret);
+make_helper(in);
+make_helper(out);
 
 #endif
