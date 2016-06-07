@@ -26,6 +26,7 @@ uint32_t loader() {
 	ide_read(buf, ELF_OFFSET_IN_DISK, 4096);
 #else
 	ramdisk_read(buf, ELF_OFFSET_IN_DISK, 4096);
+	panic("hehe");
 #endif
 
 	elf = (void*)buf;
