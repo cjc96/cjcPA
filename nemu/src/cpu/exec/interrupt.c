@@ -25,6 +25,7 @@ void raise_intr(uint8_t NO) {
     swaddr_write(cpu.esp, 4, cpu.CS.val, SEG_TYPE_SS);
     cpu.esp -= 4;
     swaddr_write(cpu.esp, 4, cpu.eip, SEG_TYPE_SS); // next instruction now
+    printf("%x\n", cpu.eip);
     
      // no error code currently
     if (gate_type == 6) { // interrupt gate
