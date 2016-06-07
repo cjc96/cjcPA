@@ -11,8 +11,8 @@ static inline void sys_write(TrapFrame *tf) {
     char *buf = (char *)tf->ecx;
     uint32_t len = tf->edx, result = 0;
     if (fd == 1 || fd == 2) {
-        //asm volatile (".byte 0xd6" : : "a"(2), "c"(buf), "d"(len));
-        while (len--) serial_printc(*(buf++));
+        asm volatile (".byte 0xd6" : : "a"(2), "c"(buf), "d"(len));
+        //while (len--) serial_printc(*(buf++));
         result = tf->edx;
     } else {
         assert(0);

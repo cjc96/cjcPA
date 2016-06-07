@@ -10,14 +10,14 @@ make_helper(sti)
 	return 1;
 }
 
-make_helper(hlt)
+/*make_helper(hlt)
 {
 	//opcode = f4
 	while (!cpu.INTR);
 	print_asm("hlt");
 	
 	return 1;
-}
+}*/
 
 make_helper(outb)
 {

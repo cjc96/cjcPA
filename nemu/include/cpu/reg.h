@@ -168,7 +168,7 @@ typedef struct {
 	
 	CR3 cr3;
 	
-	volatile bool INTR;
+	//volatile bool INTR;
 	
 	TLB tlb[64];
 } CPU_state;
