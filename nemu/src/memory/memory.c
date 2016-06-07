@@ -1,4 +1,5 @@
 #include "common.h"
+#include "device/mmio.h"
 
 uint32_t dram_read(hwaddr_t, size_t);
 void dram_write(hwaddr_t, size_t, uint32_t);
@@ -94,7 +95,15 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 #endif
 
 #ifndef CACHE
-	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+	uint32_t port_num = is_mmio(addr);
+	if (port_num == -1)
+	{
+		return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+	}
+	else
+	{
+		return mmio_read(addr, len, port_num) & (~0u >> ((4 - len) << 3));
+	}
 #endif
 }
 
@@ -150,7 +159,15 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 #endif
 
 #ifndef CACHE
-	dram_write(addr, len, data);
+	uint32_t port_num = is_mmio(addr);
+	if (port_num == -1)
+	{
+		dram_write(addr, len, data);
+	}
+	else
+	{
+		mmio_write(addr, len, data, port_num);
+	}
 #endif
 }
 

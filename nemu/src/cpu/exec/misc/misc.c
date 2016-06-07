@@ -7,6 +7,7 @@ make_helper(out)
 	//opcode = ef
 	pio_write(cpu.dx, 4, cpu.eax);
 	print_asm("out");
+	
 	return 1;
 }
 
