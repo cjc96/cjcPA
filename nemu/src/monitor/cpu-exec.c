@@ -70,6 +70,9 @@ void cpu_exec(volatile uint32_t n) {
 		do_call = 0; do_jmpnear = 0; do_rm_call = 0;
 		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
+		
+		if (cpu.eip == 0xc01013f6) printf("\n%d\n",instr_len);
+		
 		cpu.eip += instr_len;
 		former_eip += instr_len;
 		if (do_call)
@@ -101,7 +104,7 @@ void cpu_exec(volatile uint32_t n) {
 		}
 #endif
 
-		/* TODO: check watchpoints here. */
+		/* check watchpoints here. */
 		WP *temp_node;
 		int temp_value;
 		bool temp_success;
