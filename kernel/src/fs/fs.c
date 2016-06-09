@@ -1,4 +1,5 @@
 #include "common.h"
+#include <string.h>
 
 typedef struct {
 	char *name;
@@ -30,5 +31,71 @@ static const file_info file_table[] = {
 void ide_read(uint8_t *, uint32_t, uint32_t);
 void ide_write(uint8_t *, uint32_t, uint32_t);
 
-/* TODO: implement a simplified file system here. */
+/* implement a simplified file system here. */
 
+typedef struct {
+	bool opened;
+	uint32_t offset;
+} FSTATE;
+
+FSTATE fstate[NR_FILES + 3];
+
+int fs_open(const char *pathname, int flags) {
+	int i = 0;
+    for (i = 0; i < NR_FILES; i++) {
+        if (strcmp(file_table[i].name, pathname) == 0) {
+            int fd = i + 3;
+            fstate[fd].opened = true;
+            fstate[fd].offset = 0;
+            return fd;
+        }
+    }
+    panic("file not found");
+    return -1;
+}
+
+int fs_read(int fd, void *buf, size_t len) {
+    if (fd < 3) return -1;
+    assert(fd < NR_FILES + 3);
+    assert(fstate[fd].opened);
+    int max_len = file_table[fd - 3].size - fstate[fd].offset;
+    assert(max_len >= 0);
+    if (max_len < len) len = max_len;
+    ide_read(buf, file_table[fd - 3].disk_offset + fstate[fd].offset, len);
+    fstate[fd].offset += len;
+    return len;
+}
+
+int fs_write(int fd, const void *buf, size_t len) {
+    if (fd < 3) return -1;
+    assert(fd < NR_FILES + 3);
+    assert(fstate[fd].opened);
+    int max_len = file_table[fd - 3].size - fstate[fd].offset;
+    assert(max_len >= 0);
+    if (max_len < len) len = max_len;
+    ide_write(buf, file_table[fd - 3].disk_offset + fstate[fd].offset, len);
+    fstate[fd].offset += len;
+    return len;
+}
+
+off_t fs_lseek(int fd, off_t offset, int whence) {
+    if (fd < 3) return -1;
+    assert(fd < NR_FILES + 3);
+    assert(fstate[fd].opened);
+    switch (whence) {
+        case SEEK_SET: fstate[fd].offset = 0; break;
+        case SEEK_CUR: break;
+        case SEEK_END: fstate[fd].offset = file_table[fd - 3].size; break;
+        default: assert(0);
+    }
+    fstate[fd].offset += offset;
+    assert(fstate[fd].offset >= 0);
+    assert(fstate[fd].offset <= file_table[fd - 3].size);
+    return fstate[fd].offset;
+}
+
+int fs_close(int fd) {
+    assert(fstate[fd].opened);
+    fstate[fd].opened = false;
+    return 0;
+}
