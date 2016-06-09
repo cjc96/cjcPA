@@ -6,6 +6,12 @@ void add_irq_handle(int, void (*)(void));
 void mm_brk(uint32_t);
 void serial_printc(char);
 
+int fs_open(const char *pathname, int flags);
+int fs_read(int fd, void *buf, int len);
+int fs_write(int fd, void *buf, int len);
+int fs_lseek(int fd, int offset, int whence);
+int fs_close(int fd);
+
 static inline void sys_write(TrapFrame *tf) {
 	uint32_t fd = tf->ebx;
     char *buf = (char *)tf->ecx;
