@@ -32,7 +32,6 @@ void create_video_mapping() {
         vptable[idx].val = make_pte(vmem_addr);
         idx++;
     }
-	//panic("please implement me");
 }
 
 void video_mapping_write_test() {
