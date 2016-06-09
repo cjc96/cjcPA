@@ -21,7 +21,8 @@ keyboard_event(void) {
     bool release = !!(scancode & 0x80);
     scancode = scancode & ~(0x80);
     int index = -1;
-    for (size_t i = 0; i < NR_KEYS; i++) {
+    size_t i;
+    for (i = 0; i < NR_KEYS; i++) {
         if (scancode == keycode_array[i]) {
             index = i;
             break;
@@ -29,14 +30,14 @@ keyboard_event(void) {
     }
     if (index == -1) return;
     if (release) return;
-    if (key_state[index] == KEY_STATE_RELEASED) {
+    if (key_state[index] == KEY_STATE_EMPTY) {
         key_state[index] = KEY_STATE_PRESS;
-    } else if (key_state[index] == KEY_STATE_PENDING_RELEASE) {
-        key_state[index] = KEY_STATE_PRESSED;
+    } else if (key_state[index] == KEY_STATE_RELEASE) {
+        key_state[index] = KEY_STATE_WAIT_RELEASE;
     }
 }
 
-static inline int
+/*static inline int
 get_keycode(int index) {
 	assert(index >= 0 && index < NR_KEYS);
 	return keycode_array[index];
@@ -58,7 +59,7 @@ static inline void
 clear_key(int index) {
 	assert(index >= 0 && index < NR_KEYS);
 	key_state[index] = KEY_STATE_EMPTY;
-}
+}*/
 
 bool 
 process_keys(void (*key_press_callback)(int), void (*key_release_callback)(int)) {
@@ -70,16 +71,16 @@ process_keys(void (*key_press_callback)(int), void (*key_release_callback)(int))
 	 * If no such key is found, the function return false.
 	 * Remember to enable interrupts before returning from the function.
 	 */
-	
-	for (int index = 0; index < NR_KEYS; index++) {
+	int index;
+	for (index = 0; index < NR_KEYS; index++) {
         if (key_state[index] == KEY_STATE_PRESS) {
             key_press_callback(keycode_array[index]);
-            key_state[index] = KEY_STATE_PENDING_RELEASE;
-        } else if (key_state[index] == KEY_STATE_PENDING_RELEASE) {
+            key_state[index] = KEY_STATE_RELEASE;
+        } else if (key_state[index] == KEY_STATE_RELEASE) {
             key_release_callback(keycode_array[index]);
-            key_state[index] = KEY_STATE_RELEASED;
-        } else if (key_state[index] == KEY_STATE_PRESSED) {
-            key_state[index] = KEY_STATE_PENDING_RELEASE;
+            key_state[index] = KEY_STATE_EMPTY;
+        } else if (key_state[index] == KEY_STATE_WAIT_RELEASE) {
+            key_state[index] = KEY_STATE_RELEASE;
         }
     }
 	
