@@ -135,6 +135,14 @@ void cpu_exec(volatile uint32_t n) {
 			raise_intr(intr_no);
 		}
 		
+		
+		// Debug for pal
+		if (instr_fetch(cpu.eip, 1) == 0)
+		{
+			printf("%x\n", cpu.eip);
+			assert(0);
+		}
+		
 	}
 
 	if(nemu_state == RUNNING) { nemu_state = STOP; }
