@@ -34,7 +34,7 @@ uint32_t loader() {
 	const uint32_t elf_magic = 0x464c457f;
 	uint32_t *p_magic = (void *)buf;
 	nemu_assert(*p_magic == elf_magic);
-
+	Log("asd");
 	/* Load each program segment */
 	int i;
 	for(i=0;i<elf->e_phnum;i++ ) {
@@ -51,7 +51,6 @@ uint32_t loader() {
 #ifndef HAS_DEVICE
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
 #else
-			Log("123");
 			ide_read((void*)pa, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
 #endif
 			memset((void*)(pa + ph->p_filesz), 0, ph->p_memsz - ph->p_filesz);
