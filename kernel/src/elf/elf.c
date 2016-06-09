@@ -51,7 +51,7 @@ uint32_t loader() {
 #ifndef HAS_DEVICE
 			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
 #else
-			Log("%d\n",i);
+			Log("123\n");
 			ide_read((void*)pa, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
 #endif
 			memset((void*)(pa + ph->p_filesz), 0, ph->p_memsz - ph->p_filesz);
