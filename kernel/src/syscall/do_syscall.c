@@ -26,6 +26,31 @@ static inline void sys_write(TrapFrame *tf) {
     tf->eax = result;
 }
 
+static void sys_open(TrapFrame *tf) {	//Do not care about flags
+    const char *pathname = (const char *)tf->ebx;
+    int flags = tf->ecx;
+    tf->eax = fs_open(pathname, flags);
+}
+
+static void sys_close(TrapFrame *tf) {
+    int fd = tf->ebx;
+    tf->eax = fs_close(fd);
+}
+
+static void sys_read(TrapFrame *tf) {
+    int fd = tf->ebx;
+    char *buf = (char *) tf->ecx;
+    size_t len = tf->edx;
+    tf->eax = fs_read(fd, buf, len);
+}
+
+static void sys_lseek(TrapFrame *tf) {
+    int fd = tf->ebx;
+    off_t offset = tf->ecx;
+    int whence = tf->edx;
+    tf->eax = fs_lseek(fd, offset, whence);
+}
+
 static void sys_brk(TrapFrame *tf) {
 #ifdef IA32_PAGE
 	mm_brk(tf->ebx);
