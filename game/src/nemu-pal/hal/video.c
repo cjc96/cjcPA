@@ -158,6 +158,15 @@ void SDL_SoftStretch(SDL_Surface *src, SDL_Rect *scrrect,
 		assert(0);
 	}
 	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
+	__asm__ __volatile__("nop");
 }
 
 SDL_Surface* SDL_CreateRGBSurface(uint32_t flags, int width, int height, int depth,
