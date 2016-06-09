@@ -38,6 +38,7 @@
 #include "logic/test.h"
 #include "logic/cmp.h"
 #include "logic/setcc.h"
+#include "logic/bt.h"
 
 #include "string/rep.h"
 #include "string/stos.h"
