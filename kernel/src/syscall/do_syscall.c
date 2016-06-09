@@ -50,6 +50,10 @@ void do_syscall(TrapFrame *tf) {
 
 		/* TODO: Add more system calls. */
 		case SYS_write: sys_write(tf); break;
+		case SYS_open: sys_open(tf); break;
+        case SYS_read: sys_read(tf); break;
+        case SYS_lseek: sys_lseek(tf); break;
+        case SYS_close: sys_close(tf); break;
 
 		default: panic("Unhandled system call: id = %d", tf->eax);
 	}
