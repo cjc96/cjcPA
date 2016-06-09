@@ -157,6 +157,7 @@ void SDL_SoftStretch(SDL_Surface *src, SDL_Rect *scrrect,
 		/* No other case occurs in NEMU-PAL. */
 		assert(0);
 	}
+	__asm__ __volatile__("nop");
 }
 
 SDL_Surface* SDL_CreateRGBSurface(uint32_t flags, int width, int height, int depth,
