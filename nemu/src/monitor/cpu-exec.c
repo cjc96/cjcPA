@@ -134,7 +134,12 @@ void cpu_exec(volatile uint32_t n) {
 			i8259_ack_intr();
 			raise_intr(intr_no);
 		}
-
+		
+		if (instr_fetch(cpu.eip, 1) == 0x00)
+		{
+			printf("%x\n", cpu.eip);
+			assert(0);
+		}
 	}
 
 	if(nemu_state == RUNNING) { nemu_state = STOP; }

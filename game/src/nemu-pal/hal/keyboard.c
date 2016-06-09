@@ -16,8 +16,24 @@ static int key_state[NR_KEYS];
 
 void
 keyboard_event(void) {
-	/* TODO: Fetch the scancode and update the key states. */
-	assert(0);
+	/* Fetch the scancode and update the key states. */
+	uint8_t scancode = in_byte(0x60);
+    bool release = !!(scancode & 0x80);
+    scancode = scancode & ~(0x80);
+    int index = -1;
+    for (size_t i = 0; i < NR_KEYS; i++) {
+        if (scancode == keycode_array[i]) {
+            index = i;
+            break;
+        }
+    }
+    if (index == -1) return;
+    if (release) return;
+    if (key_state[index] == KEY_STATE_RELEASED) {
+        key_state[index] = KEY_STATE_PRESS;
+    } else if (key_state[index] == KEY_STATE_PENDING_RELEASE) {
+        key_state[index] = KEY_STATE_PRESSED;
+    }
 }
 
 static inline int
@@ -47,15 +63,26 @@ clear_key(int index) {
 bool 
 process_keys(void (*key_press_callback)(int), void (*key_release_callback)(int)) {
 	cli();
-	/* TODO: Traverse the key states. Find a key just pressed or released.
+	/* Traverse the key states. Find a key just pressed or released.
 	 * If a pressed key is found, call ``key_press_callback'' with the keycode.
 	 * If a released key is found, call ``key_release_callback'' with the keycode.
 	 * If any such key is found, the function return true.
 	 * If no such key is found, the function return false.
 	 * Remember to enable interrupts before returning from the function.
 	 */
-
-	assert(0);
+	
+	for (int index = 0; index < NR_KEYS; index++) {
+        if (key_state[index] == KEY_STATE_PRESS) {
+            key_press_callback(keycode_array[index]);
+            key_state[index] = KEY_STATE_PENDING_RELEASE;
+        } else if (key_state[index] == KEY_STATE_PENDING_RELEASE) {
+            key_release_callback(keycode_array[index]);
+            key_state[index] = KEY_STATE_RELEASED;
+        } else if (key_state[index] == KEY_STATE_PRESSED) {
+            key_state[index] = KEY_STATE_PENDING_RELEASE;
+        }
+    }
+	
 	sti();
 	return false;
 }
