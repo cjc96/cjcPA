@@ -140,7 +140,8 @@ void cpu_exec(volatile uint32_t n) {
 		if (instr_fetch(cpu.eip, 1) == 0)
 		{
 			printf("%x\n", cpu.eip);
-			assert(0);
+			nemu_state = STOP;
+			return;
 		}
 		
 	}
