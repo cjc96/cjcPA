@@ -212,7 +212,7 @@ uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
 	if (cpu.cr0.paging && cpu.cr0.protect_enable)
 	{
 		uint32_t boundary = (addr & 0xfff) + len;
-		if (boundary > 4096) {
+		if (boundary >= 4096) {
 			/* this is a special case, you can handle it later. */
 			//assert(0);
 			uint32_t temp_ans = 0;
@@ -238,7 +238,7 @@ void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
 	if (cpu.cr0.paging && cpu.cr0.protect_enable)
 	{
 		uint32_t boundary = (addr & 0xfff) + len;
-		if (boundary > 4096) {
+		if (boundary >= 4096) {
 		
 			/* this is a special case, you can handle it later. */
 			//assert(0);
