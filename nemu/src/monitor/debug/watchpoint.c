@@ -59,4 +59,4 @@ WP* get_head()
 {
 	return head;
 }
-/* TODO: Implement the functionality of watchpoint */
+/* Implement the functionality of watchpoint */

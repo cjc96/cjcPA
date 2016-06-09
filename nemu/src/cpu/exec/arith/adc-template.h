@@ -6,9 +6,7 @@ static void do_execute () {
 	DATA_TYPE result = op_dest->val + op_src->val + cpu.CF;
 	OPERAND_W(op_dest, result);
 
-	/* TODO: Update EFLAGS. */
-	//printf("%d %d\n",op_dest->val,op_src->val);
-	//panic("please implement me");
+	/* Update EFLAGS. */
 	
 	int sin = 0,cin = 0;
 	DATA_TYPE ain = op_dest->val,bin = op_src->val + cpu.CF;

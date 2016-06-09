@@ -4,7 +4,7 @@
 
 static void do_execute () {
 
-	/* TODO: Update EFLAGS. */
+	/* Update EFLAGS. */
 	int temp[32] , i ;
 	cpu.OF = 0;
 	cpu.CF = 0;

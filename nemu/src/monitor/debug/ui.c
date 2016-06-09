@@ -348,7 +348,7 @@ static struct {
 #endif
 	{ "clear", "Clear the screen", cmd_clear}
 
-	/* TODO: Add more commands */
+	/* Add more commands */
 
 };
 

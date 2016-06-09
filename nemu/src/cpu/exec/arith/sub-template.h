@@ -6,9 +6,7 @@ static void do_execute () {
 	DATA_TYPE result = op_dest->val - op_src->val;
 	OPERAND_W(op_dest, result);
 
-	/* TODO: Update EFLAGS. */
-	//printf("%d %d\n",op_dest->val,op_src->val);
-	//panic("please implement me");
+	/* Update EFLAGS. */
 	
 	DATA_TYPE ain = op_dest->val, bin = op_src->val;
 	int sin = 1, cin = 1;

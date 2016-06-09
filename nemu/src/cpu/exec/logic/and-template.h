@@ -6,7 +6,7 @@ static void do_execute () {
 	DATA_TYPE result = op_dest->val & op_src->val;
 	OPERAND_W(op_dest, result);
 
-	/* TODO: Update EFLAGS. */
+	/* Update EFLAGS. */
 	
 	int sin = 0,cin = 0;
 	DATA_TYPE ain = result,bin = 0;
