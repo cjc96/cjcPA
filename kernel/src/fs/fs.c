@@ -78,7 +78,7 @@ int fs_write(int fd, const void *buf, int len) {
     return len;
 }
 
-/*off_t fs_lseek(int fd, int offset, int whence) {
+off_t fs_lseek(int fd, int offset, int whence) {
     if (fd < 3) return -1;
     assert(fd < NR_FILES + 3);
     assert(fstate[fd].opened);
@@ -92,7 +92,7 @@ int fs_write(int fd, const void *buf, int len) {
     assert(fstate[fd].offset >= 0);
     assert(fstate[fd].offset <= file_table[fd - 3].size);
     return fstate[fd].offset;
-}*/
+}
 
 int fs_close(int fd, int test) {
 	test = test;
