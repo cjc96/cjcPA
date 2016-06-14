@@ -94,7 +94,8 @@ off_t fs_lseek(int fd, int offset, int whence) {
     return fstate[fd].offset;
 }
 
-int fs_close(int fd) {
+int fs_close(int fd, int test) {
+	test = test;
     assert(fstate[fd].opened);
     fstate[fd].opened = false;
     return 0;

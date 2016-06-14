@@ -7,9 +7,9 @@ void mm_brk(uint32_t);
 void serial_printc(char);
 
 int fs_open(const char *pathname, int flags);
-int fs_read(int fd, void *buf, size_t len);
-int fs_write(int fd, const void *buf, size_t len);
-off_t fs_lseek(int fd, off_t offset, int whence);
+int fs_read(int fd, void *buf, int len);
+int fs_write(int fd, const void *buf, int len);
+off_t fs_lseek(int fd, int offset, int whence);
 int fs_close(int fd);
 
 static void sys_brk(TrapFrame *tf) {
