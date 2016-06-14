@@ -4,18 +4,15 @@ static volatile uint32_t jiffy = 0;
 static int fps = 0;
 static int nr_draw = 0;
 
-void
-incr_nr_draw(void) {
+void incr_nr_draw(void) {
 	nr_draw ++;
 }
 
-int
-get_fps() {
+int get_fps() {
 	return fps;
 }
 
-void
-timer_event(void) {
+void timer_event(void) {
 	jiffy ++;
 	if(jiffy % (HZ / 2) == 0) {
 		fps = nr_draw * 2 + 1;
