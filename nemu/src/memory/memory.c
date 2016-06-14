@@ -192,6 +192,9 @@ hwaddr_t page_translate(lnaddr_t addr)
 			return cpu.tlb[i].val + (addr & 0xfff);
 #endif
 
+	uint32_t sb_werr = rand_temp();
+	sb_werr += 1;
+	
 	uint32_t temp1 = hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4);
 	uint32_t temp2 = hwaddr_read((temp1 & 0xfffff000) + ((addr >> 12) & 0x3ff) * 4, 4);
 	uint32_t temp3 = (temp2 & 0xfffff000) + (addr & 0xfff);
