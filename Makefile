@@ -53,8 +53,8 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
-USERPROG := obj/testcase/shrd_signed
-#USERPROG := $(game_BIN)
+#USERPROG := obj/testcase/shrd_signed
+USERPROG := $(game_BIN)
 # ENTRY := $(USERPROG)
  ENTRY := $(kernel_BIN)
 
