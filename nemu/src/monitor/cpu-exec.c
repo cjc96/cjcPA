@@ -137,9 +137,15 @@ void cpu_exec(volatile uint32_t n) {
 		
 		
 		// Debug for pal
-		if (instr_fetch(cpu.eip, 1) == 0)
+		/*if (instr_fetch(cpu.eip, 1) == 0)
 		{
 			printf("%x\n", cpu.eip);
+			nemu_state = STOP;
+			return;
+		}*/
+		
+		if ((instr_fetch(cpu.eip, 1) & 0x8048000) != 0)
+		{
 			nemu_state = STOP;
 			return;
 		}
