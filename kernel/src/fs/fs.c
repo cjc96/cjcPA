@@ -1,5 +1,5 @@
-#include "common.h"
 #include <string.h>
+#include "common.h"
 
 typedef struct {
 	char *name;
@@ -29,75 +29,73 @@ static const file_info file_table[] = {
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
 
 void ide_read(uint8_t *, uint32_t, uint32_t);
-void ide_write(const uint8_t *, uint32_t, uint32_t);
+void ide_write(uint8_t *, uint32_t, uint32_t);
 
-/* implement a simplified file system here. */
+/* TODO: implement a simplified file system here. */
 
-typedef struct {
+struct {
 	bool opened;
 	uint32_t offset;
-} FSTATE;
-
-FSTATE fstate[NR_FILES + 3];
+} Fstate[NR_FILES + 3];
 
 int fs_open(const char *pathname, int flags) {
-	int i = 0;
-    for (i = 0; i < NR_FILES; i++) {
-        if (strcmp(file_table[i].name, pathname) == 0) {
-            int fd = i + 3;
-            fstate[fd].opened = true;
-            fstate[fd].offset = 0;
-            return fd;
-        }
-    }
-    panic("file not found");
-    return -1;
+	int i;
+	for(i = 0; i < NR_FILES; i++) {
+		if(strcmp(pathname,file_table[i].name) == 0) {
+			Fstate[i + 3].opened = true;
+			Fstate[i + 3].offset = 0;
+			printk("syscall: open(\"%s\", %d) = %d\n", pathname, flags, i);
+			return i + 3;
+		}
+	}
+	nemu_assert(0);
+    return 0;
 }
 
 int fs_read(int fd, void *buf, int len) {
-    if (fd < 3) return -1;
-    assert(fd < NR_FILES + 3);
-    assert(fstate[fd].opened);
-    int max_len = file_table[fd - 3].size - fstate[fd].offset;
-    assert(max_len >= 0);
-    if (max_len < len) len = max_len;
-    ide_read(buf, file_table[fd - 3].disk_offset + fstate[fd].offset, len);
-    fstate[fd].offset += len;
-    return len;
+	//int len_before = len;
+	if(Fstate[fd].offset + len > file_table[fd - 3].size) 
+		len = file_table[fd - 3].size - Fstate[fd].offset;
+	ide_read(buf, file_table[fd - 3].disk_offset + Fstate[fd].offset, len);
+	Fstate[fd].offset += len;
+	//printk("syscall: read( %d, \"%s\", %d) = %d\n", fd, buf, len_before, len);
+	return len;
 }
 
-int fs_write(int fd, const void *buf, int len) {
-    if (fd < 3) return -1;
-    assert(fd < NR_FILES + 3);
-    assert(fstate[fd].opened);
-    int max_len = file_table[fd - 3].size - fstate[fd].offset;
-    assert(max_len >= 0);
-    if (max_len < len) len = max_len;
-    ide_write(buf, file_table[fd - 3].disk_offset + fstate[fd].offset, len);
-    fstate[fd].offset += len;
-    return len;
+int fs_write(int fd, void *buf, int len) {
+	//int len_before = len;
+	if(Fstate[fd].offset + len > file_table[fd - 3].size)
+		len = file_table[fd - 3].size - Fstate[fd].offset;
+	ide_write(buf, file_table[fd - 3].disk_offset + Fstate[fd].offset, len);
+	Fstate[fd].offset += len;
+	//printk("syscall: write( %d, \"%s\", %d) = %d\n", fd, buf, len_before, len);
+	return len;
+}
+	
+int fs_lseek(int fd, int offset, int whence) {
+	unsigned new_offset = 0;
+	if(whence == SEEK_SET) new_offset = offset;
+	else if(whence == SEEK_CUR) new_offset = file_table[fd - 3].disk_offset + offset;
+	else if(whence == SEEK_END) new_offset = file_table[fd - 3].size + offset;
+	else panic("unknown whence %d", whence);
+	Fstate[fd].offset = new_offset;
+	return new_offset;
 }
 
-off_t fs_lseek(int fd, int offset, int whence) {
-    if (fd < 3) return -1;
-    assert(fd < NR_FILES + 3);
-    assert(fstate[fd].opened);
-    switch (whence) {
-        case SEEK_SET: fstate[fd].offset = 0; break;
-        case SEEK_CUR: break;
-        case SEEK_END: fstate[fd].offset = file_table[fd - 3].size; break;
-        default: assert(0);
-    }
-    fstate[fd].offset += offset;
-    assert(fstate[fd].offset >= 0);
-    assert(fstate[fd].offset <= file_table[fd - 3].size);
-    return fstate[fd].offset;
+int fs_close(int fd) {
+	Fstate[fd].opened = false;
+	printk("syscall: close(%d) [fn = %s]\n", fd, file_table[fd - 3].name);
+	return 0;
 }
 
-int fs_close(int fd, int test) {
-	test = test;
-    assert(fstate[fd].opened);
-    fstate[fd].opened = false;
-    return 0;
-}
+
+
+
+
+
+
+
+
+
+
 
