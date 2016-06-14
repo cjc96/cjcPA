@@ -1,16 +1,11 @@
 #include "irq.h"
+#include "fs.h"
 
 #include <sys/syscall.h>
 
 void add_irq_handle(int, void (*)(void));
 void mm_brk(uint32_t);
 void serial_printc(char);
-
-extern int fs_open(const char *pathname, int flags);
-extern int fs_read(int fd, void *buf, int len);
-extern int fs_write(int fd, const void *buf, int len);
-extern off_t fs_lseek(int fd, int offset, int whence);
-extern int fs_close(int fd);
 
 static void sys_brk(TrapFrame *tf) {
 #ifdef IA32_PAGE
