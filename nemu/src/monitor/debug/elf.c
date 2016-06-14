@@ -85,14 +85,14 @@ void load_elf_tables(int argc, char *argv[]) {
 int get_now_func_name(uint32_t now_addr,uint32_t para)
 {
 	int i;
-	extern uint32_t swaddr_read(uint32_t, size_t);
+	extern uint32_t swaddr_read(uint32_t, size_t, uint32_t);
 	for (i = 0; i < nr_symtab_entry; i++)
 	{
 		if (now_addr >=(symtab+i)->st_value && now_addr < (symtab+i)->st_value + (symtab+i)->st_size)
 		{
 			
 			printf("%s(",strtab+(symtab+i)->st_name);
-			printf("%u, %u, %u, %u)\n",swaddr_read(para+8,4),swaddr_read(para+12,4),swaddr_read(para+16,4),swaddr_read(para+20,4));
+			printf("%u, %u, %u, %u)\n",swaddr_read(para+8,4,0),swaddr_read(para+12,4,0),swaddr_read(para+16,4,0),swaddr_read(para+20,4,0));
 			if (strcmp(strtab+(symtab+i)->st_name,"main") == 0)
 				return 0;
 			else 
@@ -108,14 +108,14 @@ int get_func_name(uint32_t now_addr)
 	
 	for (i = 0; i < nr_symtab_entry; i++)
 	{
-		extern uint32_t swaddr_read(uint32_t, size_t);
-		uint32_t temp = swaddr_read(now_addr+4,4);
+		extern uint32_t swaddr_read(uint32_t, size_t, uint32_t);
+		uint32_t temp = swaddr_read(now_addr+4,4,0);
 		
 		if (temp >= (symtab+i)->st_value && temp < (symtab+i)->st_value + (symtab+i)->st_size)
 		{
 			printf("%s(",strtab+(symtab+i)->st_name);
-			now_addr = swaddr_read(now_addr,4);
-			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+8,4),swaddr_read(now_addr+12,4),swaddr_read(now_addr+16,4),swaddr_read(now_addr+20,4));
+			now_addr = swaddr_read(now_addr,4,0);
+			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+8,4,0),swaddr_read(now_addr+12,4,0),swaddr_read(now_addr+16,4,0),swaddr_read(now_addr+20,4,0));
 			if (!strcmp(strtab+(symtab+i)->st_name,"main"))
 				return 1;
 			return 0;
