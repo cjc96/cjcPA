@@ -144,8 +144,10 @@ void cpu_exec(volatile uint32_t n) {
 			return;
 		}*/
 		
-		if ((cpu.eip & 0x8040000) != 0)
+		static int zhixingyici = 0;
+		if ((cpu.eip & 0x8040000) != 0 && !zhixingyici)
 		{
+			zhixingyici = 1;
 			nemu_state = STOP;
 			return;
 		}
