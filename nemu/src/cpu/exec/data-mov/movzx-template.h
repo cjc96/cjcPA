@@ -3,7 +3,15 @@
 #define instr movzb
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 static void do_execute() {
-    unsigned char val = op_src->val;
+    unsigned char val;
+    if (op_src->type == OP_TYPE_REG)
+    {
+    	val = reg_b(op_src->reg);
+    }
+    else
+    {
+    	val = op_src->val;
+    }
     unsigned int result = val;
     OPERAND_W(op_dest, result);
 	print_asm_template2();
