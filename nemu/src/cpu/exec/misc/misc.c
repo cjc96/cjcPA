@@ -212,12 +212,22 @@ make_helper(lea)
 
 make_helper(cltd) 
 {
-	if (cpu.eax>>31)
-		cpu.edx = 0xFFFFFFFF;
+	if (!ops_decoded.is_data_size_16)
+	{
+		if (cpu.eax>>31)
+			cpu.edx = 0xFFFFFFFF;
+		else
+			cpu.edx = 0;
+		print_asm("cltd");
+	}
 	else
-		cpu.edx = 0;
-	print_asm("cltd");
-	
+	{
+		if (cpu.ax >> 15)
+			cpu.dx = 0xFFFF;
+		else
+			cpu.dx = 0;
+		print_asm("cltw");
+	}
 	return 1;
 }
 
