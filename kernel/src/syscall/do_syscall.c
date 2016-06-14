@@ -46,12 +46,12 @@ static void sys_read(TrapFrame *tf) {
     tf->eax = fs_read(fd, buf, len);
 }
 
-static void sys_lseek(TrapFrame *tf) {
+/*static void sys_lseek(TrapFrame *tf) {
     int fd = tf->ebx;
     off_t offset = tf->ecx;
     int whence = tf->edx;
     tf->eax = fs_lseek(fd, offset, whence);
-}
+}*/
 
 void do_syscall(TrapFrame *tf) {
 	switch(tf->eax) {
@@ -72,7 +72,7 @@ void do_syscall(TrapFrame *tf) {
 		case SYS_write: sys_write(tf); break;
 		case SYS_open: sys_open(tf); break;
         case SYS_read: sys_read(tf); break;
-        case SYS_lseek: sys_lseek(tf); break;
+       // case SYS_lseek: sys_lseek(tf); break;
         case SYS_close: sys_close(tf); break;
 
 		default: panic("Unhandled system call: id = %d", tf->eax);
