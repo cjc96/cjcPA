@@ -53,8 +53,8 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
-#USERPROG := obj/testcase/eflags_byte_add_cmovcc
-USERPROG := $(game_BIN)
+USERPROG := obj/testcase/eflags_byte_add_cmovcc
+#USERPROG := $(game_BIN)
 # ENTRY := $(USERPROG)
  ENTRY := $(kernel_BIN)
 
