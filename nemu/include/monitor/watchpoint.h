@@ -5,14 +5,19 @@
 
 typedef struct watchpoint {
 	int NO;
+	char expr[32];
+	int value;
 	struct watchpoint *next;
 
-	/* DONE: Add more members if necessary */
+	/* Add more members if necessary */
 
-    int expr_id;
-    int hit;
-    int type; /* type == 0 means wp hit when expr value changes
-                      == 1 means wp hit when expr value is non-zero */
+
 } WP;
+
+WP* new_wp();
+
+void free_wp(WP *wp);
+
+WP* get_head();
 
 #endif

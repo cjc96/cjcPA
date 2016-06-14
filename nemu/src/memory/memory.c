@@ -1,205 +1,326 @@
 #include "common.h"
-#include "cpu/reg.h"
-#include "memory/memory.h"
 #include "device/mmio.h"
 
-// dram functions
-extern uint32_t dram_read(hwaddr_t, size_t);
-extern void dram_write(hwaddr_t, size_t, uint32_t);
+uint32_t dram_read(hwaddr_t, size_t);
+void dram_write(hwaddr_t, size_t, uint32_t);
 
-// translate functions
-extern lnaddr_t seg_translate(swaddr_t addr, size_t len, uint8_t sreg);
-extern hwaddr_t page_translate(lnaddr_t addr);
+#ifdef CACHE
+#include "cpu/reg.h"
+#endif
+
+#ifdef SEGMENT
+#include "cpu/reg.h"
+extern CPU_state cpu;
+#endif
 
 /* Memory accessing interfaces */
+#ifdef RANDOM
+static uint32_t rand_temp()
+{
+	static uint32_t rand_num;
+	return ++rand_num;
+}
+#endif
 
-
-#ifndef USE_VERY_FAST_MEMORY
-// ================ HWADDR ==================
-
-uint32_t hwaddr_read_nocache(hwaddr_t addr, size_t len) {
+uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
+#ifdef CACHE	
+	uint32_t musk = ~0u >> ((4 - len) << 3);
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, start_sp = ((addr + len - 1) & 0x000001c0) << 1, tag_sp = (addr + len -1) & 0xfffffe00;
+	
+	uint32_t i, start =(addr & 0x000001c0) << 1, end = start + 128;
+	for (i = start; i < end; i++)
+	{
+		if (l1_cache[i].valid && l1_cache[i].tag == tag)
+		{
+			if (start_sp != start)
+			{
+				uint8_t ans[4], *temp = ans, loc = 0;
+				while ((((addr + loc) & 0x000001c0) << 1) == start)
+				{
+					ans[loc] = l1_cache[i].data_b[offset + loc];
+					loc++;
+				}
+				
+				uint32_t j, end_sp = start_sp + 128, loc_sp = 0;
+				for (j = start_sp; j < end_sp; j++)
+				{
+					if (l1_cache[j].valid && l1_cache[j].tag == tag_sp)
+					{
+						assert(loc < len);
+						while (loc < len)
+						{
+							ans[loc] = l1_cache[j].data_b[loc_sp];
+							loc++;
+							loc_sp++;
+						}
+						return *(uint32_t *)temp & musk;
+					}
+				}
+				break;
+			}
+			else
+			{
+				uint8_t *temp = &l1_cache[i].data_b[offset];
+				return *(uint32_t *)temp & musk;
+			}
+		}
+	}
+#ifndef L2_CACHE
+	uint32_t temp = rand_temp() % 128 + start, temp_set = addr - offset;
+	
+	for (i = 0; i < 16; i++)
+	{
+		l1_cache[temp].data_d[i] = dram_read(temp_set + i * 4, 4);
+	}
+	l1_cache[temp].tag = tag;
+	l1_cache[temp].valid = 1;
+	if (start != start_sp)
+	{
+		uint32_t start_sp_temp = start_sp + rand_temp() % 128, temp_set_sp = (addr + len -1) & 0xffffffc0;
+		for (i = 0; i < 16; i++)
+		{	
+			l1_cache[start_sp_temp].data_d[i] = dram_read(temp_set_sp + i * 4, 4);
+		}
+		l1_cache[start_sp_temp].tag = tag_sp;
+		l1_cache[start_sp_temp].valid = 1;
+	}
+	
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+#endif
+
+#ifdef L2_CACHE
+
+#endif
+
+#endif
+
+#ifndef CACHE
+	uint32_t port_num = is_mmio(addr);
+	if (port_num == -1)
+	{
+		return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+	}
+	else
+	{
+		return mmio_read(addr, len, port_num) & (~0u >> ((4 - len) << 3));
+	}
+#endif
 }
 
-void hwaddr_write_nocache(hwaddr_t addr, size_t len, uint32_t data) {
+void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
+#ifdef CACHE
 	dram_write(addr, len, data);
-}
-
-
-
-
-inline uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
-    assert(len <= 4);
-    
-    // check for mmio
-    int mmio_id = is_mmio(addr);
-    if (likely(mmio_id < 0)) { // not mmio, read cache
-#ifdef USE_MEMORY_CACHE
-        uint32_t ret = 0;
-	    extern void l1cache_read(void *dest, unsigned addr, int len);
-	    l1cache_read(&ret, addr, len);
-    	return ret;
-#else
-        return hwaddr_read_nocache(addr, len);
-#endif
-    } else {
-        return mmio_read(addr, len, mmio_id);
-    }
-}
-
-inline void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
-    assert(len <= 4);
-    
-    // check for mmio
-    int mmio_id = is_mmio(addr);
-    if (likely(mmio_id < 0)) { // not mmio, write cache
-#ifdef USE_MEMORY_CACHE
-	    extern void l1cache_write(unsigned addr, void *src, int len);
-	    l1cache_write(addr, &data, len);
-#else
-        hwaddr_write_nocache(addr, len, data);
-#endif
-    } else {
-        mmio_write(addr, len, data, mmio_id);
-    }
-}
-#endif
-
-
-// ================ LNADDR ==================
-
-
-uint32_t __attribute__((noinline)) lnaddr_crosspage_read(lnaddr_t addr, lnaddr_t raddr, size_t len)
-{
-    // data cross the page boundary
-    // read data byte by byte
-    
-    hwaddr_t first_hwaddr, second_hwaddr;
-    volatile uint32_t result;
-    uint8_t *result_bytes = (void *) &result;
-
-    // data cross the page boundary
-    int poffset = GET_PAGE_OFFSET(addr);
-    int rpoffset = GET_PAGE_OFFSET(raddr);
-    
-    int i, j = 0;
-    
-    // read (PAGE_SIZE - poffset) bytes from page 'pn'
-    assert(PAGE_SIZE - poffset > 0);
-    assert(PAGE_SIZE - poffset < 4);
-    first_hwaddr = page_translate(addr);
-    for (i = 0; i < PAGE_SIZE - poffset; i++)
-        result_bytes[j++] = hwaddr_read(first_hwaddr + i, 1);
-    
-    // read (rpoffset + 1) bytes from page 'rpn'
-    assert(rpoffset + 1 > 0);
-    assert(rpoffset + 1 < 4);
-    second_hwaddr = page_translate(ROUND_TO_PAGE(raddr));
-    for (i = 0; i < rpoffset + 1; i++)
-        result_bytes[j++] = hwaddr_read(second_hwaddr + i, 1);
-    
-    assert(j == len);
-
-    #ifdef DEBUG
-    volatile uint32_t sresult;
-    uint8_t *sresult_bytes = (void *) &sresult;
-    for (i = 0; i < len; i++)
-        sresult_bytes[i] = hwaddr_read(page_translate(addr + i), 1);
-    assert(sresult == result);
-    #endif
-    
-    return result;
-}
-inline uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
-    // [addr, addr + 1, addr + 2, addr + 3] addr + 4)
-    //                             ^ raddr
-    //  4095 | 0      | 1       | 2       | 3
-    // [FIRST, 0x00   , 0x00    , 0x00]
-    //        [SECOND===================  , 0x00 ]
-    // [REQUESTED                         ]
-    
-    assert(len == 1 || len == 2 || len == 4);
-    
-    if (ADDR_CROSS_PAGE(addr, len)) {
-        lnaddr_t raddr = addr + len - 1;
-        return lnaddr_crosspage_read(addr, raddr, len);
-    } else {
-        hwaddr_t hwaddr = page_translate(addr);
-	    return hwaddr_read(hwaddr, len);
+	
+	uint32_t tag = addr & 0xfffffe00, offset = addr & 0x0000003f, tag_sp = (addr + len - 1) & 0xfffffe00, start_sp = ((addr + len - 1) & 0x000001c0) << 1;
+	
+	uint32_t i, start = (addr & 0x000001c0) << 1, end = start + 128;
+	for (i = start; i < end; i++)
+	{
+		if (l1_cache[i].valid && l1_cache[i].tag == tag)
+		{
+			if (start_sp != start)
+			{
+				uint8_t loc = 0;
+				while ((((addr + loc) & 0x000001c0) << 1) == start)
+				{
+					l1_cache[i].data_b[offset + loc] = data & 0xff;
+					data >>= 8;
+					loc++;
+				}
+				
+				uint32_t j, end_sp = start_sp + 128, loc_sp = 0;
+				for (j = start_sp; j < end_sp; j++)
+				{
+					if (l1_cache[j].valid && l1_cache[j].tag == tag_sp)
+					{
+						assert(loc < len);
+						while (loc < len)
+						{
+							l1_cache[j].data_b[loc_sp] = data & 0xff;
+							data >>= 8;
+							loc++;
+							loc_sp++;
+						}
+					}
+				}
+				break;
+			}
+			else
+			{
+				uint32_t j, temp_end = offset + len;
+				for (j = offset; j < temp_end; j++)
+				{
+					l1_cache[i].data_b[j] = data & 0xff;
+					data >>= 8;
+				}
+			}
+		}
 	}
-}
-void __attribute__((noinline)) lnaddr_crosspage_write(lnaddr_t addr, size_t len, uint32_t data)
-{
-    uint8_t *data_bytes = (void *) &data;
-    int i;
-    for (i = 0; i < len; i++)
-        hwaddr_write(page_translate(addr + i), 1, data_bytes[i]);
-}
-inline void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
-    assert(len == 1 || len == 2 || len == 4);
-//    lnaddr_t raddr = addr + len - 1;
-    if (ADDR_CROSS_PAGE(addr, len)) {
-        lnaddr_crosspage_write(addr, len, data);
-    } else {
-        hwaddr_t hwaddr = page_translate(addr);
-        //printf("lnaddr_write: addr=%08x hwaddr=%08x data=%08x len=%d\n", addr, hwaddr, data, (int) len);
-	    hwaddr_write(hwaddr, len, data);
+#endif
+
+#ifndef CACHE
+	uint32_t port_num = is_mmio(addr);
+	if (port_num == -1)
+	{
+		dram_write(addr, len, data);
 	}
+	else
+	{
+		mmio_write(addr, len, data, port_num);
+	}
+#endif
 }
 
+#ifndef PAGE
+uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
+	return hwaddr_read(addr, len);
+}
 
+void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
+	hwaddr_write(addr, len, data);
+}
+#endif
 
-// ================ SWADDR ==================
+#ifdef PAGE
 
+hwaddr_t page_translate(lnaddr_t addr)
+{	
+#ifdef CACHE_TLB
+	uint32_t i;
+	for (i = 0; i < 64; i++)
+		if (cpu.tlb[i].tag == (addr & 0xfffff000) && cpu.tlb[i].valid)
+			return cpu.tlb[i].val + (addr & 0xfff);
+#endif
 
-uint32_t swaddr_read_slow(swaddr_t addr, size_t len, uint8_t sreg) {
+	uint32_t sb_werr = rand_temp();
+	sb_werr += 1;
+	
+	uint32_t temp1 = hwaddr_read((cpu.cr3.val & 0xfffff000) + ((addr >> 22) & 0x3ff) * 4, 4);
+	uint32_t temp2 = hwaddr_read((temp1 & 0xfffff000) + ((addr >> 12) & 0x3ff) * 4, 4);
+	uint32_t temp3 = (temp2 & 0xfffff000) + (addr & 0xfff);
+#ifdef CACHE_TLB
+	uint32_t temp_id = rand_temp() % 64;
+	cpu.tlb[temp_id].tag = addr & 0xfffff000;
+	cpu.tlb[temp_id].valid = 1;
+	cpu.tlb[temp_id].val = temp2 & 0xfffff000;
+#endif	
+
+	return temp3;
+}
+
+uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
 #ifdef DEBUG
 	assert(len == 1 || len == 2 || len == 4);
 #endif
-    lnaddr_t lnaddr = seg_translate(addr, len, sreg);
-	return lnaddr_read(lnaddr, len);
-}
-
-
-void swaddr_write_slow(swaddr_t addr, size_t len, uint32_t data, uint8_t sreg) {
-#ifdef DEBUG
-	assert(len == 1 || len == 2 || len == 4);
-#endif
-    lnaddr_t lnaddr = seg_translate(addr, len, sreg);
-	lnaddr_write(lnaddr, len, data);
-}
-
-
-#ifndef USE_VERY_FAST_MEMORY
-uint32_t swaddr_read(swaddr_t addr, size_t len, uint8_t sreg) {
-    return swaddr_read_slow(addr, len, sreg);
-}
-void swaddr_write(swaddr_t addr, size_t len, uint32_t data, uint8_t sreg) {
-    swaddr_write_slow(addr, len, data, sreg);
-}
-#endif
-
-// ================ UI: SAFE_SWADDR ==================
-
-int safe_read_flag, safe_read_failed;
-int ui_safe_read_failed;
-uint32_t safe_swaddr_read(swaddr_t addr, size_t len, int *success, uint8_t sreg) {
-    /* debugger need safe-read feature */
-#ifdef DEBUG
-	assert(len == 1 || len == 2 || len == 4);
-#endif
-    uint32_t ret;
-    safe_read_flag = 1;
-    safe_read_failed = 0;
-	ret = swaddr_read_slow(addr, len, sreg);
-	if (safe_read_failed) {
-	    ret = 0xCCCCCCCC & (((1 << (len * 8 - 1)) << 1) - 1);
-	    if (success == NULL) ui_safe_read_failed = 1;
+	if (cpu.cr0.paging && cpu.cr0.protect_enable)
+	{
+		uint32_t boundary = (addr & 0xfff) + len;
+		if (boundary > 4096) {
+			uint32_t temp_ans = 0;
+			while (len--)
+			{
+				temp_ans = temp_ans * 0x100 + lnaddr_read(addr + len, 1);
+			}
+			return temp_ans;
+		}
+		else {
+			hwaddr_t hwaddr = page_translate(addr);
+			return hwaddr_read(hwaddr, len);
+		}
 	}
-	safe_read_flag = 0;
-	if (success != NULL) *success = !safe_read_failed;
-	return ret;
+	else
+		return hwaddr_read(addr, len);
 }
 
+void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
+#ifdef DEBUG
+	assert(len == 1 || len == 2 || len == 4);
+#endif
+	if (cpu.cr0.paging && cpu.cr0.protect_enable)
+	{
+		uint32_t boundary = (addr & 0xfff) + len;
+		if (boundary > 4096) {
+			uint32_t temp_loop;
+			for (temp_loop = 0; temp_loop < len; temp_loop++)
+			{
+				lnaddr_write(addr + temp_loop, 1, data & 0xff);
+				data >>= 8;
+			}
+		}
+		else {
+			hwaddr_t hwaddr = page_translate(addr);
+			hwaddr_write(hwaddr, len, data);
+		}
+	}
+	else
+		return hwaddr_write(addr, len, data);
+}
+#endif
 
+#ifndef SEGMENT
+uint32_t swaddr_read(swaddr_t addr, size_t len) {
+#ifdef DEBUG
+	assert(len == 1 || len == 2 || len == 4);
+#endif
+	return lnaddr_read(addr, len);
+}
+#endif
 
+#ifdef SEGMENT
+uint32_t swaddr_read(swaddr_t addr, size_t len, uint32_t seg) {
+#ifdef DEBUG
+    assert(len == 1 || len == 2 || len ==4);
+#endif
+	uint32_t temp;
+	if (!cpu.cr0.protect_enable)
+		temp = 0;
+	else
+	{
+		if (seg == 0)
+			temp = cpu.DS.cache.base;
+		else if (seg == 1)
+			temp = cpu.SS.cache.base;
+		else if (seg == 2)
+			temp = cpu.ES.cache.base;
+		else if (seg == 3)
+			temp = cpu.CS.cache.base;
+		else
+			assert(0);
+	} 
+	return lnaddr_read(addr + temp, len);
+}
+#endif
+
+#ifndef SEGMENT
+void swaddr_write(swaddr_t addr, size_t len, uint32_t data) {
+#ifdef DEBUG
+	assert(len == 1 || len == 2 || len == 4);
+#endif
+	lnaddr_write(addr, len, data);
+}
+#endif
+
+#ifdef SEGMENT
+void swaddr_write(swaddr_t addr, size_t len, uint32_t data, uint32_t seg) {
+#ifdef DEBUG
+	assert(len == 1 || len == 2 || len == 4);
+#endif
+	uint32_t temp;
+	if (!cpu.cr0.protect_enable)
+		temp = 0;
+	else
+	{
+		if (seg == 0)
+			temp = cpu.DS.cache.base;
+		else if (seg == 1)
+			temp = cpu.SS.cache.base;
+		else if (seg == 2)
+			temp = cpu.ES.cache.base;
+		else if (seg == 3)
+			temp = cpu.CS.cache.base;
+		else
+			assert(0);
+	}
+	lnaddr_write(addr + temp, len, data);
+}
+#endif

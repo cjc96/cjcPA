@@ -2,10 +2,16 @@
 
 #define instr sub
 
-static inline void do_execute () {
-	DATA_TYPE result = EFLAGS(op_dest->val, op_src->val, 1);
+static void do_execute () {
+	DATA_TYPE result = op_dest->val - op_src->val;
 	OPERAND_W(op_dest, result);
 
+	/* Update EFLAGS. */
+	
+	DATA_TYPE ain = op_dest->val, bin = op_src->val;
+	int sin = 1, cin = 1;
+	set_eflags(ain,bin,sin,cin);
+	
 	print_asm_template2();
 }
 

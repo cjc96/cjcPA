@@ -2,27 +2,20 @@
 
 #define instr push
 
-static inline void do_execute() {
-
-#if DATA_BYTE == 1
-    PUSH_BYTE(op_src->val);
-#elif DATA_BYTE == 2
-	PUSH_WORD(op_src->val);
-#elif DATA_BYTE == 4
-	PUSH_DWORD(op_src->val);
-#else
-#error unknown DATA_BYTE
+static void do_execute () {
+	cpu.esp -= 4;
+#ifdef SEGMENT
+	swaddr_write(cpu.esp, DATA_BYTE, op_src->val, SEG_TYPE_SS);
 #endif
-
+#ifndef SEGMENT
+	swaddr_write(cpu.esp, DATA_BYTE, op_src->val);
+#endif
+	
 	print_asm_template1();
-	//printf("DATA_BYTE = %d\n", DATA_BYTE);
 }
 
-#if DATA_BYTE == 2 || DATA_BYTE == 4
-make_instr_helper(rm)
-make_instr_helper(r)
-#endif
 make_instr_helper(i)
-
+make_instr_helper(r)
+make_instr_helper(rm)
 
 #include "cpu/exec/template-end.h"

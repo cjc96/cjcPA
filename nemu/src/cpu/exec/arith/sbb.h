@@ -1,5 +1,5 @@
-#ifndef __SBB_H__
-#define __SBB_H__
+#ifndef __sbb_H__
+#define __sbb_H__
 
 make_helper(sbb_i2a_b);
 make_helper(sbb_i2rm_b);

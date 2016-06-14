@@ -1,7 +1,6 @@
 #include "cpu/decode/modrm.h"
 #include "cpu/helper.h"
 
-#ifndef USE_VERY_FAST_MEMORY
 int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 	assert(m->mod != 3);
 
@@ -10,8 +9,6 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 	int base_reg = -1, index_reg = -1, scale = 0;
 	swaddr_t addr = 0;
 
-    rm->sreg = R_DS;
-    
 	if(m->R_M == R_ESP) {
 		SIB s;
 		s.val = instr_fetch(eip + 1, 1);
@@ -22,7 +19,7 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 		if(s.index != R_ESP) { index_reg = s.index; }
 	}
 	else {
-		// no SIB
+		/* no SIB */
 		base_reg = m->R_M;
 		disp_offset = 1;
 	}
@@ -35,7 +32,7 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 
 	instr_len = disp_offset;
 	if(disp_size != 0) {
-		// has disp
+		/* has disp */
 		disp = instr_fetch(eip + disp_offset, disp_size);
 		if(disp_size == 1) { disp = (int8_t)disp; }
 
@@ -43,24 +40,21 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 		addr += disp;
 	}
 
-	if(base_reg >= 0) {
+	if(base_reg != -1) {
 		addr += reg_l(base_reg);
-		if (base_reg == R_ESP || base_reg == R_EBP) {
-    		rm->sreg = R_SS;
-        }
 	}
 
-	if(index_reg >= 0) {
+	if(index_reg != -1) {
 		addr += reg_l(index_reg) << scale;
 	}
-
+	
 #ifdef DEBUG
 	char disp_buf[16];
 	char base_buf[8];
 	char index_buf[8];
 
 	if(disp_size != 0) {
-		// has disp
+		/* has disp */
 		sprintf(disp_buf, "%s%#x", (disp < 0 ? "-" : ""), (disp < 0 ? -disp : disp));
 	}
 	else { disp_buf[0] = '\0'; }
@@ -79,91 +73,43 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 		sprintf(rm->str, "%s", disp_buf);
 	}
 	else {
-		sprintf(rm->str, "%s:%s(%s%s)", seg_regs[rm->sreg], disp_buf, base_buf, index_buf);
+		sprintf(rm->str, "%s(%s%s)", disp_buf, base_buf, index_buf);
 	}
 #endif
 
 	rm->type = OP_TYPE_MEM;
 	rm->addr = addr;
+	
+	if (base_reg == -1 || m->R_M == R_EBP || m->R_M == R_ESP)
+	{
+		rm->seg_type = SEG_TYPE_SS;
+	}
+	else
+	{
+		rm->seg_type = SEG_TYPE_DS;
+	}
+
 
 	return instr_len;
 }
-#else
-// faster version of load_addr
 
-inline int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
-
-	
-    //static int cnt[100]; if (cnt[99]++ % 100000 == 0) { int i; for (i = 0; i < 10; i++) { printf("cnt[%d] = %d\n", i, cnt[i]); cnt[i] = 0; } printf("\n"); }
-
-    int base_reg = m->R_M;
-    int mod = m->mod;
-
-    unsigned eip_p1_data = instr_fetch(eip + 1, 4);
-    rm->type = OP_TYPE_MEM;
-    
-	if (base_reg == R_ESP) {
-    	swaddr_t addr = 0;
-		SIB s;
-		s.val = eip_p1_data;
-		rm->type = OP_TYPE_MEM;
-		rm->sreg = R_SS;
-
-        //cnt[s.index != R_ESP]++;
-		if (s.index != R_ESP) { addr = reg_l(s.index) << s.ss; } // likely
-	    if (mod == 0) { // likely
-		    if (s.base != R_EBP) {
-		        rm->addr = addr + reg_l(s.base);
-		        return 2;
-		    }
-	    } else {
-    	    addr += reg_l(s.base);
-	        if (mod == 1) { // likely
-                rm->addr = addr + (int8_t) (eip_p1_data >> 8);
-                return 3;
-            }
-	    }
-	    rm->addr = addr + instr_fetch(eip + 2, 4);
-	    return 6;
-	} else {
-        rm->sreg = R_DS;
-	    if (mod == 0) {
-		    if (base_reg == R_EBP) {
-			    rm->addr = eip_p1_data;
-	            return 5;
-		    } else {
-                rm->addr = reg_l(base_reg);
-		        return 1;
-	        }
-	    } else if (mod == 1) {
-	        rm->addr = reg_l(base_reg) + (int8_t) eip_p1_data;
-	        return 2;
-	    } else {
-	        rm->addr = reg_l(base_reg) + eip_p1_data;
-	        return 5;
-	    }
-	}
-}
-#endif
-
-static inline int read_ModR_M_with_size(swaddr_t eip, Operand *rm, Operand *reg, int size) {
+int read_ModR_M(swaddr_t eip, Operand *rm, Operand *reg) {
 	ModR_M m;
 	m.val = instr_fetch(eip, 1);
 	reg->type = OP_TYPE_REG;
 	reg->reg = m.reg;
 
-	if (m.mod == 3) {
+	if(m.mod == 3) {
 		rm->type = OP_TYPE_REG;
 		rm->reg = m.R_M;
-		
-		switch(size) {
+		switch(rm->size) {
 			case 1: rm->val = reg_b(m.R_M); break;
 			case 2: rm->val = reg_w(m.R_M); break;
 			case 4: rm->val = reg_l(m.R_M); break;
 			default: assert(0);
 		}
 #ifdef DEBUG
-		switch(size) {
+		switch(rm->size) {
 			case 1: sprintf(rm->str, "%%%s", regsb[m.R_M]); break;
 			case 2: sprintf(rm->str, "%%%s", regsw[m.R_M]); break;
 			case 4: sprintf(rm->str, "%%%s", regsl[m.R_M]); break;
@@ -173,23 +119,13 @@ static inline int read_ModR_M_with_size(swaddr_t eip, Operand *rm, Operand *reg,
 	}
 	else {
 		int instr_len = load_addr(eip, &m, rm);
-		rm->val = swaddr_read(rm->addr, size, rm->sreg);
+		#ifdef SEGMENT
+		rm->val = swaddr_read(rm->addr, rm->size, rm->seg_type);
+		#endif
+		#ifndef SEGMENT
+		rm->val = swaddr_read(rm->addr, rm->size);
+		#endif
 		return instr_len;
 	}
 }
 
-int read_ModR_M(swaddr_t eip, Operand *rm, Operand *reg) {
-    return read_ModR_M_with_size(eip, rm, reg, rm->size);
-}
-
-int read_ModR_M_b(swaddr_t eip, Operand *rm, Operand *reg) {
-    return read_ModR_M_with_size(eip, rm, reg, 1);
-}
-
-int read_ModR_M_w(swaddr_t eip, Operand *rm, Operand *reg) {
-    return read_ModR_M_with_size(eip, rm, reg, 2);
-}
-
-int read_ModR_M_l(swaddr_t eip, Operand *rm, Operand *reg) {
-    return read_ModR_M_with_size(eip, rm, reg, 4);
-}

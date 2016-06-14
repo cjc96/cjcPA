@@ -2,10 +2,26 @@
 
 #define instr sbb
 
-static inline void do_execute () {
-	DATA_TYPE result = EFLAGS_ALU(op_dest->val, op_src->val, 1, READF(CF));
+static void do_execute () {
+	DATA_TYPE result;
+	DATA_TYPE ain = op_dest->val, bin;
+	
+	if ((sizeof(op_src->val) == 8) && (sizeof(op_dest->val) == 16 || sizeof(op_dest->val) == 32))
+	{
+		result = op_dest->val - ((DATA_TYPE_S)op_src->val + cpu.CF);
+		bin = (DATA_TYPE_S)op_src->val + cpu.CF;
+	}
+	else
+	{
+		result = op_dest->val - (op_src->val + cpu.CF);
+		bin = op_src->val + cpu.CF;
+	}
 	OPERAND_W(op_dest, result);
-
+	
+	
+	int sin = 1, cin = 1;
+	set_eflags(ain,bin,sin,cin);
+	
 	print_asm_template2();
 }
 

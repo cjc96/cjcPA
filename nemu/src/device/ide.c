@@ -40,13 +40,14 @@ void ide_io_handler(ioaddr_t addr, size_t len, bool is_write) {
 					| ide_port_base[4] << 8 | ide_port_base[3];
 				disk_idx = sector << 9;
 				fseek(disk_fp, disk_idx, SEEK_SET);
-				//printf("fseek to %08lx\n", (long) disk_idx);
 
 				byte_cnt = 0;
 
 				if(ide_port_base[7] == 0x20) {
 					/* command: read from disk */
 					ide_write = false;
+					
+					
 					ide_port_base[7] = 0x40;
 					i8259_raise_intr(IDE_IRQ);
 				}
@@ -72,9 +73,7 @@ void ide_io_handler(ioaddr_t addr, size_t len, bool is_write) {
 			/* read 4 bytes data from disk */
 			assert(!ide_write);
 			ret = fread(ide_port_base, 4, 1, disk_fp);
-			//printf("read from disk: %08X, ftell() = %08lx\n", *(uint32_t *) ide_port_base, ftell(disk_fp));
-			assert(ret == 1 || feof(disk_fp)); FORCE_USE(ret);
-
+			assert(ret == 1 || feof(disk_fp));
 			byte_cnt += 4;
 			if(byte_cnt == 512) {
 				/* finish */
@@ -104,10 +103,9 @@ void bmr_io_handler(ioaddr_t addr, size_t len, bool is_write) {
 						| ide_port_base[4] << 8 | ide_port_base[3];
 					disk_idx = sector << 9;
 					fseek(disk_fp, disk_idx, SEEK_SET);
-					//printf("fseek to %08lx\n", (long) disk_idx);
 
 					ret = fread((void *)hwa_to_va(addr), byte_cnt, 1, disk_fp);
-					assert(ret == 1 || feof(disk_fp)); FORCE_USE(ret);
+					assert(ret == 1 || feof(disk_fp));
 
 					/* We only implement PRDT of single entry. */
 					assert(hi_entry & 0x80000000);
@@ -133,7 +131,6 @@ void init_ide() {
 	bmr_base[0] = 0;
 
 	extern char *exec_file;
-	//printf("exec_file = %s\n", exec_file);
 	disk_fp = fopen(exec_file, "r+");
 	Assert(disk_fp, "Can not open '%s'", exec_file);
 }
