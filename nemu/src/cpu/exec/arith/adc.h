@@ -1,5 +1,5 @@
-#ifndef __adc_H__
-#define __adc_H__
+#ifndef __ADC_H__
+#define __ADC_H__
 
 make_helper(adc_i2a_b);
 make_helper(adc_i2rm_b);

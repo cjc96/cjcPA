@@ -2,8 +2,8 @@ void init_monitor(int, char *[]);
 void reg_test();
 void restart();
 void ui_mainloop();
-void init_device();
-void init_sdl();
+
+void expr_test();
 
 int main(int argc, char *argv[]) {
 
@@ -12,13 +12,12 @@ int main(int argc, char *argv[]) {
 
 	/* Test the implementation of the ``CPU_state'' structure. */
 	reg_test();
+	
+	/* ZBY: test expr() */
+	expr_test();
 
 	/* Initialize the virtual computer system. */
 	restart();
-
-	/* Initialize device and sdl(PA4) */
-	init_device();
-	init_sdl();
 
 	/* Receive commands from user. */
 	ui_mainloop();

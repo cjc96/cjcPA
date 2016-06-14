@@ -14,4 +14,4 @@
 
 /* for instruction encoding overloading */
 make_helper_v(shldi)
-make_helper_v(shldc)
+make_helper_v(shld_cl)

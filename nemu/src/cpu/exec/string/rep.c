@@ -24,16 +24,15 @@ make_helper(rep) {
 				|| ops_decoded.opcode == 0xae	// scasb
 				|| ops_decoded.opcode == 0xaf	// scasw
 				);
-			
-			if (ops_decoded.opcode == 0xa6 || ops_decoded.opcode == 0xa7 || ops_decoded.opcode == 0xae || ops_decoded.opcode == 0xaf)
-			{
-				int temp_opcode = instr_fetch(eip, 1);
-				if (temp_opcode == 0xf3 && !cpu.ZF)
-					break;
-				else if (temp_opcode == 0xf2 && cpu.ZF)
-					break;
-			}
 
+			/* DONE: Jump out of the while loop if necessary. */
+            if (   ops_decoded.opcode == 0xa6	    // cmpsb
+				|| ops_decoded.opcode == 0xa7	    // cmpsw
+				|| ops_decoded.opcode == 0xae	    // scasb
+				|| ops_decoded.opcode == 0xaf) {	// scasw
+			    if (READF(ZF) == 0) break;
+			}
+			    
 		}
 		len = 1;
 	}

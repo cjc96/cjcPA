@@ -2,14 +2,9 @@
 
 #define instr inc
 
-static void do_execute () {
-	DATA_TYPE result = op_src->val + 1;
+static inline void do_execute () {
+	DATA_TYPE result = EFLAGS_BASE(op_src->val, 1, 0, 0, 0); /* inc will not update CF */
 	OPERAND_W(op_src, result);
-
-	int temp_flag = cpu.CF;
-	uint32_t ain = op_src->val, bin = 1, sin = 0, cin = 0;
-	set_eflags(ain, bin, sin, cin);
-	cpu.CF = temp_flag;
 
 	print_asm_template1();
 }

@@ -2,16 +2,12 @@
 
 #define instr or
 
-static void do_execute () {
+static inline void do_execute () {
 	DATA_TYPE result = op_dest->val | op_src->val;
 	OPERAND_W(op_dest, result);
 
-	int sin = 0,cin = 0;
-	DATA_TYPE ain = op_dest->val,bin = 0;
-	set_eflags(ain,bin,sin,cin);
-	cpu.CF = 0;
-	cpu.OF = 0;
-	
+	EFLAGS_B(result);
+
 	print_asm_template2();
 }
 

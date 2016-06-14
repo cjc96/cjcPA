@@ -12,7 +12,5 @@
 #include "movs-template.h"
 #undef DATA_BYTE
 
-/* for instruction encoding overloading */
-
 make_helper_v(movs)
 

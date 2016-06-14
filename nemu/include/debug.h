@@ -1,9 +1,16 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
+/* for assert() */
+#ifndef DEBUG
+    #ifndef NDEBUG
+        #define NDEBUG
+    #endif
+#endif
+
+#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-
 
 extern FILE* log_fp;
 
@@ -34,6 +41,7 @@ extern FILE* log_fp;
 	} while(0)
 
 #define panic(format, ...) \
-	Assert(0, format, ## __VA_ARGS__)
+	do { printf(format, ## __VA_ARGS__); putchar('\n'); abort(); exit(1); } while (0)
 
 #endif
+

@@ -2,18 +2,9 @@
 
 #define instr movsb
 #if DATA_BYTE == 2 || DATA_BYTE == 4
-static void do_execute() {
-    signed char val;
-    if (op_src->type == OP_TYPE_REG)
-    {
-    	val = reg_b(op_src->reg);
-    }
-    else
-    {
-    	val = op_src->val;
-    }
-
-    signed int result = val;
+static inline void do_execute() {
+    signed char val = op_src->type == OP_TYPE_REG ? reg_b(op_src->reg) : op_src->val;
+    int result = val;
     OPERAND_W(op_dest, result);
 	print_asm_template2();
 }
@@ -23,9 +14,12 @@ make_instr_helper(rm2r)
 
 #define instr movsw
 #if DATA_BYTE == 2 || DATA_BYTE == 4
-static void do_execute() {
-    signed short val = op_src->val;
-    signed int result = val;
+static inline void do_execute() {
+#if DATA_BYTE == 2
+        panic("no 16 bit movzw instruction");
+#endif
+    short val = op_src->val;
+    int result = val;
     OPERAND_W(op_dest, result);
 	print_asm_template2();
 }

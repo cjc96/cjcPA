@@ -2,16 +2,10 @@
 
 #define instr adc
 
-static void do_execute () {
-	DATA_TYPE result = op_dest->val + op_src->val + cpu.CF;
+static inline void do_execute () {
+	DATA_TYPE result = EFLAGS_ALU(op_dest->val, op_src->val, 0, READF(CF));
 	OPERAND_W(op_dest, result);
 
-	/* Update EFLAGS. */
-	
-	int sin = 0,cin = 0;
-	DATA_TYPE ain = op_dest->val,bin = op_src->val + cpu.CF;
-	set_eflags(ain,bin,sin,cin);
-	
 	print_asm_template2();
 }
 

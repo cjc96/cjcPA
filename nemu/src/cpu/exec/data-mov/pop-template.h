@@ -2,19 +2,25 @@
 
 #define instr pop
 
-static void do_execute () {
-#ifdef SEGMENT
-	OPERAND_W(op_src, swaddr_read(cpu.esp, DATA_BYTE, SEG_TYPE_SS));
+#if DATA_BYTE == 2 || DATA_BYTE == 4
+static inline void do_execute() {
+
+#if DATA_BYTE == 2
+	OPERAND_W(op_src, POP_WORD());
+#elif DATA_BYTE == 4
+	OPERAND_W(op_src, POP_DWORD());
+#else
+#error unknown DATA_BYTE
 #endif
-#ifndef SEGMENT
-	OPERAND_W(op_src, swaddr_read(cpu.esp, DATA_BYTE));
-#endif
-	cpu.esp += DATA_BYTE;
-	
+
 	print_asm_template1();
+	//printf("DATA_BYTE = %d\n", DATA_BYTE);
 }
 
-make_instr_helper(r)
+
 make_instr_helper(rm)
+make_instr_helper(r)
+#endif
+
 
 #include "cpu/exec/template-end.h"
