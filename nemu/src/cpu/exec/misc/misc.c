@@ -55,7 +55,14 @@ make_helper(outb)
 make_helper(outd)
 {
 	//opcode = ef
-	pio_write(cpu.dx, 4, cpu.eax);
+	if (!ops_decoded.is_data_size_16)
+	{
+		pio_write(cpu.dx, 4, cpu.eax);
+	}
+	else
+	{
+		pio_write(cpu.dx, 2, cpu.ax);
+	}
 	print_asm("outd");
 	
 	return 1;
@@ -73,7 +80,14 @@ make_helper(inb)
 make_helper(ind)
 {
 	//opcode = ed
-	cpu.eax = pio_read(cpu.dx, 4);
+	if (!ops_decoded.is_data_size_16)
+	{
+		cpu.eax = pio_read(cpu.dx, 4);
+	}
+	else
+	{
+		cpu.ax = pio_read(cpu.dx, 2);
+	}
 	print_asm("ind");
 	
 	return 1;
