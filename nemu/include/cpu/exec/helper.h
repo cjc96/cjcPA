@@ -1,5 +1,5 @@
 #ifndef __EXEC_HELPER_H__
-#define __EXEC_HELPER_H__
+#define __EXEC_HELPER_H__ 
 
 #include "cpu/helper.h"
 #include "cpu/decode/decode.h"
@@ -10,15 +10,10 @@
 	}
 
 #define do_execute concat4(do_, instr, _, SUFFIX)
-#define do_execute_ins(ins) concat4(do_, ins, _, SUFFIX)
 
 #define make_instr_helper(type) \
 	make_helper(concat5(instr, _, type, _, SUFFIX)) { \
 		return idex(eip, concat4(decode_, type, _, SUFFIX), do_execute); \
-	}
-#define make_instr_helper_ins(type, ins) \
-	make_helper(concat5(ins, _, type, _, SUFFIX)) { \
-		return idex(eip, concat4(decode_, type, _, SUFFIX), do_execute_ins(ins)); \
 	}
 
 extern char assembly[];

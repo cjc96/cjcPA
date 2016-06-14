@@ -1,9 +1,5 @@
-//
-// Created by lyw on 15-11-14.
-//
-
-#ifndef NEMU_ADD_H
-#define NEMU_ADD_H
+#ifndef __add_H__
+#define __add_H__
 
 make_helper(add_i2a_b);
 make_helper(add_i2rm_b);
@@ -16,5 +12,4 @@ make_helper(add_si2rm_v);
 make_helper(add_r2rm_v);
 make_helper(add_rm2r_v);
 
-
-#endif //NEMU_ADD_H
+#endif

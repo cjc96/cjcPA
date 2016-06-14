@@ -1,7 +1,3 @@
-//
-// Created by lyw on 15-11-15.
-//
-
 #include "cpu/exec/helper.h"
 
 #define DATA_BYTE 1
@@ -18,4 +14,5 @@
 
 /* for instruction encoding overloading */
 
-make_helper_v(stos);
+make_helper_v(stos)
+

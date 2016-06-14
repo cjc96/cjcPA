@@ -1,24 +1,25 @@
 #include "nemu.h"
 #include <stdlib.h>
 #include <time.h>
-#include <cpu/reg.h>
+
+#ifdef CACHE
+l1_cache_state l1_cache[1024];
+#ifdef L2_CACHE
+l2_cache_state l2_cache[65536];
+#endif
+#endif
 
 CPU_state cpu;
 
 const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
 const char *regsw[] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di"};
 const char *regsb[] = {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
-const char *regeflags[] = {"cf", "ef_t1", "pf", "ef_t2", "af", "ef_t3", "zf",
-                           "sf", "tf", "if", "df", "of", "ipol1", "ipol2", "nt", "ef_t4", "rf", "vm"};
-const char *segsw[] = {"es", "cs", "ss", "ds", "fs", "gs"};
 
 void reg_test() {
 	srand(time(0));
 	uint32_t sample[8];
 	uint32_t eip_sample = rand();
 	cpu.eip = eip_sample;
-	uint32_t eflags_sample = rand();
-	cpu.EFLAGS = eflags_sample;
 
 	int i;
 	for(i = R_EAX; i <= R_EDI; i ++) {
@@ -46,25 +47,5 @@ void reg_test() {
 	assert(sample[R_EDI] == cpu.edi);
 
 	assert(eip_sample == cpu.eip);
-
-	assert(cpu.CF == (eflags_sample & 1));
-	assert(cpu.t1 == ((eflags_sample >> 1) & 1));
-	assert(cpu.PF == ((eflags_sample >> 2) & 1));
-	assert(cpu.t2 == ((eflags_sample >> 3) & 1));
-	assert(cpu.AF == ((eflags_sample >> 4) & 1));
-	assert(cpu.t3 == ((eflags_sample >> 5) & 1));
-	assert(cpu.ZF == ((eflags_sample >> 6) & 1));
-	assert(cpu.SF == ((eflags_sample >> 7) & 1));
-	assert(cpu.TF == ((eflags_sample >> 8) & 1));
-	assert(cpu.IF == ((eflags_sample >> 9) & 1));
-	assert(cpu.DF == ((eflags_sample >> 10) & 1));
-	assert(cpu.OF == ((eflags_sample >> 11) & 1));
-	assert(cpu.IOPL == ((eflags_sample >> 12) & 3));
-	assert(cpu.NT == ((eflags_sample >> 14) & 1));
-	assert(cpu.t4 == ((eflags_sample >> 15) & 1));
-	assert(cpu.RF == ((eflags_sample >> 16) & 1));
-	assert(cpu.VM == ((eflags_sample >> 17) & 1));
-
-	assert(eflags_sample == cpu.EFLAGS);
 }
 

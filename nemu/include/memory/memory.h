@@ -17,10 +17,26 @@ extern uint8_t *hw_mem;
 	hwa_to_va(addr); \
 })
 
-uint32_t swaddr_read(swaddr_t, size_t, uint8_t);
+#ifndef SEGMENT
+uint32_t swaddr_read(swaddr_t, size_t);
+#endif
+
+#ifdef SEGMENT
+uint32_t swaddr_read(swaddr_t, size_t, uint32_t);
+#endif
+
 uint32_t lnaddr_read(lnaddr_t, size_t);
+
 uint32_t hwaddr_read(hwaddr_t, size_t);
-void swaddr_write(swaddr_t, size_t, uint32_t, uint8_t);
+
+#ifndef SEGMENT
+void swaddr_write(swaddr_t, size_t, uint32_t);
+#endif
+
+#ifdef SEGMENT
+void swaddr_write(swaddr_t, size_t, uint32_t, uint32_t);
+#endif
+
 void lnaddr_write(lnaddr_t, size_t, uint32_t);
 void hwaddr_write(hwaddr_t, size_t, uint32_t);
 

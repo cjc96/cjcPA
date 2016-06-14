@@ -1,7 +1,6 @@
 #include "common.h"
 #include <stdlib.h>
 #include <elf.h>
-#include <memory/memory.h>
 
 char *exec_file = NULL;
 
@@ -16,10 +15,11 @@ void load_elf_tables(int argc, char *argv[]) {
 
 	FILE *fp = fopen(exec_file, "rb");
 	Assert(fp, "Can not open '%s'", exec_file);
-
+	
 	uint8_t buf[sizeof(Elf32_Ehdr)];
 	ret = fread(buf, sizeof(Elf32_Ehdr), 1, fp);
 	assert(ret == 1);
+	
 
 	/* The first several bytes contain the ELF header. */
 	Elf32_Ehdr *elf = (void *)buf;
@@ -82,29 +82,60 @@ void load_elf_tables(int argc, char *argv[]) {
 	fclose(fp);
 }
 
-uint32_t findsym(char *var) {
-    int i;
-    for(i=0;i<nr_symtab_entry; i++)
-    {
-        char* Var = &strtab[symtab[i].st_name];
-        if(strcmp(var,Var) ==0){
-            return symtab[i].st_value;
-        }
-    }
-    Log("symbol not found");
-    return 0;
+int get_now_func_name(uint32_t now_addr,uint32_t para)
+{
+	int i;
+	extern uint32_t swaddr_read(uint32_t, size_t, uint32_t);
+	for (i = 0; i < nr_symtab_entry; i++)
+	{
+		if (now_addr >=(symtab+i)->st_value && now_addr < (symtab+i)->st_value + (symtab+i)->st_size)
+		{
+			
+			printf("%s(",strtab+(symtab+i)->st_name);
+			printf("%u, %u, %u, %u)\n",swaddr_read(para+8,4,0),swaddr_read(para+12,4,0),swaddr_read(para+16,4,0),swaddr_read(para+20,4,0));
+			if (strcmp(strtab+(symtab+i)->st_name,"main") == 0)
+				return 0;
+			else 
+				return 1;
+		}
+	}
+	return -1;
 }
 
-char *getname(uint32_t addr) {
+int get_func_name(uint32_t now_addr)
+{
+	int i;
+	
+	for (i = 0; i < nr_symtab_entry; i++)
+	{
+		extern uint32_t swaddr_read(uint32_t, size_t, uint32_t);
+		uint32_t temp = swaddr_read(now_addr+4,4,0);
+		
+		if (temp >= (symtab+i)->st_value && temp < (symtab+i)->st_value + (symtab+i)->st_size)
+		{
+			printf("%s(",strtab+(symtab+i)->st_name);
+			now_addr = swaddr_read(now_addr,4,0);
+			printf("%u, %u, %u, %u)\n",swaddr_read(now_addr+8,4,0),swaddr_read(now_addr+12,4,0),swaddr_read(now_addr+16,4,0),swaddr_read(now_addr+20,4,0));
+			if (!strcmp(strtab+(symtab+i)->st_name,"main"))
+				return 1;
+			return 0;
+		}
+	}
+	return 0;
+}
+
+unsigned int get_address_from_name(char *exname)
+{
     int i;
-    for(i=0;i<nr_symtab_entry; i++)
-    {
-        //printf("(0x%x,0x%x)", symtab[i].st_value, symtab[i].st_value + symtab[i].st_size);
-        if(addr >= symtab[i].st_value && addr < symtab[i].st_value + symtab[i].st_size)
+    
+    for (i = 0; i < nr_symtab_entry; i++)
+    {       
+        if (strcmp(strtab+(symtab+i)->st_name,exname) == 0)
         {
-            return &strtab[symtab[i].st_name];
+            unsigned int temp_address = 0;
+            temp_address = (symtab+i)->st_value;
+            return temp_address;
         }
     }
-    Log("name not found");
     return 0;
 }

@@ -21,19 +21,18 @@ make_helper(concat(decode_i_, SUFFIX)) {
 	return DATA_BYTE;
 }
 
-#if DATA_BYTE == 1 || DATA_BYTE == 4 || DATA_BYTE == 2
+#if DATA_BYTE == 1 || DATA_BYTE == 4
 /* sign immediate */
 make_helper(concat(decode_si_, SUFFIX)) {
 	op_src->type = OP_TYPE_IMM;
 
-	/* TODO: Use instr_fetch() to read ``DATA_BYTE'' bytes of memory pointed 
+	/* Use instr_fetch() to read ``DATA_BYTE'' bytes of memory pointed 
 	 * by ``eip''. Interpret the result as an signed immediate, and assign
 	 * it to op_src->simm.
 	 *
 	op_src->simm = ???
 	 */
-	DATA_TYPE_S simm = (DATA_TYPE)instr_fetch(eip, DATA_BYTE);
-    op_src->simm = simm;
+	op_src->simm = (DATA_TYPE_S)instr_fetch(eip, DATA_BYTE);
 	//panic("please implement me");
 
 	op_src->val = op_src->simm;
@@ -183,7 +182,14 @@ make_helper(concat(decode_rm_imm_, SUFFIX)) {
 
 void concat(write_operand_, SUFFIX) (Operand *op, DATA_TYPE src) {
 	if(op->type == OP_TYPE_REG) { REG(op->reg) = src; }
-	else if(op->type == OP_TYPE_MEM) { swaddr_write(op->addr, op->size, src, R_DS); }
+	else if(op->type == OP_TYPE_MEM) { 
+#ifdef SEGMENT
+		swaddr_write(op->addr, op->size, src, op->seg_type); 
+#endif
+#ifndef SEGMENT
+		swaddr_write(op->addr, op->size, src);
+#endif
+	}
 	else { assert(0); }
 }
 

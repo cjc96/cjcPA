@@ -1,8 +1,8 @@
-//
-// Created by lyw on 15-11-19.
-//
-
 #include "cpu/exec/helper.h"
+
+#define DATA_BYTE 1
+#include "cmovcc-template.h"
+#undef DATA_BYTE
 
 #define DATA_BYTE 2
 #include "cmovcc-template.h"
@@ -14,5 +14,4 @@
 
 /* for instruction encoding overloading */
 
-make_helper_v(cmovcc);
-
+make_helper_v(cmovcc_rm2r)

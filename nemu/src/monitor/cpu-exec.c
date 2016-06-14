@@ -1,9 +1,12 @@
 #include "monitor/monitor.h"
 #include "cpu/helper.h"
 #include <setjmp.h>
-#include <monitor/watchpoint.h>
-#include <cpu/reg.h>
-#include <device/i8259.h>
+#include "monitor/expr.h"
+#include "monitor/watchpoint.h"
+
+/* PA4: interrupt */
+#include "device/i8259.h"
+#include "cpu/exec/interrupt.h"
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -13,14 +16,12 @@
 #define MAX_INSTR_TO_PRINT 10
 
 int nemu_state = STOP;
-bool DONT_TOUCH_MY_EIP;
-bool CALL_CHANGE_PUSH_LATER = false;
 
 int exec(swaddr_t);
-void raise_intr(uint8_t NO);
 
 char assembly[80];
 char asm_buf[128];
+int do_call,do_jmpnear,do_rm_call;
 
 /* Used with exception handling. */
 jmp_buf jbuf;
@@ -65,17 +66,32 @@ void cpu_exec(volatile uint32_t n) {
 
 		/* Execute one instruction, including instruction fetch,
 		 * instruction decode, and the actual execution. */
-        DONT_TOUCH_MY_EIP = false;
+		 
+		do_call = 0; do_jmpnear = 0; do_rm_call = 0;
+		int former_eip = cpu.eip;		
 		int instr_len = exec(cpu.eip);
-
-        if(!DONT_TOUCH_MY_EIP)cpu.eip += instr_len;
-        if(CALL_CHANGE_PUSH_LATER)
-        {
-            uint32_t retaddr = swaddr_read(cpu.esp, 4, R_SS);
-            retaddr += instr_len;
-            swaddr_write(cpu.esp, 4, retaddr, R_SS);
-            CALL_CHANGE_PUSH_LATER= false;
-        }
+		
+		cpu.eip += instr_len;
+		former_eip += instr_len;
+		if (do_call)
+		{
+			cpu.esp -= 4;
+#ifndef SEGMENT
+			swaddr_write(cpu.esp,4,former_eip);
+#endif
+#ifdef SEGMENT
+			swaddr_write(cpu.esp,4,former_eip,SEG_TYPE_SS);
+#endif
+			
+			if (do_rm_call)
+				cpu.eip -= instr_len;
+				
+			//printf("%x\n",former_eip);
+		}
+		if (do_jmpnear)
+		{
+			cpu.eip -= instr_len;
+		}
 
 #ifdef DEBUG
 		print_bin_instr(eip_temp, instr_len);
@@ -86,18 +102,56 @@ void cpu_exec(volatile uint32_t n) {
 		}
 #endif
 
-#ifdef DEBUG
-		/* TODO: check watchpoints here. */
-		if(check_wp(false)) nemu_state = STOP;
-#endif
-
+		/* check watchpoints here. */
+		WP *temp_node;
+		int temp_value;
+		bool temp_success;
+		
+		temp_value = 0;
+		temp_success = true;
+		
+		temp_node = get_head();
+		while (temp_node != NULL)
+		{
+			temp_value = expr(temp_node->expr,&temp_success);
+			if (temp_value != temp_node->value)
+			{
+				nemu_state = STOP;
+				temp_node->value = temp_value;
+				printf("break at watchpoint %d\n",temp_node->NO);
+				break;
+			}
+			temp_node = temp_node->next;
+		}
+		
 		if(nemu_state != RUNNING) { return; }
 
-        if(cpu.INTR & cpu.IF) {
-            uint32_t intr_no = i8259_query_intr();
-            i8259_ack_intr();
-            raise_intr(intr_no);
-        }
+	
+		/* PA4:check if an interrupt is called whenever an instruction was excecuted */
+		if(cpu.INTR & cpu.IF) 
+		{
+			uint32_t intr_no = i8259_query_intr();
+			i8259_ack_intr();
+			raise_intr(intr_no);
+		}
+		
+		
+		// Debug for pal
+		/*if (instr_fetch(cpu.eip, 1) == 0)
+		{
+			printf("%x\n", cpu.eip);
+			nemu_state = STOP;
+			return;
+		}*/
+		
+		/*static int zhixingyici = 0;
+		if ((cpu.eip & 0x8040000) != 0 && !zhixingyici)
+		{
+			zhixingyici = 1;
+			nemu_state = STOP;
+			return;
+		}*/
+		
 	}
 
 	if(nemu_state == RUNNING) { nemu_state = STOP; }

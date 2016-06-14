@@ -1,5 +1,3 @@
-#include <unistd.h>
-#include <cpu/reg.h>
 #include "cpu/exec/helper.h"
 #include "monitor/monitor.h"
 
@@ -19,31 +17,19 @@ make_helper(inv) {
 1. The instruction at eip = 0x%08x is not implemented.\n\
 2. Something is implemented incorrectly.\n", eip);
 	printf("Find this eip value(0x%08x) in the disassembling result to distinguish which case it is.\n\n", eip);
-	printf("\33[1;31mIf it is the first case, see\n%s\nfor more details.\n\nIf it is the second case, remember:\n\
-* The machine is always right!\n\
-* Every line of untested code is always wrong!\33[0m\n\n", logo);
+	printf("\33[1;31mWash Wash Sleep\n%s\n\33[0m\n\n", logo);
 
 	assert(0);
 }
 
 make_helper(nemu_trap) {
 	print_asm("nemu trap (eax = %d)", cpu.eax);
-    int i;
-    char* buf;
+	int temp;
+
 	switch(cpu.eax) {
 		case 2:
-            //printf("va = %08X\n", cpu.ecx);
-            buf = malloc(cpu.edx+1);
-            //Log("len = %d\n", cpu.edx);
-            for(i = 0; i < cpu.edx; i++)
-            {
-                buf[i] = (char) swaddr_read(cpu.ecx + i, 1, R_DS);
-            }
-            buf[cpu.edx] = 0;
-            //i = (int) write(cpu.ebx , buf, cpu.edx);
-            printf("%s", buf);
-            free(buf);
-            //printf("tmp = %d\n", tmp);
+			for (temp = 0; temp < cpu.edx; temp++)
+				printf("%c", swaddr_read(cpu.ecx + temp, 1, SEG_TYPE_DS));
 		   	break;
 
 		default:
