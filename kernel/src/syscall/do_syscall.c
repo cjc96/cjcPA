@@ -1,11 +1,15 @@
 #include "irq.h"
-#include "fs.h"
 
 #include <sys/syscall.h>
 
 void add_irq_handle(int, void (*)(void));
 void mm_brk(uint32_t);
-void serial_printc(char);
+
+extern int fs_open(const char *pathname, int flags);
+extern int fs_read(int fd, void *buf, int len);
+extern int fs_write(int fd, void *buf, int len);
+extern int fs_lseek(int fd, int offset, int whence);
+extern int fs_close(int fd);
 
 static void sys_brk(TrapFrame *tf) {
 #ifdef IA32_PAGE
@@ -13,44 +17,44 @@ static void sys_brk(TrapFrame *tf) {
 #endif
 	tf->eax = 0;
 }
+void serial_printc(char ch);
 
-static inline void sys_write(TrapFrame *tf) {
-	uint32_t fd = tf->ebx;
-    char *buf = (char *)tf->ecx;
-    uint32_t len = tf->edx, result = 0;
-    if (fd == 1 || fd == 2) {
-        //asm volatile (".byte 0xd6" : : "a"(2), "c"(buf), "d"(len));
-        while (len--) serial_printc(*(buf++));
-        result = tf->edx;
-    } else {
-        assert(0);
+static void sys_write(TrapFrame *tf) {
+    int i;
+	int fd = tf->ebx;
+	uint32_t buf = tf->ecx;
+	size_t len = tf->edx;
+	
+	if(fd == 1 || fd == 2) 
+	{
+		//asm volatile (".byte 0xd6" : : "a"(2), "c"(buf), "d"(len));
+        for(i = 0; i < len; i++) {
+            char *output = (char *)(buf + i);
+            serial_printc(*output);
+        }
+        if(len == 0) tf->eax = (uint32_t) -1;
+        else tf->eax = 0;
+	} else {
+        tf->eax = fs_write(tf->ebx, (void *)tf->ecx, tf->edx);
     }
-    tf->eax = result;
+	/*if((fd == 1 || fd == 2) && (len == 0)) tf->eax = -1;
+	else tf->eax = 0;*/
 }
 
-static void sys_open(TrapFrame *tf) {	//Do not care about flags
-    const char *pathname = (const char *)tf->ebx;
-    int flags = tf->ecx;
-    tf->eax = fs_open(pathname, flags);
+static void sys_open(TrapFrame *tf) {
+    tf->eax = fs_open((void *) tf->ebx, tf->ecx);
 }
 
 static void sys_close(TrapFrame *tf) {
-    int fd = tf->ebx;
-    tf->eax = fs_close(fd);
+    tf->eax = fs_close(tf->ebx);
 }
 
 static void sys_read(TrapFrame *tf) {
-    int fd = tf->ebx;
-    char *buf = (char *) tf->ecx;
-    size_t len = tf->edx;
-    tf->eax = fs_read(fd, buf, len);
+    tf->eax = fs_read(tf->ebx, (void *) tf->ecx, tf->edx);
 }
 
 static void sys_lseek(TrapFrame *tf) {
-    int fd = tf->ebx;
-    off_t offset = tf->ecx;
-    int whence = tf->edx;
-    tf->eax = fs_lseek(fd, offset, whence);
+    tf->eax = fs_lseek(tf->ebx, tf->ecx, tf->edx);
 }
 
 void do_syscall(TrapFrame *tf) {
@@ -67,16 +71,20 @@ void do_syscall(TrapFrame *tf) {
 			break;
 
 		case SYS_brk: sys_brk(tf); break;
-
-		/* Add more system calls. */
+		
 		case SYS_write: sys_write(tf); break;
-		case SYS_open: sys_open(tf); break;
+		
+        case SYS_open: sys_open(tf); break;
+
         case SYS_read: sys_read(tf); break;
+
         case SYS_lseek: sys_lseek(tf); break;
+
         case SYS_close: sys_close(tf); break;
+
+		/* TODO: Add more system calls. */
 
 		default: panic("Unhandled system call: id = %d", tf->eax);
 	}
 }
-
 
