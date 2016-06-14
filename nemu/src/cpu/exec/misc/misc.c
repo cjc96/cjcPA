@@ -174,11 +174,20 @@ make_helper(std)
 
 make_helper(cwtl) 
 {
-	int16_t temp1 = cpu.ax;
-	int32_t temp2 = temp1;
-	cpu.eax = temp2;	
-	print_asm("cwtl");
-	
+	if (!ops_decoded.is_data_size_16)
+	{
+		int16_t temp1 = cpu.ax;
+		int32_t temp2 = temp1;
+		cpu.eax = temp2;	
+		print_asm("cwtl");
+	}
+	else
+	{
+		int8_t temp1 = cpu.al;
+		int16_t temp2 = temp1;
+		cpu.ax = temp2;
+		print_asm("cbtw");
+	}
 	return 1;
 }
 
@@ -226,7 +235,7 @@ make_helper(cltd)
 			cpu.dx = 0xFFFF;
 		else
 			cpu.dx = 0;
-		print_asm("cltw");
+		print_asm("cwtd");
 	}
 	return 1;
 }
