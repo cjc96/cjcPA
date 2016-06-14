@@ -1,6 +1,10 @@
-#ifndef __CMOVcc_H__
-#define __CMOVcc_H__
+//
+// Created by lyw on 15-11-19.
+//
 
-make_helper(cmovcc_rm2r_v);
+#ifndef NEMU_CMOVCC_H
+#define NEMU_CMOVCC_H
 
-#endif
+make_helper(cmovcc_v);
+
+#endif //NEMU_CMOVCC_H

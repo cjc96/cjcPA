@@ -1,17 +1,14 @@
+//
+// Created by lyw on 15-10-17.
+//
+#include <cpu/reg.h>
 #include "cpu/exec/template-start.h"
 
 #define instr add
 
 static void do_execute () {
-	DATA_TYPE result = op_dest->val + op_src->val;
-	OPERAND_W(op_dest, result);
-
-	/* Update EFLAGS. */
-	
-	int sin = 0,cin = 0;
-	DATA_TYPE ain = op_dest->val,bin = op_src->val;
-	set_eflags(ain,bin,sin,cin);
-	
+    DATA_TYPE result = EFLAGS_ALU(op_dest->val, op_src->val, 0, 0);
+    OPERAND_W(op_dest,result);
 	print_asm_template2();
 }
 

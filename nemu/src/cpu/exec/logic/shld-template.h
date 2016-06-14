@@ -1,3 +1,5 @@
+#include <cpu/decode/operand.h>
+#include <cpu/reg.h>
 #include "cpu/exec/template-start.h"
 
 #define instr shld
@@ -11,7 +13,7 @@ static void do_execute () {
 	count &= 0x1f;
 	while(count != 0) {
 		out <<= 1;
-		out |= in >> ((DATA_BYTE << 3) - 1);
+		out |= (in >> ((DATA_BYTE << 3) - 1)) & 1;
 		in <<= 1;
 		count --;
 	}

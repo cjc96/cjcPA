@@ -1,3 +1,4 @@
+#include <cpu/decode/operand.h>
 #include "cpu/decode/modrm.h"
 #include "cpu/helper.h"
 
@@ -42,12 +43,15 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 
 	if(base_reg != -1) {
 		addr += reg_l(base_reg);
+        if(base_reg == R_EBP || base_reg == R_ESP)
+            rm->sreg = R_SS;
+        else rm->sreg = R_DS;
 	}
 
 	if(index_reg != -1) {
 		addr += reg_l(index_reg) << scale;
 	}
-	
+
 #ifdef DEBUG
 	char disp_buf[16];
 	char base_buf[8];
@@ -79,16 +83,6 @@ int load_addr(swaddr_t eip, ModR_M *m, Operand *rm) {
 
 	rm->type = OP_TYPE_MEM;
 	rm->addr = addr;
-	
-	if (base_reg == -1 || m->R_M == R_EBP || m->R_M == R_ESP)
-	{
-		rm->seg_type = SEG_TYPE_SS;
-	}
-	else
-	{
-		rm->seg_type = SEG_TYPE_DS;
-	}
-
 
 	return instr_len;
 }
@@ -118,14 +112,9 @@ int read_ModR_M(swaddr_t eip, Operand *rm, Operand *reg) {
 		return 1;
 	}
 	else {
-		int instr_len = load_addr(eip, &m, rm);
-		#ifdef SEGMENT
-		rm->val = swaddr_read(rm->addr, rm->size, rm->seg_type);
-		#endif
-		#ifndef SEGMENT
-		rm->val = swaddr_read(rm->addr, rm->size);
-		#endif
-		return instr_len;
-	}
+        int instr_len = load_addr(eip, &m, rm);
+        rm->val = swaddr_read(rm->addr, rm->size, rm->sreg);
+        return instr_len;
+    }
 }
 

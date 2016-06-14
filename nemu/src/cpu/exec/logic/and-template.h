@@ -6,13 +6,7 @@ static void do_execute () {
 	DATA_TYPE result = op_dest->val & op_src->val;
 	OPERAND_W(op_dest, result);
 
-	/* Update EFLAGS. */
-	
-	int sin = 0,cin = 0;
-	DATA_TYPE ain = result,bin = 0;
-	set_eflags(ain,bin,sin,cin);
-	cpu.OF = 0;
-	cpu.CF = 0;
+    EFLAGS_UPDATE_LOGIC(result);
 
 	print_asm_template2();
 }

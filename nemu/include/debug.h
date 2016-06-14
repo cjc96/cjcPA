@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-
 extern FILE* log_fp;
 
 #ifdef LOG_FILE

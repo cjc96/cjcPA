@@ -1,3 +1,5 @@
+#include <cpu/decode/operand.h>
+#include <cpu/reg.h>
 #include "cpu/exec/template-start.h"
 
 #define instr shrd

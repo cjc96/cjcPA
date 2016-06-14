@@ -1,6 +1,10 @@
-#ifndef __leave_H__
-#define __leave_H__
+//
+// Created by lyw on 15-10-28.
+//
 
-make_helper(leave);
+#ifndef NEMU_LEAVE_H
+#define NEMU_LEAVE_H
 
-#endif
+make_helper(leave_v);
+
+#endif //NEMU_LEAVE_H

@@ -11,4 +11,3 @@
 #undef OPERAND_W
 
 #undef MSB
-#undef set_eflags

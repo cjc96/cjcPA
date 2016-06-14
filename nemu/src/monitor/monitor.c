@@ -1,3 +1,4 @@
+#include <cpu/reg.h>
 #include "nemu.h"
 
 #define ENTRY_START 0x100000
@@ -10,6 +11,9 @@ void load_elf_tables(int, char *[]);
 void init_regex();
 void init_wp_list();
 void init_ddr3();
+void init_cache();
+void init_device();
+void init_sdl();
 
 FILE *log_fp = NULL;
 
@@ -37,6 +41,10 @@ void init_monitor(int argc, char *argv[]) {
 
 	/* Initialize the watchpoint link list. */
 	init_wp_list();
+
+    init_device();
+
+    init_sdl();
 
 	/* Display welcome message. */
 	welcome();
@@ -86,28 +94,26 @@ void restart() {
 
 	/* Set the initial instruction pointer. */
 	cpu.eip = ENTRY_START;
-	cpu.EFLAGS = 2;
 
+    cpu.cs_cache_base = 0x0;
+    cpu.cs_cache_limit = 0xFFFFFFFF;
+
+	/*
+	 * First, the register EFLAGS is set to a predefined value of 0x00000002.
+	 * https://www.freebsd.org/doc/en_US.ISO8859-1/books/arch-handbook/boot-kernel.html
+	 * page174@intel386
+	 */
+	cpu.EFLAGS= 0x00000002;
+
+    cpu.CR0 = 0;
+
+    /*uint32_t descripter_high = 0x000F0000;
+    uint32_t descripter_low = 0x0000FFFF;
+    lnaddr_write((uint32_t)(cpu.GDTR >> 16) + (cpu.cs >> 3) * 8, 4, descripter_low);
+    lnaddr_write((uint32_t)(cpu.GDTR >> 16) + (cpu.cs >> 3) * 8 + 4, 4, descripter_high);*/
+
+    init_cache();
+    init_tlb();
 	/* Initialize DRAM. */
 	init_ddr3();
-	
-#ifdef CACHE
-	/* Initialize cache */
-	int i;
-	for (i = 0; i < 1024; i++)
-		l1_cache[i].valid = 0;
-#ifdef L2_CACHE
-	for (i = 0; i < 65536; i++)
-		l2_cache[i].valid = 0;
-#endif	
-#endif
-#ifdef SEGMENT
-	cpu.CS.cache.limit = 0xffffffff;
-	cpu.CS.cache.base  = 0x0;
-	cpu.cr0.val = 0;
-#endif
-#ifdef tlb
-	int tlb_i;
-	for (tlb_i = 0; tlb_i < 64; i++) cpu.tlb[i].valid = 0;
-#endif
 }

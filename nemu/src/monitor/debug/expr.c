@@ -5,49 +5,94 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <stdlib.h>
+#include <cpu/reg.h>
 
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+#define KRESET "\033[0m"
+extern uint32_t findsym(char* var);
 enum {
-	NOTYPE = 256, EQ, NEQ, NLT, NMT, MT, LT, LAND, LOR, LN, XOR, AAND, AOR, AN, NUM, REG, NEG, SHL, SHR, HEX, POINTER, OBJ
+	NOTYPE = 256, NUM, HEXNUM, REG, VAR,
+	UNARY_PLUS = 33, UNARY_MINUS = 34, LNOT = 35, BNOT = 36, IND = 38,
+
+	PLUS = 43, MINUS = 45, MULTIPLY = 42, DIVISION = 47, LEFT_PARENTHESES = 40, RIGHT_PARENTHESES = 41,
+	MOD = 53,
+	BLSHIFT = 71, BRSHIFT = 72,
+	LESSTHAN = 81 ,LESSOREQ = 82, GREATOREQ = 84, GREATTHAN = 83,
+	EQ = 91, NEQ = 92,
+	BITAND = 101, BITOR = 111, BITXOR = 121, LAND = 131, LOR = 141,
+
+	//DIRASS = 161, ASSSUM = 162, ASSDIF = 163, ASSPRO = 164, ASSQUO = 165, ASSREM = 166,
+	//ASSLS = 167, ASSRS = 168,ASSAND = 169, ASSXOR = 170, ASSOR = 171,
+
 };
 
 static struct rule {
 	char *regex;
 	int token_type;
+	int precedence;  // -1为不适用 优先级参考资料：https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B
 } rules[] = {
 
-	/* Add more rules.
+	/* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
-	
-	{"0x[0-9a-fA-F]+",HEX},			// hex
-	{" +", NOTYPE},					// spaces
-	{"\\+", '+'},					// plus
-	{"\\-", '-'},	 				// minus
-	{"\\*", '*'},					// times
-	{"\\/", '/'},					// divided
-	{"\\%", '%'},					// modify
-	{"\\(", '('},					// right parenthese
-	{"\\)", ')'},					// left parenthese
-	{"==", EQ},						// equal
-	{">>", SHR},					// shr
-	{"<<", SHL},					// shl
-	{"!=", NEQ},					// not equal
-	{">=", NLT},					// no less than
-	{"<=", NMT},					// no more than
-	{">", MT},						// more than
-	{"<", LT},						// less than
-	{"&&", LAND},					// logical and
-	{"\\|\\|", LOR},				// logical or
-	{"!", LN},						// logical not
-	{"\\^", XOR},					// xor
-	{"\\&", AAND},					// algebra and
-	{"\\|", AOR},					// algebra or
-	{"~", AN},						// algebra not
-	{"[0-9]+", NUM},				// number
-	{"\\$[a-zA-Z]+", REG},				// register
-	{"[a-zA-Z_][a-zA-Z0-9_]*",OBJ}  // object
 
-	
+	{" +",	NOTYPE, -1},				// spaces
+
+	{"0x[0-9a-fA-F]+", HEXNUM, -1},
+	{"\\$[a-zA-Z]+", REG, -1},
+	{"[0-9]+", NUM, -1},				// 不知道为什么"\\d+"不行
+
+	//{"<<=", ASSLS, 16},
+	//{">>=", ASSRS, 16},
+
+	{"<<", BLSHIFT, 7},
+	{">>", BRSHIFT, 7},
+	{"<=", LESSOREQ, 8},
+	{">=", GREATOREQ, 8},
+	{"==", EQ, 9},						// equal
+	{"!=",NEQ, 9},
+	{"&&", LAND, 13},
+	{"\\|\\|", LOR,  14},
+
+	/*{"\\+=", ASSSUM, 16},
+	{"-=", ASSDIF, 16},
+	{"*=", ASSPRO, 16},
+	{"/=", ASSQUO, 16},
+	{"%=", ASSREM, 16},
+	{"&=", ASSAND, 16},
+	{"\\^=", ASSXOR, 16},
+	{"\\|=", ASSOR, 16},
+	 */
+
+	{"\\+", '+', 6},					// plus  '+' = 75
+	{"-",   '-', 6},					// minus '-' = 77
+	{"!", LNOT, 3},
+	{"~", BNOT, 3},
+	{"\\*", '*', 5},					// multiply '*' = 74
+	{"/",   '/', 5},					// division '/' = 79
+	{"%", MOD, 5},
+	{">", GREATTHAN, 8},
+	{"<", LESSTHAN, 8},
+	{"\\(", '(', -1},                   //          '(' = 72
+	{"\\)", ')', -1},                   //          ')' = 73
+	{"&", BITAND, 10},
+	{"\\^", BITXOR, 11},
+	{"\\|", BITOR, 12},
+	//{"=", DIRASS, 16},
+
+
+	{"\\*", IND, 3},
+	{"[^0-9\\)]-", UNARY_MINUS, 3},
+	{"[^0-9\\)]\\+", UNARY_PLUS,  3},
+    {"[A-Za-z_][A-Za-z0-9_]*", VAR, -1}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -74,16 +119,16 @@ void init_regex() {
 typedef struct token {
 	int type;
 	char str[32];
-	unsigned int num;
+	int precedence;
 } Token;
 
-Token tokens[32];
+Token tokens[128];
+
 int nr_token;
 
 static bool make_token(char *e) {
 	int position = 0;
-	char regtemp[32];
-	unsigned int i,temp;
+	int i;
 	regmatch_t pmatch;
 	
 	nr_token = 0;
@@ -95,278 +140,26 @@ static bool make_token(char *e) {
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
-				//Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s\n", i, rules[i].regex, position, substr_len, substr_len, substr_start);
+				//Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
-				/* Now a new token is recognized with rules[i]. Add codes
-				 * to record the token in the array ``tokens''. For certain 
+				/* TODO: Now a new token is recognized with rules[i]. Add codes
+				 * to record the token in the array ``tokens''. For certain
 				 * types of tokens, some extra actions should be performed.
 				 */
 
 				switch(rules[i].token_type) {
-				    case OBJ:
-				        tokens[nr_token].type = rules[i].token_type;
-				        for (temp = 0; temp < substr_len; ++temp)
-				            tokens[nr_token].str[temp] = substr_start[temp];
-				        tokens[nr_token].str[temp] = '\0';
-				        
-				        extern uint32_t get_address_from_name(char *);
-				        tokens[nr_token].num = get_address_from_name(tokens[nr_token].str);
-				        assert(tokens[nr_token].num);
-				        
-				        nr_token++;
-				        break;
-				
-					case NOTYPE: 
-						break;
-						
-					case EQ:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-
-					case SHL:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-
-					case SHR:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-
-					case NEQ:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-					
-					case NLT:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-					
-					case NMT:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case MT:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case LT:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case LAND:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case LOR:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case LN:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case XOR:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case AAND:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case AOR:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case AN:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case NUM:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token].str[temp] = '\0';
-						
-						tokens[nr_token].num = 0;
-						for (temp = 0; temp < substr_len; ++temp)
-						{
-							tokens[nr_token].num = tokens[nr_token].num * 10 + substr_start[temp] - '0';
-						}
-						nr_token++;
-						break;
-						
+					case NOTYPE: break;
+                    case VAR :
+					case NUM :
+					case HEXNUM:
 					case REG:
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token].str[temp] = '\0';
-						
-						for (temp = 1; temp < substr_len; ++temp)
-							regtemp[temp-1] = substr_start[temp];
-						if (strcmp(regtemp,"eax") == 0)
-							tokens[nr_token].num = cpu.eax;
-						if (strcmp(regtemp,"edx") == 0)
-							tokens[nr_token].num = cpu.edx;
-						if (strcmp(regtemp,"ecx") == 0)
-							tokens[nr_token].num = cpu.ecx;
-						if (strcmp(regtemp,"ebx") == 0)
-							tokens[nr_token].num = cpu.ebx;
-						if (strcmp(regtemp,"esi") == 0)
-							tokens[nr_token].num = cpu.esi;
-						if (strcmp(regtemp,"edi") == 0)
-							tokens[nr_token].num = cpu.edi;
-						if (strcmp(regtemp,"esp") == 0)
-							tokens[nr_token].num = cpu.esp;
-						if (strcmp(regtemp,"ebp") == 0)
-							tokens[nr_token].num = cpu.ebp;
-						if (strcmp(regtemp,"ax") == 0)
-							tokens[nr_token].num = cpu.ax;
-						if (strcmp(regtemp,"dx") == 0)
-							tokens[nr_token].num = cpu.dx;
-						if (strcmp(regtemp,"cx") == 0)
-							tokens[nr_token].num = cpu.cx;
-						if (strcmp(regtemp,"bx") == 0)
-							tokens[nr_token].num = cpu.bx;
-						if (strcmp(regtemp,"bp") == 0)
-							tokens[nr_token].num = cpu.bp;	
-						if (strcmp(regtemp,"si") == 0)
-							tokens[nr_token].num = cpu.si;
-						if (strcmp(regtemp,"di") == 0)
-							tokens[nr_token].num = cpu.di;
-						if (strcmp(regtemp,"sp") == 0)
-							tokens[nr_token].num = cpu.sp;
-						if (strcmp(regtemp,"al") == 0)
-							tokens[nr_token].num = cpu.al;
-						if (strcmp(regtemp,"dl") == 0)
-							tokens[nr_token].num = cpu.dl;
-						if (strcmp(regtemp,"cl") == 0)
-							tokens[nr_token].num = cpu.cl;
-						if (strcmp(regtemp,"bl") == 0)
-							tokens[nr_token].num = cpu.bl;
-						if (strcmp(regtemp,"ah") == 0)
-							tokens[nr_token].num = cpu.ah;
-						if (strcmp(regtemp,"dh") == 0)
-							tokens[nr_token].num = cpu.dh;
-						if (strcmp(regtemp,"ch") == 0)
-							tokens[nr_token].num = cpu.ch;
-						if (strcmp(regtemp,"bh") == 0)
-							tokens[nr_token].num = cpu.bh;
-						if (strcmp(regtemp,"eip") == 0)
-							tokens[nr_token].num = cpu.eip;
-						if (strcmp(regtemp,"CS") == 0)
-							tokens[nr_token].num = cpu.CS.val;
-						if (strcmp(regtemp,"DS") == 0)
-							tokens[nr_token].num = cpu.DS.val;
-						if (strcmp(regtemp,"ES") == 0)
-							tokens[nr_token].num = cpu.ES.val;
-						if (strcmp(regtemp,"SS") == 0)
-							tokens[nr_token].num = cpu.SS.val;
-						nr_token++;
-						break;
-						
-					case '+': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case '-': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case '*': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case '/': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case '%': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case '(': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case ')': 
-						tokens[nr_token].type = rules[i].token_type; 
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token++].str[temp] = '\0';
-						break;
-						
-					case HEX:
-						tokens[nr_token].type = NUM;
-						for (temp = 0; temp < substr_len; ++temp)
-							tokens[nr_token].str[temp] = substr_start[temp];
-						tokens[nr_token].str[temp] = '\0';
-						sscanf(tokens[nr_token].str,"%x",&tokens[nr_token].num);
-						nr_token++;
-						break;
-						
-					default: panic("please implement me");
+						assert(substr_len < 32);
+                        memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token]));
+						memcpy(tokens[nr_token].str, substr_start, (size_t) substr_len);
+					default:
+						tokens[nr_token].type = rules[i].token_type;
+						tokens[nr_token++].precedence = rules[i].precedence;
 				}
 
 				break;
@@ -378,268 +171,172 @@ static bool make_token(char *e) {
 			return false;
 		}
 	}
+	for(i = 0; i < nr_token; i++)
+	{
+		if(tokens[i].type == MINUS || tokens[i].type == PLUS || tokens[i].type == MULTIPLY) // HERE MAY BE HAVE SOME BUG!
+		{
+			if (i == 0 || (tokens[i-1].type != ')' &&
+                    tokens[i-1].type != NUM && tokens[i-1].type != REG &&
+                    tokens[i-1].type != HEXNUM && tokens[i-1].type != VAR) ) {
+				switch (tokens[i].type) {
+					case PLUS: tokens[i].type = UNARY_PLUS; break;
+					case MINUS:tokens[i].type = UNARY_MINUS;break;
+					case MULTIPLY:tokens[i].type = IND; break;
+					default: assert(0);
+				}
+				tokens[i].precedence = 3;
+			}
+		}
+		//Log("tokens[%d] = %d(%d)(%s)",i,tokens[i].type, tokens[i].type,tokens[i].str);
+	}
 
 	return true; 
 }
 
-uint32_t expr(char *e, bool *success) {
-	int i;											// loop varible
-	unsigned int sta[32] = {0};						// stack
-	int  sta_len = 0;								// stack length
-	int pro[32] = {0}, pro_len = 0;					// order of process
-	int priority[300]={0};							// priority
-	unsigned int temp1,temp2;						// execute numbers
-	
-	// priority table
-	priority[EQ] = 6; priority[NEQ] = 6; priority[NLT] = 7;
-	priority[NMT] = 7; priority[MT] = 7; priority[LT] = 7;
-	priority[LAND] = 2; priority[LOR] = 1; priority[LN] = 11;
-	priority[XOR] = 4; priority[AAND] = 5; priority[AOR] = 3;
-	priority[AN] = 11; priority[NUM] = 13; priority[REG] = 13;
-	priority[NEG] = 11; priority['+'] = 9; priority['-'] = 9;
-	priority['*'] = 10; priority['/'] = 10; priority['%'] = 10;
-	priority[SHL] = 8; priority[SHR] = 8; priority[HEX] = 13;
-	priority[POINTER] = 11; priority[OBJ] = 13;
+bool check_parentheses(int p, int q) {
+	if(tokens[p].type != '(' || tokens[q].type != ')') return false;
+	int i, cnt = 0;
+	for(i = p; i <= q; i++) {
+		if(tokens[i].type == '(') cnt ++;
+		if(tokens[i].type == ')') {
+			cnt --;
+			if(cnt == 0) return (bool) (i == q);
+		}
+	}
+	return false;
+	//return (bool) (tokens[p].type == '(' && tokens[q].type == ')'); // 为什么要强制类型转换？ch
+}
 
+int get_dominant_op(int p,int q) {
+	int op = -1, op_pre = 0 , i, cnt_parentheses = 0;
+	for(i = q; i >= p; i--) {
+		if(cnt_parentheses == 0 && op_pre < tokens[i].precedence)
+		{
+			op = i;
+			op_pre = tokens[i].precedence;
+		}
+		else if(tokens[i].type == ')') cnt_parentheses --;
+		else if(tokens[i].type == '(') cnt_parentheses ++;
+	}
+	//Log("op = %d", tokens[op].type);
+	return op;
+}
+
+uint32_t eval(int p, int q, bool *success) {
+	//Log("EVAL %d %d",p, q);
+	if (p > q) {
+		//*success = false;
+		//printf("BAD EXPRESSION\n");
+		return 0;
+	}
+	else if (p == q) {
+		uint32_t ret;
+		char buf[32];
+		int i;
+		switch (tokens[p].type) {
+			case NUM:
+				sscanf(tokens[p].str, "%u", &ret);
+				return ret;
+			case HEXNUM:
+				sscanf(tokens[p].str, "%X", &ret);
+				return ret;
+            case VAR:
+                return findsym(tokens[p].str);
+			case REG:
+                memset(buf, 0, sizeof(buf));
+				sscanf(tokens[p].str + 1, "%s", buf);
+				for (i = R_EAX; i <= R_EDI; i++) {
+					if (strcmp(buf, regsl[i]) == 0)
+						return cpu.gpr[i]._32;
+				}
+				for (i = R_AX; i <= R_DI; i++) {
+					if (strcmp(buf, regsw[i]) == 0)
+						return cpu.gpr[i]._16;
+				}
+				for (i = R_AL; i <= R_BH; i++) {
+					if (strcmp(buf, regsb[i]) == 0)
+						return cpu.gpr[i % 4]._8[i / 4];
+				}
+                for(i = E_CF; i <= E_VM; i++)
+                {
+                    if(strcmp(buf, regeflags[i]) == 0)
+                        return (cpu.EFLAGS & (1 << i)) >> i;
+                }
+                for(i = R_ES; i <= R_GS; i++) {
+                    if(strcmp(buf, segsw[i]) == 0)
+                        return seg_w(i);
+                }
+                if(strcmp(buf, "eip") == 0)
+                    return cpu.eip;
+                if(strcmp(buf, "eflags") == 0)
+                    return cpu.EFLAGS;
+                if(strcmp(buf, "cro") == 0)
+                    return cpu.CR0;
+                if(strcmp(buf, "crE") == 0)
+                    return cpu.CR3;
+
+			default:
+				Assert(0,"tokens[%d].type = %d",p,tokens[p].type);
+		}
+	}
+	else if (check_parentheses(p, q)) {
+		return eval(p + 1, q - 1, success);
+	}
+	else {
+		uint32_t val1, val2;
+		int op;
+		op = get_dominant_op(p, q);
+		if(op < 0) {
+			*success = false;
+			printf("BAD EXPRESSION or INNER ERROR\n");
+			return 0;
+		}
+		val1 = eval(p, op - 1, success);
+		val2 = eval(op + 1, q, success);
+		//Log("[%d,%d] val1=%u val2=%u\n", p, q, val1, val2);
+		switch (tokens[op].type) {
+			case UNARY_MINUS: return (uint32_t) -val2;
+			case UNARY_PLUS: return val2;
+			case IND: return swaddr_read(val2, 4, R_DS);
+			case LNOT: return (uint32_t) !val2;
+			case BNOT: return ~val2;
+
+			case EQ: return (uint32_t) (val1 == val2);
+			case NEQ: return (uint32_t) (val1 != val2);
+			case '+': return val1 + val2;
+			case '-': return val1 - val2;
+			case '*': return val1 * val2;
+			case '/': return val1 / val2;
+			case MOD: return val1 % val2;
+			case BLSHIFT: return val1 << val2;
+			case BRSHIFT: return val1 >> val2;
+			case LESSTHAN: return (uint32_t) (val1 < val2);
+			case LESSOREQ: return (uint32_t) (val1 <= val2);
+			case GREATOREQ: return (uint32_t) (val1 >= val2);
+			case GREATTHAN: return (uint32_t) (val1 > val2);
+			case BITAND: return val1 & val2;
+			case BITOR: return val1 | val2;
+			case BITXOR: return val1 ^ val2;
+			case LAND: return (uint32_t) (val1 && val2);
+			case LOR: return (uint32_t) (val1 || val2);
+
+			default:
+				*success = false;
+				printf("BAD EXPRESSION or INNER ERROR\n");
+				return 0;
+		}
+	}
+
+}
+
+uint32_t expr(char *e, bool *success) {
 	if(!make_token(e)) {
 		*success = false;
 		return 0;
 	}
-
-	// correct '-' from minus into negative 
-	for (i = 0; i < nr_token; ++i)
-	{
-		if (tokens[i].type == '-' && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i-1].type != ')')
-			tokens[i].type = NEG;
-		if (tokens[i].type == '*' && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i-1].type != ')')
-			tokens[i].type = POINTER;
-	}
-	
-	// get infix expression into suffix expression
-	for (i = 0; i < nr_token; ++i)
-	{
-		if (tokens[i].type == REG || tokens[i].type == NUM)
-			pro[pro_len++] = i;
-		else if (tokens[i].type == '(')
-			sta[sta_len++] = i;
-		else if (tokens[i].type == ')')
-		{
-			while (tokens[sta[sta_len-1]].type != '(')
-			{
-				pro[pro_len++] = sta[sta_len-1];
-				sta_len--;
-			}
-			sta_len--;
-		}
-		else
-		{
-			while (sta_len > 0 && priority[tokens[sta[sta_len-1]].type] >= priority[tokens[i].type])
-			{
-				pro[pro_len++] = sta[sta_len-1];
-				sta_len--;
-			}
-			sta[sta_len++] = i;
-		}
-	}
-	while (sta_len > 0)
-		pro[pro_len++] = sta[--sta_len];
-	
-	
-	/*for (i = 0; i < pro_len; i++)
-	{
-		printf("%s %u\n",tokens[pro[i]].str,tokens[pro[i]].num);
-	}
-	printf("\n");*/
-	
-	// calculate the value of the expression with the help of array "pro"
-	sta_len = 0;
-	memset(sta,0,sizeof(sta));
-	for (i = 0; i < pro_len; i++)
-	{
-		switch (tokens[pro[i]].type)
-		{
-			case EQ:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 == temp2);
-				sta_len--;
-				break;
-				
-			case SHL:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 << temp2);
-				sta_len--;
-				break;
-
-			case SHR:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 >> temp2);
-				sta_len--;
-				break;
-				
-			case NEQ:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 != temp2);
-				sta_len--;
-				break;
-
-			case NLT:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 >= temp2);
-				sta_len--;
-				break;
-					
-			case NMT:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 <= temp2);
-				sta_len--;
-				break;
-					
-			case MT:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 > temp2);
-				sta_len--;
-				break;
-						
-			case LT:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 < temp2);
-				sta_len--;
-				break;
-				
-			case LAND:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 && temp2);
-				sta_len--;
-				break;
-						
-			case LOR:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 || temp2);
-				sta_len--;
-				break;
-						
-			case LN:
-				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (!temp2);
-				break;
-						
-			case XOR:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 ^ temp2);
-				sta_len--;
-				break;
-						
-			case AAND:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 & temp2);
-				sta_len--;
-				break;
-				
-			case AOR:
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 | temp2);
-				sta_len--;
-				break;
-						
-			case AN:
-				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = (~temp2);
-				break;
-						
-			case NUM:
-				sta[sta_len++] = tokens[pro[i]].num;
-				break;
-						
-			case REG:
-				sta[sta_len++] = tokens[pro[i]].num;
-				break;
-				
-			case OBJ:
-			    sta[sta_len++] = tokens[pro[i]].num;
-			    break;
-				
-			case POINTER:
-				temp2 = sta[sta_len-1];
-#ifdef SEGMENT
-				sta[sta_len-1] = swaddr_read(temp2, 4, 0);
-#endif
-#ifndef SEGMENT
-				sta[sta_len-1] = swaddr_read(temp2, 4);
-#endif
-				break;
-						
-			case '+': 
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 + temp2);
-				sta_len--;
-				break;
-						
-			case '-': 
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 - temp2);
-				sta_len--;
-				break;
-						
-			case '*': 
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				if (temp2 == 0)
-				{
-					*success = false;
-					return 0;
-				}
-				sta[sta_len-2] = (temp1 * temp2);
-				sta_len--;
-				break;
-						
-			case '/': 
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				sta[sta_len-2] = (temp1 / temp2);
-				sta_len--;
-				break;
-						
-			case '%': 
-				temp1 = sta[sta_len-2];
-				temp2 = sta[sta_len-1];
-				if (temp2 == 0)
-				{
-					*success = false;
-					return 0;
-				}
-				sta[sta_len-2] = (temp1 % temp2);
-				sta_len--;
-				break;
-				
-			case NEG:
-				temp2 = sta[sta_len-1];
-				sta[sta_len-1] = 0-temp2;
-				break;
-						
-			default: panic("please implement me");	
-		}
-	}
-	
-	if (sta_len != 1)
-	{
-		*success = false;
-		return 0;
-	}
-	
-	return sta[0];
+	/* TODO: Insert codes to evaluate the expression. */
+	*success = true;
+	uint32_t ret = (uint32_t) eval(0, nr_token -1, success);
+	return ret;
 }
+
