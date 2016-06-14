@@ -1,5 +1,5 @@
 #include "irq.h"
-//#include "fs.h"
+#include "fs.h"
 
 #include <sys/syscall.h>
 
