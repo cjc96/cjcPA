@@ -5,7 +5,7 @@
 static void do_execute() {
 	DATA_TYPE result = -op_src->val;
 	OPERAND_W(op_src, result);
-	if (op_src == 0)
+	if (!op_src->val)
 	{
 		cpu.CF = 0;
 	}
