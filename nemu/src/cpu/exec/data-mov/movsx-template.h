@@ -3,7 +3,16 @@
 #define instr movsb
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 static void do_execute() {
-    signed char val = reg_b(op_src->reg);
+    signed char val;
+    if (op_src->type == OP_TYPE_REG)
+    {
+    	val = reg_b(op_src->reg);
+    }
+    else
+    {
+    	val = op_src->val;
+    }
+
     signed int result = val;
     OPERAND_W(op_dest, result);
 	print_asm_template2();
