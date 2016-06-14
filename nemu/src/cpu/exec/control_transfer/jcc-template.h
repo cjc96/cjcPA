@@ -28,6 +28,10 @@ static void do_execute () {
 				case 0x8f : if ((!cpu.ZF) && (cpu.SF == cpu.OF)) cpu.eip += op_src->val; break;
 				default : panic("Please implent me!");
 			}
+		if (ops_decoded.is_data_size_16)
+		{
+			cpu.eip &= 0xffff; 
+		}
 	}
 	else 
 		if ((op_temp <= 0x7f && op_temp >= 0x70) || op_temp == 0xe3)
@@ -53,6 +57,10 @@ static void do_execute () {
 				case 0x7f : if ((!cpu.ZF) && (cpu.SF == cpu.OF)) cpu.eip += op_src->val; break;
 				case 0xe3 : if (!cpu.ecx) cpu.eip += op_src->val; break;
 				default : panic("Please implent me!");
+			}
+			if (ops_decoded.is_data_size_16)
+			{
+				cpu.eip &= 0xffff;
 			}
 		}
 		else
