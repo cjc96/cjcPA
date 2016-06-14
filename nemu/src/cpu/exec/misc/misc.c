@@ -43,56 +43,6 @@ make_helper(hlt)
 	return 1;
 }
 
-make_helper(outb)
-{
-	//opcode = ee
-	pio_write(cpu.dx, 1, cpu.al);
-	print_asm("outb");
-	
-	return 1;
-}
-
-make_helper(outd)
-{
-	//opcode = ef
-	if (!ops_decoded.is_data_size_16)
-	{
-		pio_write(cpu.dx, 4, cpu.eax);
-	}
-	else
-	{
-		pio_write(cpu.dx, 2, cpu.ax);
-	}
-	print_asm("outd");
-	
-	return 1;
-}
-
-make_helper(inb)
-{
-	//opcode = ec
-	cpu.al = pio_read(cpu.dx, 1);
-	print_asm("inb");
-	
-	return 1;
-}
-
-make_helper(ind)
-{
-	//opcode = ed
-	if (!ops_decoded.is_data_size_16)
-	{
-		cpu.eax = pio_read(cpu.dx, 4);
-	}
-	else
-	{
-		cpu.ax = pio_read(cpu.dx, 2);
-	}
-	print_asm("ind");
-	
-	return 1;
-}
-
 make_helper(iret)
 {
     assert(cpu.cr0.protect_enable == 1);

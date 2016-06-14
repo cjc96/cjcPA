@@ -12,6 +12,8 @@
 #include "data-mov/lidt.h"
 #include "data-mov/movcr.h"
 #include "data-mov/movseg.h"
+#include "data-mov/in.h"
+#include "data-mov/out.h"
 
 #include "arith/dec.h"
 #include "arith/inc.h"
