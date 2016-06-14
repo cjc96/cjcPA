@@ -37,8 +37,7 @@ make_helper(sti)
 make_helper(hlt)
 {
 	//opcode = f4
-	if (!cpu.INTR)
-	return 0;
+	while (!cpu.INTR);
 	print_asm("hlt");
 	
 	return 1;
