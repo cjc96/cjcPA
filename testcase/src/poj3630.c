@@ -1,3 +1,28 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2015 Zhang Boyang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
 char input_buffer[] = 
 "\x35\x0A\x33\x0A\x39\x31\x31\x0A\x39\x37"
 "\x36\x32\x35\x39\x39\x39\x0A\x39\x31\x31"
@@ -101,7 +126,7 @@ int write_llint(long long lld)
     if (lld < 0) { write_char('-'); lld = -lld; }
     llu = lld;
     do {
-        LLdiv10(llu, &llu, &    buf[p++]);
+        LLdiv10(llu, &llu, &buf[p++]);
     } while (llu > 0);
     ret = p;
     while (p > 0) write_char('0' + buf[--p]);
@@ -191,21 +216,21 @@ void unread_char(char c)
 
 void read_space()
 {
-    char c;
+    char c = '\0';
     while (read_char(&c) && naive_isspace(c));
-    unread_char(c);
+    if (c) unread_char(c);
 }
 
 int read_string(char *s)
 {
     int flag = 0;
-    char c;
+    char c = '\0';
     read_space();
     while (read_char(&c) && !naive_isspace(c)) {
         *s++ = c;
         flag = 1;
     }
-    unread_char(c);
+    if (c) unread_char(c);
     if (flag) *s = '\0';
     return flag;
 }
@@ -215,7 +240,7 @@ int read_llint(long long *lldp)
     int flag = 0;
     long long lld = 0;
     int f = 0;
-    char c;
+    char c = '\0';
     read_space();
     read_char(&c);
     if (c == '-') f = 1; else unread_char(c);
@@ -223,7 +248,7 @@ int read_llint(long long *lldp)
         lld = lld * 10 + (c - '0');
         flag = 1;
     }
-    unread_char(c);
+    if (c) unread_char(c);
     if (flag) *lldp = f ? -lld : lld;
     if (!flag && f) unread_char('-');
     return flag;
@@ -234,7 +259,7 @@ int read_int(int *dp)
     int flag = 0;
     int d = 0;
     int f = 0;
-    char c;
+    char c = '\0';
     read_space();
     read_char(&c);
     if (c == '-') f = 1; else unread_char(c);
@@ -242,7 +267,7 @@ int read_int(int *dp)
         d = d * 10 + (c - '0');
         flag = 1;
     }
-    unread_char(c);
+    if (c) unread_char(c);
     if (flag) *dp = f ? -d : d;
     if (!flag && f) unread_char('-');
     return flag;
@@ -280,13 +305,13 @@ int naive_scanf(const char *fmt, ...)
                     }
                     break;
                 case '%':
-                    read_char(&c);
-                    flag = (c == '%');
+                    if (read_char(&c)) flag = (c == '%');
+                    else flag = 0;
                     break;
             }
         } else {
-            read_char(&c);
-            flag = (c == *fmt);
+            if (read_char(&c)) flag = (c == *fmt);
+            else flag = 0;
         }
         if (!flag) goto done;
         fmt++;
@@ -295,6 +320,8 @@ done:
     va_end(ap);
     return cnt;
 }
+
+
 
 
 
@@ -347,6 +374,7 @@ int main()
 #define putchar(ch) naive_printf("%c", (ch))
 
 /* REAL USER PROGRAM */
+
 
 #include <string.h>
 #include <stdlib.h>
