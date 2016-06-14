@@ -144,7 +144,7 @@ void cpu_exec(volatile uint32_t n) {
 			return;
 		}*/
 		
-		if ((instr_fetch(cpu.eip, 1) & 0x8048000) != 0)
+		if ((instr_fetch(cpu.eip, 1) & 0x8040000) != 0)
 		{
 			nemu_state = STOP;
 			return;
