@@ -2,6 +2,14 @@
 #include "cpu/decode/modrm.h"
 #include "device/port-io.h"
 
+make_helper(clc)
+{
+	cpu.CF = 0;
+	print_asm("clc");
+	
+	return 1;
+}
+
 make_helper(cli)
 {
 	cpu.IF = 0;

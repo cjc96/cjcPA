@@ -18,5 +18,6 @@ make_helper(outb);
 make_helper(hlt);
 make_helper(sti);
 make_helper(cli);
+make_helper(clc);
 
 #endif
