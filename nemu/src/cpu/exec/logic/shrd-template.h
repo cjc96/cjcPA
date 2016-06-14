@@ -28,12 +28,15 @@ make_helper(concat(shrdi_, SUFFIX)) {
 	return len + 1;
 }
 
-/*make_helper(concat(shrdc_, SUFFIX)) {
-	int len = concat(decode_cl_rm2r_, SUFFIX) (eip + 1);
+make_helper(concat(shrdc_, SUFFIX)) {
+	int len = concat(decode_rm2r_, SUFFIX) (eip + 1);
 	op_dest->val = REG(op_dest->reg);
+    *op_src2 = *op_src;
+    op_src->val = cpu.ecx;
+    strcpy(op_src->str,"%cl");
 	do_execute();
 	return len + 1;
-}	*/
+}
 #endif
 
 #include "cpu/exec/template-end.h"
