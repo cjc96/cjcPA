@@ -40,7 +40,7 @@ uint32_t loader() {
 		/* Scan the program header table, load each segment into memory */
 		ph=(void *)(elf->e_phoff + i * elf->e_phentsize + buf);
 		if(ph->p_type == PT_LOAD) {
-		//Log("success");
+		Log("success");
 #ifdef IA32_PAGE
 			/* Record the program break for future use. */
 			extern uint32_t brk;
@@ -49,9 +49,9 @@ uint32_t loader() {
 			uint32_t pa=mm_malloc(ph->p_vaddr,ph->p_memsz);
 #endif  
 #ifndef HAS_DEVICE
-			ramdisk_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
+			ramdisk_read((void*)pa, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz); 
 #else
-			ide_read((void*)pa + KOFFSET, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
+			ide_read((void*)pa, ELF_OFFSET_IN_DISK + ph->p_offset, ph->p_filesz);
 #endif
 			memset((void*)(pa + ph->p_filesz), 0, ph->p_memsz - ph->p_filesz);
 		}
