@@ -5,6 +5,14 @@
 static void do_execute() {
 	DATA_TYPE result = -op_src->val;
 	OPERAND_W(op_src, result);
+	if (op_src == 0)
+	{
+		cpu.CF = 0;
+	}
+	else
+	{
+		cpu.CF = 1;
+	}
 
 	/* There is no need to update EFLAGS, since no other instructions 
 	 * in PA will test the flags updated by this instruction.
