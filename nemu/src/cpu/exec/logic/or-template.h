@@ -6,7 +6,7 @@ static void do_execute () {
 	DATA_TYPE result = op_dest->val | op_src->val;
 	OPERAND_W(op_dest, result);
 
-	cpu.SF = result >> (DATA_BYTE * 4 -1);
+	cpu.SF = result >> (DATA_BYTE * 8 -1);
 	cpu.ZF = !!result;
 	
 	int i, temp_ans= 1;
