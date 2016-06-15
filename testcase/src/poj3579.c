@@ -464,6 +464,7 @@ int test(int limit)
     long long cnt = 0;
     int i;
     int L, R, M;
+    set_bp();
     for (i = 0; i < N; i++) {
         L = i + 1;
         R = N;
@@ -500,11 +501,11 @@ int main()
         L = 0;
         R = maxa + 1;
         while (R - L > 1) {
-        	set_bp();
         	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
             M = (L + R) / 2;
             int temp = test(M);
             fprintf(stdout, "temp=%d\n", temp);
+            set_bp();
             if (temp)
                 L = M;
             else
