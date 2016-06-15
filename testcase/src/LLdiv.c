@@ -104,6 +104,7 @@ void ULLdivULL(ULL a, ULL b, ULL *qp, ULL *rp)
         }
         printf("i=%d a=%08x b=%08x r=%08x q=%08x\n", i, (unsigned) a, (unsigned) b, (unsigned) r, (unsigned) q);
     }
+    set_bp();
     if (qp) *qp = q;
     if (rp) *rp = r;
 }
