@@ -500,8 +500,8 @@ int main()
         L = 0;
         R = maxa + 1;
         while (R - L > 1) {
-        	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
         	set_bp();
+        	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
             M = (L + R) / 2;
             int temp = test(M);
             fprintf(stdout, "temp=%d\n", temp);
