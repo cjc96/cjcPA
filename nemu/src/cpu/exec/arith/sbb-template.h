@@ -6,20 +6,20 @@ static void do_execute () {
 	DATA_TYPE result;
 	DATA_TYPE ain = op_dest->val, bin;
 	
-	if ((sizeof(op_src->val) == 8) && (sizeof(op_dest->val) == 16 || sizeof(op_dest->val) == 32))
+	if ((sizeof(op_src->val) == 1) && (sizeof(op_dest->val) == 2 || sizeof(op_dest->val) == 4))
 	{
 		result = op_dest->val - ((DATA_TYPE_S)op_src->val + cpu.CF);
-		bin = (DATA_TYPE_S)op_src->val + cpu.CF;
+		bin = (DATA_TYPE_S)op_src->val;
 	}
 	else
 	{
 		result = op_dest->val - (op_src->val + cpu.CF);
-		bin = op_src->val + cpu.CF;
+		bin = op_src->val;
 	}
 	OPERAND_W(op_dest, result);
 	
 	
-	int sin = 1, cin = 1;
+	int sin = 1, cin = cpu.CF;
 	set_eflags(ain,bin,sin,cin);
 	
 	print_asm_template2();
