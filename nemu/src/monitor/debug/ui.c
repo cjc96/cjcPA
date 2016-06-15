@@ -122,6 +122,9 @@ static int cmd_x(char *args)
 	sscanf(temp,"%d",&n);
 	sscanf(temp + strlen(temp)+1 , "%x" , &addr);
 	
+	bool success;
+	addr = expr(temp + strlen(temp) + 1,&success);
+	
 #ifndef SEGMENT
 	for (i = 0; i < n; i++)
 		printf("%x\t :\t %d\n",addr+i,swaddr_read(addr+i,4));
@@ -140,7 +143,7 @@ static int cmd_p(char *args)
 	unsigned int temp;
 	
 	success = true;
-	temp = 0;
+	
 	temp = expr(args,&success);
 	if (success)
 		printf("DEC : %u\t\tHEX : %x\n",temp,temp);
