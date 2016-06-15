@@ -43,7 +43,7 @@ void addcnt()
 int main()
 {
 	volatile myfp_t fp[1000] = {};
-	set_bp();
+	//set_bp();
 	fp[3] = addcnt;
 	fp[499] = addcnt;
 	fp[977] = addcnt;
