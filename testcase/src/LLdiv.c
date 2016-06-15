@@ -397,8 +397,8 @@ void test_ ## TYPE() \
         b = data[j]; \
         printf("i=%d sp=%d b=%d\n", i, samplep, (int)b); \
         if (b == 0) continue; \
-        if (i==38 || i==39) set_bp(); else {samplep += 2; continue; }\
         printf("addition i=%d sp=%d b=%d\n", i, samplep, (int)b); \
+        if (i==38 || i==39) set_bp(); else {samplep += 2; continue; }\
         /*TYPE ## div ## TYPE (a, b, &q, &r);*/ \
         /*sample_q = sample[samplep++];*/ \
         /*sample_r = sample[samplep++];*/ \
