@@ -21,8 +21,8 @@ static void do_execute () {
 		case 0x9b : if (!cpu.PF) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break;
 		case 0x9c : if (cpu.SF != cpu.OF) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break;
 		case 0x9d : if (cpu.SF == cpu.OF) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break;
-		case 0x9e : if (cpu.ZF || cpu.SF != cpu.OF) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break;
-		case 0x9f : if (cpu.ZF || cpu.SF == cpu.OF) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break; 
+		case 0x9e : if (cpu.ZF || (cpu.SF != cpu.OF)) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break;
+		case 0x9f : if (!cpu.ZF && (cpu.SF == cpu.OF)) OPERAND_W(op_src, 1); else OPERAND_W(op_src, 0); break; 
 		default : panic("Please implent me!");
 	}
 	
