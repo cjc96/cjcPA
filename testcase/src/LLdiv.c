@@ -391,7 +391,7 @@ void test_ ## TYPE() \
     TYPE q, r; \
     TYPE sample_q, sample_r; \
     int i, j; \
-    for (i = 0; i < data_size; i++) { \
+    for (i = 0; i < data_size; i += 3) { \
         j = data_size - i - 1; \
         a = data[i]; \
         b = data[j]; \
