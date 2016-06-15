@@ -127,11 +127,11 @@ static int cmd_x(char *args)
 	
 #ifndef SEGMENT
 	for (i = 0; i < n; i++)
-		printf("%x\t :\t %d\n",addr+i,swaddr_read(addr+i,4));
+		printf("%x\t :\t %d\n",addr+i*4,swaddr_read(addr+i*4,4));
 #endif
 #ifdef SEGMENT
     for (i = 0; i < n; i++)
-        printf("%x\t :\t %d\n",addr+i,swaddr_read(addr + i, 4, SEG_TYPE_DS));
+        printf("%x\t :\t %d\n",addr+i*4,swaddr_read(addr + i*4, 4, SEG_TYPE_DS));
 #endif
 
 	return 0;
