@@ -368,6 +368,7 @@ int naive_memcmp(void *p1, void *p2, int n)
 
 int main()
 {
+	set_bp();
     test_LL();
     test_ULL();
     /*int i;
