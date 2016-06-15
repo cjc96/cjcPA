@@ -6,54 +6,21 @@ make_helper(concat(cmps_, SUFFIX)) {
 
 	int incdec;
 	
-	if (DATA_BYTE == 1)
-	{
+	
 		int sin = 1, cin = 1;
 #ifndef SEGMENT
-		int ain = swaddr_read(cpu.esi, 1), bin = swaddr_read(cpu.edi, 1);
+		int ain = swaddr_read(cpu.esi, DATA_BYTE), bin = swaddr_read(cpu.edi, DATA_BYTE);
 #endif
 #ifdef SEGMENT
-		int ain = swaddr_read(cpu.esi, 1, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, 1, SEG_TYPE_ES);
+		int ain = swaddr_read(cpu.esi, DATA_BYTE, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, DATA_BYTE, SEG_TYPE_ES);
 #endif
 		set_eflags(ain, bin, sin, cin);
 	
 		if (!cpu.DF)
-			incdec = 1;
+			incdec = DATA_BYTE;
 		else
-			incdec = -1;
-	}
-	else if (DATA_BYTE == 2)
-	{
-		int sin = 1,cin = 1;
-#ifndef SEGMENT
-		int ain = swaddr_read(cpu.esi, 2), bin = swaddr_read(cpu.edi, 2);
-#endif
-#ifdef SEGMENT
-		int ain = swaddr_read(cpu.esi, 2, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, 2, SEG_TYPE_ES);
-#endif
-		set_eflags(ain, bin, sin, cin);
+			incdec = -DATA_BYTE;
 	
-		if (!cpu.DF)
-			incdec = 2;
-		else
-			incdec = -2;
-	}
-	else
-	{
-		int sin = 1,cin = 1;
-#ifndef SEGMENT
-		int ain = swaddr_read(cpu.esi, 4), bin = swaddr_read(cpu.edi, 4);
-#endif
-#ifdef SEGMENT
-		int ain = swaddr_read(cpu.esi, 4, SEG_TYPE_DS), bin = swaddr_read(cpu.edi, 4, SEG_TYPE_ES);
-#endif
-		set_eflags(ain, bin, sin, cin);
-	
-		if (!cpu.DF)
-			incdec = 4;
-		else
-			incdec = -4;
-	}
 	cpu.esi += incdec;
 	cpu.edi += incdec;
 	
