@@ -48,7 +48,7 @@ int main()
 	fp[499] = addcnt;
 	fp[977] = addcnt;
 	fp[976] = donothing;
-	
+	set_bp();
 	__asm__ __volatile__ ("call *%0"::"m"(fp[3]));
 	__asm__ __volatile__ ("call *%0"::"m"(fp[976]));
 	__asm__ __volatile__ ("call *%0"::"m"(fp[499]));
