@@ -396,6 +396,7 @@ void test_ ## TYPE() \
         /*a = data[i];*/ \
         b = data[j]; \
         printf("i=%d sp=%d b=%d\n", i, samplep, (int)b); \
+        if (i==35) set_bp(); \
         if (b == 0) continue; \
         printf("addition i=%d sp=%d b=%d\n", i, samplep, (int)b); \
         if (i==38 || i==39) set_bp(); else {samplep += 2; continue; }\
