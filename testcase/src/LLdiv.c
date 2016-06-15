@@ -392,11 +392,11 @@ void test_ ## TYPE() \
     /*TYPE sample_q, sample_r;*/ \
     int i, j; \
     for (i = 0; i < data_size; i++) { \
-        /*j = data_size - i - 1;*/ \
+        j = data_size - i - 1; \
         /*a = data[i];*/ \
-        /*b = data[j];*/ \
-        /*if (b == 0) continue;*/ \
-        printf("i=%d sp=%d\n", i, samplep); \
+        b = data[j]; \
+        printf("i=%d sp=%d b=%d\n", i, samplep, (int)b); \
+        if (b == 0) continue; \
         if (i==38 || i==39) set_bp(); else {samplep += 2; continue; }\
         /*TYPE ## div ## TYPE (a, b, &q, &r);*/ \
         /*sample_q = sample[samplep++];*/ \
