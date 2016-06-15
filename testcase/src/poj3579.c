@@ -483,23 +483,24 @@ int test(int limit)
 int main()
 {
     int i;
-    int maxa;
-    int L, R, M;
+    int maxa= -1;
+    int L = 0, R = 0, M = 0;
     while (scanf("%d", &N) == 1 && N) {
-    	fprintf(stdout, "N=%d\n", N);
+    	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
     	set_bp();
         K = (long long) N * (N - 1) / 2;
         K = (K + K % 2) / 2;
         maxa = 0;
         for (i = 0; i < N; i++) {
             scanf("%d", &a[i]);
-            fprintf(stdout, "a[i]=%d  ", a[i]);
+            //fprintf(stdout, "a[i]=%d  ", a[i]);
             if (a[i] > maxa) maxa = a[i];
         }
         qsort(a, N, sizeof(int), cmp);
         L = 0;
         R = maxa + 1;
         while (R - L > 1) {
+        	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
             M = (L + R) / 2;
             if (test(M))
                 L = M;
