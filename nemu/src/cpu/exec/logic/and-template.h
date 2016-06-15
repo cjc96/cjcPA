@@ -9,7 +9,7 @@ static void do_execute () {
 	/* Update EFLAGS. */
 	
 	cpu.SF = result >> (DATA_BYTE * 8 -1);
-	cpu.ZF = !!result;
+	cpu.ZF = !result;
 	
 	int i, temp_ans= 1;
 	for (i = 0; i < 8; i++)
