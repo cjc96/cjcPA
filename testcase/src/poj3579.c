@@ -372,7 +372,7 @@ int main()
     HIT_GOOD_TRAP;
     return 0;
 }
-
+#define myprintf printf
 #define main program_main
 #define scanf naive_scanf
 #define printf naive_printf
@@ -440,6 +440,7 @@ int main()
             else
                 R = M;
         }
+        myprintf("%d\n", R);
         printf("%d\n", R);
     }
     return 0;
