@@ -396,6 +396,7 @@ void test_ ## TYPE() \
         a = data[i]; \
         b = data[j]; \
         if (b == 0) continue; \
+        printf("i=%d sp=%d\n", i, samplep); \
         if (i==38 || i==39) set_bp(); else {samplep += 2; continue; }\
         TYPE ## div ## TYPE (a, b, &q, &r); \
         sample_q = sample[samplep++]; \
