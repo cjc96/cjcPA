@@ -487,7 +487,7 @@ int main()
     int maxa= -1;
     int L = 0, R = 0, M = 0;
     while (scanf("%d", &N) == 1 && N) {
-    	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
+    	//fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
  
         K = (long long) N * (N - 1) / 2;
         K = (K + K % 2) / 2;
@@ -501,10 +501,10 @@ int main()
         L = 0;
         R = maxa + 1;
         while (R - L > 1) {
-        	fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
+        	//fprintf(stdout, "N=%d K=%d L=%d R=%d M=%d maxa=%d\n", N, (int)K, L, R, M, maxa);
             M = (L + R) / 2;
             int temp = test(M);
-            fprintf(stdout, "temp=%d\n", temp);
+            //fprintf(stdout, "temp=%d\n", temp);
             //set_bp();
             if (temp)
                 L = M;
