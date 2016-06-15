@@ -8,7 +8,7 @@ make_helper(rep) {
 	if(instr_fetch(eip + 1, 1) == 0xc3) {
 		/* repz ret */
 		exec(eip + 1);
-		len = 0;
+		len = -1;
 	}
 	else {
 		while(cpu.ecx) {
