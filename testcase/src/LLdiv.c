@@ -394,11 +394,12 @@ void test_ ## TYPE() \
         a = data[i]; \
         b = data[j]; \
         if (b == 0) continue; \
+        if (i==38) set_bp();\
         TYPE ## div ## TYPE (a, b, &q, &r); \
         sample_q = sample[samplep++]; \
         sample_r = sample[samplep++]; \
         /*printf("0x%llx, 0x%llx, /" "* 0x%llx div 0x%llx *" "/\n", q, r, a, b);*/ \
-        printf("%d\n", i);\
+        /*printf("%d\n", i); */\
         nemu_assert(sample_q == q); \
         nemu_assert(sample_r == r); \
     } \
