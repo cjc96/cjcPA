@@ -23,6 +23,68 @@ SOFTWARE.
 
 */
 
+#include <stdio.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <sys/stat.h>
+
+#include "trap.h"
+
+int __attribute__((__noinline__))
+syscall(int id, ...) {
+	int ret;
+	int *args = &id;
+	asm volatile("int $0x80": "=a"(ret) : "a"(args[0]), "b"(args[1]), "c"(args[2]), "d"(args[3]));
+	return ret;
+}
+
+int read(int fd, char *buf, int len) {
+	nemu_assert(0);
+	return 0;
+}
+
+int write(int fd, char *buf, int len) {
+	return syscall(__NR_write, fd, buf, len); 
+}
+
+off_t lseek(int fd, off_t offset, int whence) {
+	nemu_assert(0);
+	return 0;
+}
+
+void *sbrk(int incr) {
+	extern char end;		/* Defined by the linker */
+	static char *heap_end;
+	char *prev_heap_end;
+
+	if (heap_end == 0) {
+		heap_end = &end;
+	}
+	prev_heap_end = heap_end;
+
+	if( syscall(SYS_brk, heap_end + incr) == 0) {
+		heap_end += incr;
+	}
+
+	return prev_heap_end;
+}
+
+int close(int fd) {
+	nemu_assert(0);
+	return 0;
+}
+
+int fstat(int fd, struct stat *buf) {
+//	buf->st_mode = S_IFCHR;
+	return 0;
+}
+
+int isatty(int fd) {
+	nemu_assert(0);
+	return 0;
+}
+
+
 char input_buffer[] = 
 "\x34\x0A\x31\x20\x33\x20\x32\x20\x34\x0A"
 "\x33\x0A\x31\x20\x31\x30\x20\x32\x0A\x35"
@@ -372,11 +434,12 @@ int main()
     HIT_GOOD_TRAP;
     return 0;
 }
-#define myprintf printf
+
 #define main program_main
 #define scanf naive_scanf
 #define printf naive_printf
 #define puts(str) naive_printf("%s\n", (str))
+#undef putchar
 #define putchar(ch) naive_printf("%c", (ch))
 
 /* REAL USER PROGRAM */
@@ -440,7 +503,7 @@ int main()
             else
                 R = M;
         }
-        myprintf("%d\n", R);
+        fprintf(stdout, "%d\n", R);
         printf("%d\n", R);
     }
     return 0;
