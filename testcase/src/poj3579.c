@@ -492,6 +492,7 @@ int main()
         maxa = 0;
         for (i = 0; i < N; i++) {
             scanf("%d", &a[i]);
+            fprintf(stdout, "a[i]=%d  ", a[i]);
             if (a[i] > maxa) maxa = a[i];
         }
         qsort(a, N, sizeof(int), cmp);
