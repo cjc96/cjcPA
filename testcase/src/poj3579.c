@@ -486,6 +486,7 @@ int main()
     int maxa;
     int L, R, M;
     while (scanf("%d", &N) == 1 && N) {
+    	fprintf(stdout, "N=%d\n", N);
         K = (long long) N * (N - 1) / 2;
         K = (K + K % 2) / 2;
         maxa = 0;
