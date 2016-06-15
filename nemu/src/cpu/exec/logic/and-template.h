@@ -8,11 +8,21 @@ static void do_execute () {
 
 	/* Update EFLAGS. */
 	
-	int sin = 0,cin = 0;
-	DATA_TYPE ain = result,bin = 0;
-	set_eflags(ain,bin,sin,cin);
-	cpu.OF = 0;
+	cpu.SF = result >> (DATA_BYTE * 4 -1);
+	cpu.ZF = !!result;
+	
+	int i, temp_ans= 1;
+	for (i = 0; i < 8; i++)
+	{
+		if ((result >> i) & 1)
+		{
+			temp_ans ^= 1;
+		}
+	}
+	cpu.PF = temp_ans;
+	
 	cpu.CF = 0;
+	cpu.OF = 0;
 
 	print_asm_template2();
 }

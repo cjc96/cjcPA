@@ -23,68 +23,6 @@ SOFTWARE.
 
 */
 
-
-#include <stdio.h>
-#include <string.h>
-#include <sys/syscall.h>
-#include <sys/stat.h>
-
-#include "trap.h"
-
-int __attribute__((__noinline__))
-syscall(int id, ...) {
-	int ret;
-	int *args = &id;
-	asm volatile("int $0x80": "=a"(ret) : "a"(args[0]), "b"(args[1]), "c"(args[2]), "d"(args[3]));
-	return ret;
-}
-
-int read(int fd, char *buf, int len) {
-	nemu_assert(0);
-	return 0;
-}
-
-int write(int fd, char *buf, int len) {
-	return syscall(__NR_write, fd, buf, len); 
-}
-
-off_t lseek(int fd, off_t offset, int whence) {
-	nemu_assert(0);
-	return 0;
-}
-
-void *sbrk(int incr) {
-	extern char end;		/* Defined by the linker */
-	static char *heap_end;
-	char *prev_heap_end;
-
-	if (heap_end == 0) {
-		heap_end = &end;
-	}
-	prev_heap_end = heap_end;
-
-	if( syscall(SYS_brk, heap_end + incr) == 0) {
-		heap_end += incr;
-	}
-
-	return prev_heap_end;
-}
-
-int close(int fd) {
-	nemu_assert(0);
-	return 0;
-}
-
-int fstat(int fd, struct stat *buf) {
-//	buf->st_mode = S_IFCHR;
-	return 0;
-}
-
-int isatty(int fd) {
-	nemu_assert(0);
-	return 0;
-}
-
 #include "trap.h"
 
 typedef unsigned long long ULL;
@@ -102,9 +40,7 @@ void ULLdivULL(ULL a, ULL b, ULL *qp, ULL *rp)
             r -= b;
             q += 1;
         }
-        printf("i=%d a=%08x b=%08x r=%08x q=%08x\n", i, (unsigned) (a>>32), (unsigned) (b>>32), (unsigned) (r>>32), (unsigned) (q>>32));
     }
-    set_bp();
     if (qp) *qp = q;
     if (rp) *rp = r;
 }
@@ -389,24 +325,19 @@ void test_ ## TYPE() \
 { \
     TYPE a, b; \
     TYPE q, r; \
-    /*TYPE sample_q, sample_r;*/ \
+    TYPE sample_q, sample_r; \
     int i, j; \
     for (i = 0; i < data_size; i++) { \
         j = data_size - i - 1; \
-        /*a = data[i];*/ \
+        a = data[i]; \
         b = data[j]; \
-        printf("i=%d sp=%d b=%d\n", i, samplep, (int)b); \
-        if (i==35) set_bp(); \
         if (b == 0) continue; \
-        printf("addition i=%d sp=%d b=%d\n", i, samplep, (int)b); \
-        if (i==38 || i==39) set_bp(); else {samplep += 2; continue; }\
-        /*TYPE ## div ## TYPE (a, b, &q, &r);*/ \
-        /*sample_q = sample[samplep++];*/ \
-        /*sample_r = sample[samplep++];*/ \
+        TYPE ## div ## TYPE (a, b, &q, &r); \
+        sample_q = sample[samplep++]; \
+        sample_r = sample[samplep++]; \
         /*printf("0x%llx, 0x%llx, /" "* 0x%llx div 0x%llx *" "/\n", q, r, a, b);*/ \
-        /*printf("%d\n", i); */\
-        /*nemu_assert(sample_q == q);*/ \
-        /*nemu_assert(sample_r == r);*/ \
+        nemu_assert(sample_q == q); \
+        nemu_assert(sample_r == r); \
     } \
     for (i = 0; i < data_size; i++) \
         for (j = 0; j < data_size; j++) { \
@@ -437,7 +368,6 @@ int naive_memcmp(void *p1, void *p2, int n)
 
 int main()
 {
-	set_bp();
     test_LL();
     test_ULL();
     /*int i;
