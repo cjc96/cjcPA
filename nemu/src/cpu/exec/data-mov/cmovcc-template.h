@@ -22,7 +22,7 @@ static void do_execute () {
 		case 0x4c : if (cpu.SF != cpu.OF) OPERAND_W(op_dest, op_src->val); break;
 		case 0x4d : if (cpu.SF == cpu.OF) OPERAND_W(op_dest, op_src->val); break;
 		case 0x4e : if (cpu.ZF || (cpu.SF != cpu.OF)) OPERAND_W(op_dest, op_src->val); break;
-		case 0x4f : if (cpu.ZF || (cpu.SF == cpu.OF)) OPERAND_W(op_dest, op_src->val); break; 
+		case 0x4f : if (!cpu.ZF && (cpu.SF == cpu.OF)) OPERAND_W(op_dest, op_src->val); break; 
 		default : panic("Please implent me!");
 	}
 	
