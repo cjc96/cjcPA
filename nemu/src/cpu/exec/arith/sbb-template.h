@@ -9,17 +9,17 @@ static void do_execute () {
 	if ((sizeof(op_src->val) == 1) && (sizeof(op_dest->val) == 2 || sizeof(op_dest->val) == 4))
 	{
 		result = op_dest->val - ((DATA_TYPE_S)op_src->val + cpu.CF);
-		bin = (DATA_TYPE_S)op_src->val;
+		bin = (DATA_TYPE_S)op_src->val + cpu.CF;
 	}
 	else
 	{
 		result = op_dest->val - (op_src->val + cpu.CF);
-		bin = op_src->val;
+		bin = op_src->val + cpu.CF;
 	}
 	OPERAND_W(op_dest, result);
 	
 	
-	int sin = 1, cin = cpu.CF;
+	int sin = 1, cin = 1;
 	set_eflags(ain,bin,sin,cin);
 	
 	print_asm_template2();
